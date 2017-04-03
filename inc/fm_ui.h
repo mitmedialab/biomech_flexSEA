@@ -57,8 +57,8 @@ void user_button_test(void);
 // Definition(s):
 //****************************************************************************
 
-#define LED0(x) HAL_GPIO_WritePin(GPIOC, 1<<1, x);
-#define LED1(x) HAL_GPIO_WritePin(GPIOC, 1<<0, x);
+#define LED0(x) HAL_GPIO_WritePin(GPIOD, 1<<12, x);
+#define LED1(x) HAL_GPIO_WritePin(GPIOD, 1<<11, x);
 #define LEDR(x) HAL_GPIO_WritePin(GPIOF, 1<<4, x);
 #define LEDG(x) HAL_GPIO_WritePin(GPIOF, 1<<3, x);
 #define LEDB(x) HAL_GPIO_WritePin(GPIOF, 1<<5, x);

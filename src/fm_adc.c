@@ -108,26 +108,6 @@ void init_adc1(void)
 	sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
 	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
-	sConfig.Channel = ADC_CHANNEL_4;
-	sConfig.Rank = 5;
-	sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
-	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
-	sConfig.Channel = ADC_CHANNEL_5;
-	sConfig.Rank = 6;
-	sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
-	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
-	sConfig.Channel = ADC_CHANNEL_6;
-	sConfig.Rank = 7;
-	sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
-	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
-	sConfig.Channel = ADC_CHANNEL_7;
-	sConfig.Rank = 8;
-	sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
-	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&adc_results, ADC_CHANNELS);
 }
 
@@ -171,15 +151,9 @@ static void initAdcGpio(void)
 
 	__GPIOA_CLK_ENABLE();
 
-	//AN0 to AN7 are on PA0 to PA7
-	//AN0 & 1: 1/10kHz LPF
-	//AN3 & 3: 1/10kHz LPF, 1<G<10
-	//AN4 & 5: Buffered
-	//AN6 & 7: Resistive dividers, buffered
-
 	//Config inputs:
-	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3
-			| GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
+	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 \
+			| GPIO_PIN_4;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

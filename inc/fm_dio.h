@@ -49,6 +49,7 @@
 //****************************************************************************
 
 void init_dio(void);
+void initHooks(void);
 void dio_set_pin_direction(unsigned int pin, unsigned int dir);
 void dio_set_port_direction(unsigned int dir);
 //unsigned int dio_pin_read(unsigned int pin);	//Not implemented, read port & mask
@@ -72,15 +73,14 @@ void dio_map_pin_port(unsigned int pin, GPIO_TypeDef *port, uint16_t *gpio);
 
 #define MAX_DIO			8
 #define DIO_AF_NULL		0
-#define DIO_AF_USART		1
+#define DIO_AF_USART	1
 #define DIO_AF_SPI		2
 #define DIO_AF_I2C		3
 
 //Quick macros for debug outputs:
-#define DEBUG_OUT_DIO4(x) HAL_GPIO_WritePin(GPIOG, 1<<8, x);
-#define DEBUG_OUT_DIO5(x) HAL_GPIO_WritePin(GPIOG, 1<<13, x);
-#define DEBUG_OUT_DIO6(x) HAL_GPIO_WritePin(GPIOG, 1<<12, x);
-#define DEBUG_OUT_DIO7(x) HAL_GPIO_WritePin(GPIOG, 1<<14, x);
+#define DEBUG_H0(x) HAL_GPIO_WritePin(GPIOD, 1<<0, x);
+#define DEBUG_H1(x) HAL_GPIO_WritePin(GPIOD, 1<<1, x);
+#define DEBUG_H2(x) HAL_GPIO_WritePin(GPIOD, 1<<2, x);
 
 #endif // INC_DIO_H
 

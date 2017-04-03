@@ -50,20 +50,20 @@
 //****************************************************************************
 void init_leds(void)
 {
-	//LED0 - C1, LED1 - C0, LEDR - F4, LEDG - F3, LEDB - F5
+	//LED0 - D12, LED1 - D11, LEDR - F4, LEDG - F3, LEDB - F5
 
 	GPIO_InitTypeDef LED_InitStructure;
 
 	// Enable GPIO Peripheral clock on port C & F
-	__GPIOC_CLK_ENABLE();
+	__GPIOD_CLK_ENABLE();
 	__GPIOF_CLK_ENABLE();
 
 	// Configure pin in output push/pull mode
-	LED_InitStructure.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+	LED_InitStructure.Pin = GPIO_PIN_11 | GPIO_PIN_12;
 	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
 	LED_InitStructure.Speed = GPIO_SPEED_LOW;
 	LED_InitStructure.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOC, &LED_InitStructure);
+	HAL_GPIO_Init(GPIOD, &LED_InitStructure);
 
 	// Configure pin in output push/pull mode
 	LED_InitStructure.Pin = GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;

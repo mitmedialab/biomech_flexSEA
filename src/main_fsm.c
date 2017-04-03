@@ -83,7 +83,7 @@ void mainFSM2(void)
 //Case 3:
 void mainFSM3(void)
 {
-	slaveTransmit(PORT_RS485_2);
+
 }
 
 //Case 4: User Functions

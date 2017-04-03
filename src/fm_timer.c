@@ -193,33 +193,33 @@ void test_delayUsBlocking_blocking(void)
 	while(1)
 	{
 		//1us:
-		DEBUG_OUT_DIO4(1);
+		DEBUG_H0(1);
 		delayUsBlocking(1);
-		DEBUG_OUT_DIO4(0);
+		DEBUG_H0(0);
 		delayUsBlocking(1);
 
 		//2us
-		DEBUG_OUT_DIO4(1);
+		DEBUG_H0(1);
 		delayUsBlocking(2);
-		DEBUG_OUT_DIO4(0);
+		DEBUG_H0(0);
 		delayUsBlocking(2);
 
 		//5us:
-		DEBUG_OUT_DIO4(1);
+		DEBUG_H0(1);
 		delayUsBlocking(5);
-		DEBUG_OUT_DIO4(0);
+		DEBUG_H0(0);
 		delayUsBlocking(5);
 
 		//10us:
-		DEBUG_OUT_DIO4(1);
+		DEBUG_H0(1);
 		delayUsBlocking(10);
-		DEBUG_OUT_DIO4(0);
+		DEBUG_H0(0);
 		delayUsBlocking(10);
 
 		//100us:
-		DEBUG_OUT_DIO4(1);
+		DEBUG_H0(1);
 		delayUsBlocking(100);
-		DEBUG_OUT_DIO4(0);
+		DEBUG_H0(0);
 		delayUsBlocking(100);
 	}
 }

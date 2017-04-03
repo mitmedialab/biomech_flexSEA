@@ -44,8 +44,6 @@
 #include "fm_spi.h"
 #include "fm_i2c.h"
 #include "fm_imu.h"
-#include "fm_adv_analog.h"
-#include "fm_pwr_out.h"
 #include "usb_device.h"
 #include "user-mn.h"
 
@@ -77,6 +75,7 @@ void init_peripherals(void)
 	init_leds();
 	init_switches();
 	init_dio();					//All inputs by default
+	initHooks();
 	init_adc1();
 	init_spi4();				//Plan
 
@@ -119,9 +118,6 @@ void init_peripherals(void)
 
 	#endif	//USE_I2C_2
 
-	init_adva_fc_pins();
-	init_pwr_out();
-
 	//USB
 	#ifdef USE_USB
 
@@ -142,9 +138,6 @@ void init_peripherals(void)
 	LEDR(0);
 	LEDG(0);
 	LEDB(0);
-
-	//Default analog input states:
-	set_default_analog();
 }
 
 //Computes a bunch of stuff to maximize calculations:
@@ -180,9 +173,9 @@ void fpu_testcode_blocking(void)
 	long long myRes = 0;
 	while(1)
 	{
-		DEBUG_OUT_DIO4(1);
+		DEBUG_H0(1);
 		myRes = bunchOfUselessMath();
-		DEBUG_OUT_DIO4(0);
+		DEBUG_H0(0);
 		delayUsBlocking(10);
 		if(myRes != 0)
 		{

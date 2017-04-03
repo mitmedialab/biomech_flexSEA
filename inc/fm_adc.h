@@ -58,15 +58,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
 // Definition(s):
 //****************************************************************************
 
-//Manage 0.1 Hardware pins:
-//============================
-//AN0 to AN7 are on PA0 to PA7
-//AN0 & 1: 1/10kHz LPF
-//AN3 & 3: 1/10kHz LPF, 1<G<10
-//AN4 & 5: Buffered
-//AN6 & 7: Resistive dividers, buffered
-
-#define ADC_CHANNELS	8
+#define ADC_CHANNELS	4
 
 #endif 	// INC_FM_ADC_H
 
