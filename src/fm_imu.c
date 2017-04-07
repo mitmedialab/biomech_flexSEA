@@ -44,6 +44,7 @@
 
 struct imu_s imu;
 volatile uint8_t i2c_tmp_buf[IMU_MAX_BUF_SIZE];
+uint8_t i2c_ak8963_tmp_buf[6] = {0,0,0,0,0,0};
 
 //****************************************************************************
 // Private Function Prototype(s)
@@ -66,8 +67,26 @@ void init_imu(void)
 	// Initialize the config registers.
 	uint8_t config[4] = { D_IMU_CONFIG, D_IMU_GYRO_CONFIG, D_IMU_ACCEL_CONFIG, \
 							D_IMU_ACCEL_CONFIG2 };
-	uint8_t imu_addr = IMU_CONFIG;
-	imu_write(imu_addr, config, 4);
+	imu_write(IMU_CONFIG, config, 4);
+
+	/*
+	//Bypass I2C:
+	HAL_Delay(10);
+	config[0] = D_BYPASS_ENABLED;
+	imu_write(IMU_INT_PIN_CFG, config, 1);
+
+	//Disable Master:
+	HAL_Delay(10);
+	config[0] = 0;
+	imu_write(IMU_USER_CTRL, config, 1);
+
+	//Bypass I2C:
+	HAL_Delay(10);
+	config[0] = D_BYPASS_ENABLED;
+	imu_write(IMU_INT_PIN_CFG, config, 1);
+
+	HAL_Delay(10);
+	*/
 }
 
 // Reset the IMU to default settings
@@ -75,12 +94,40 @@ void reset_imu(void)
 {
 	uint8_t config = D_DEVICE_RESET;
 	imu_write(IMU_PWR_MGMT_1, &config, 1);
+	HAL_Delay(100);
+
+	config = 0x01;
+	imu_write(IMU_PWR_MGMT_1, &config, 1);
+	//imu_write(IMU_SIGNAL_PATH_RESET, &config, 1);
+	HAL_Delay(200);
+
+	/*
+	config = 0x01;
+	imu_write(IMU_PWR_MGMT_1, &config, 1);
+	HAL_Delay(25);
+	*/
+
+	config = 0x00;
+	imu_write(IMU_PWR_MGMT_2, &config, 1);
+	HAL_Delay(10);
+
+
+	/*
+	config = 1;
+	imu_write(IMU_USER_CTRL, &config, 1);
+	HAL_Delay(10);
+
+	config = 0;
+	imu_write(IMU_SIGNAL_PATH_RESET, &config, 1);
+	HAL_Delay(10);
+	*/
 }
 
 //Sends the register address. Needed before a Read
 void IMUPrepareRead(void)
 {
 	uint8_t i2c_1_t_buf[4] = {IMU_ACCEL_XOUT_H, 0, 0, 0};
+	//uint8_t i2c_1_t_buf[4] = {IMU_GYRO_XOUT_H, 0, 0, 0};
 	HAL_I2C_Master_Transmit_DMA(&hi2c1, IMU_ADDR, i2c_1_t_buf, 1);
 }
 
@@ -98,8 +145,7 @@ void IMUParseData(void)
 	//Rebuilt 7x 16bits words:
 	for(i = 0; i < 7; i++)
 	{
-		tmp[i] = ((uint16_t)i2c1_dma_rx_buf[index++] << 8) | \
-				((uint16_t) i2c1_dma_rx_buf[index++]);
+		tmp[i] = ((uint16_t)i2c1_dma_rx_buf[index++] << 8) | ((uint16_t) i2c1_dma_rx_buf[index++]);
 	}
 
 	//Assign:
@@ -111,6 +157,73 @@ void IMUParseData(void)
 	imu.gyro.y = (int16_t)tmp[5];
 	imu.gyro.z = (int16_t)tmp[6];
 }
+
+//===================
+//AK8963 Magnetometer
+//===================
+
+/*
+void init_ak8963(void)
+{
+	uint8_t tries = 0, works = 0;
+
+	//First, can we talk to the sensor?
+	for(tries = 0; tries < 10; tries++)
+	{
+		if(ak8963_read_status() == 0x48)
+		{
+			works = 1;
+			break;
+		}
+		HAL_Delay(10);
+	}
+
+	if(works)
+	{
+		//Configures CNTL1:
+		HAL_Delay(10);
+		i2c_ak8963_tmp_buf[0] = AK8963_REG_CNTL1;
+		i2c_ak8963_tmp_buf[1] = AK8963_SET_CNTL1;
+      	I2C_1_MasterWriteBuf( AK8963_ADDRESS, (uint8_t *)i2c_ak8963_tmp_buf, 2, (I2C_1_MODE_COMPLETE_XFER ));
+		HAL_Delay(10);
+	}
+}
+
+//Reads WIA, supposed to return 0x48
+uint8_t ak8963_read_status(void)
+{
+	//i2c1_read(AK8963_ADDRESS, AK8963_REG_WIA, i2c_ak8963_tmp_buf, 1);
+	uint8_t status = 0;
+
+	//Start, address, Write mode
+	status = I2C_1_MasterSendStart(AK8963_ADDRESS, 0);
+	if(status != I2C_1_MSTR_NO_ERROR)
+		HAL_Delay(1);
+
+	//Write to register
+	status = I2C_1_MasterWriteByteTimeOut(0x00, 500);
+	if(status != I2C_1_MSTR_NO_ERROR)
+	{
+		//Release bus:
+		I2C_1_BUS_RELEASE;
+	}
+
+	I2C_1_MasterReadBuf(AK8963_ADDRESS, (uint8_t *)i2c_ak8963_tmp_buf, 1, (I2C_1_MODE_COMPLETE_XFER | I2C_1_MODE_REPEAT_START));
+
+	return i2c_ak8963_tmp_buf[0];
+}
+
+//Puts all the gyroscope values in the structure:
+void get_magneto_xyz(void)
+{
+	uint8_t tmp_data[8] = {0,0,0,0,0,0,0,0};
+
+	//According to the documentation it's X_L, X_H, Y_L, ...
+	//We need to read ST2 everytime, hence the 7th byte
+	i2c1_read(AK8963_ADDRESS, AK8963_REG_XOUT_L, tmp_data, 7);
+
+}
+*/
 
 //****************************************************************************
 // Private Function(s)

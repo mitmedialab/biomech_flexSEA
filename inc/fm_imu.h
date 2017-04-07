@@ -35,9 +35,11 @@
 // Include(s)
 //****************************************************************************
 
-#include <stdlib.h>
-#include "stm32f4xx.h"
-#include "stm32f4xx_hal.h"
+#include "main.h"
+//#include <stdlib.h>
+//#include "stm32f4xx.h"
+//#include "stm32f4xx_hal.h"
+#include "flexsea_global_structs.h"
 
 //****************************************************************************
 // Shared variable(s)
@@ -63,7 +65,7 @@ typedef enum {
 // I2C Comms Constants
 #define IMU_BLOCK_TIMEOUT 	10 		//may want to reduce this?
 #define IMU_ADDR 			0xD0 	//device address of the IMU (8bits)
-#define IMU_MAX_BUF_SIZE 	16 		//
+#define IMU_MAX_BUF_SIZE 	100 	//
 
 // IMU Register Addresses (names correspond to those in the datasheet)
 // These are internal to the imu.
@@ -108,14 +110,39 @@ typedef enum {
 /// ACCEL_CONFIG = 0x8 results in:
 ///  Accel: +/- 4g max range
 #define D_IMU_ACCEL_CONFIG		0x08	//0b00001000
+
 /// ACCEL_CONFIG2 = 0x0 results in:
 ///  Accel: 460Hz bandwidth, 1.94ms delay, 220ug/rtHz noise density, 1kHz rate
 #define D_IMU_ACCEL_CONFIG2		0x0		//0b00000000
 
 // IMU Reset Register Values (bits auto clear)
-#define D_SIG_COND_RST			0x1		//write to USER_CTRL: reset signal paths + clear regs
+#define D_SIG_COND_RST			0x01	//write to USER_CTRL: reset signal paths + clear regs
 #define D_SIGNAL_PATH_RESET		0x07	//write to SIGNAL_PATH_RESET: reset signal paths only
 #define D_DEVICE_RESET			0x80	//write to PWR_MGMT_1: reset internal regs
+#define D_BYPASS_ENABLED		0x02	//Enables I2C bypass (no master, uC controls bus)
+#define D_USER_CTRL				0x01	//Disables master, resets all signal paths
+
+//Magnetometer Registers
+#define AK8963_ADDRESS   		0x0C	//7-bits
+#define AK8963_REG_WIA  		0x00 	//should return 0x48
+#define AK8963_REG_INFO			0x01
+#define AK8963_REG_ST1       	0x02  	//data ready status bit 0
+#define AK8963_REG_XOUT_L    	0x03  	//data
+#define AK8963_REG_XOUT_H    	0x04
+#define AK8963_REG_YOUT_L    	0x05
+#define AK8963_REG_YOUT_H		0x06
+#define AK8963_REG_ZOUT_L		0x07
+#define AK8963_REG_ZOUT_H		0x08
+#define AK8963_REG_ST2			0x09  	//Data overflow bit 3 and data read error status bit 2
+#define AK8963_REG_CNTL1		0x0A  	//Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
+#define AK8963_REG_ASTC			0x0C  	//Self test control
+#define AK8963_REG_I2CDIS		0x0F  	//I2C disable
+#define AK8963_REG_ASAX			0x10  	//Fuse ROM x-axis sensitivity adjustment value
+#define AK8963_REG_ASAY			0x11  	//Fuse ROM y-axis sensitivity adjustment value
+#define AK8963_REG_ASAZ			0x12  	//Fuse ROM z-axis sensitivity adjustment value
+
+//Settings:
+#define AK8963_SET_CNTL1		0b00010110;	//16 bits readings, Cont. mode 2
 
 //****************************************************************************
 // Public Function Prototype(s):
@@ -137,6 +164,13 @@ void imu_test_code_blocking(void);
 void IMUPrepareRead(void);
 void IMUReadAll(void);
 void IMUParseData(void);
+
+/*
+void init_ak8963(void);
+uint8_t ak8963_read_status(void);
+void test_ak8963_blocking(void);
+void get_magneto_xyz(void);
+*/
 
 #endif //INC_FM_IMU_H
 
