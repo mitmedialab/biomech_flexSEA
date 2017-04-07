@@ -35,6 +35,8 @@
 // board schematic and the associated peripherals. It will stay like this for
 // the forseeable future. -JFD
 
+//ToDo: most of this code doesn't apply to Fx-Manage: clean
+
 //****************************************************************************
 // Include(s)
 //****************************************************************************
@@ -67,20 +69,18 @@ void init_dio(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	// Enable GPIO Peripheral clocks
-	__GPIOD_CLK_ENABLE();
-	__GPIOF_CLK_ENABLE();
-	__GPIOG_CLK_ENABLE();
+	//__GPIOD_CLK_ENABLE();
+	//__GPIOF_CLK_ENABLE();
+	//__GPIOG_CLK_ENABLE();
 
-	#ifndef USE_UART3
-
-		// Configure pins as inputs
-		GPIO_InitStructure.Pin = GPIO_PIN_8 | GPIO_PIN_9;
-		GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-		GPIO_InitStructure.Speed = GPIO_SPEED_LOW;
-		GPIO_InitStructure.Pull = GPIO_NOPULL;
-		HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
-
-	#endif
+	/*
+	// Configure pins as inputs
+	GPIO_InitStructure.Pin = GPIO_PIN_8 | GPIO_PIN_9;
+	GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStructure.Speed = GPIO_SPEED_LOW;
+	GPIO_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+*/
 
 		/*
 		 * ToDo

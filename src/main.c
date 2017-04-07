@@ -40,6 +40,7 @@
 #include "fm_master_slave_comm.h"
 #include "fm_ui.h"
 #include "fm_misc.h"
+#include "fm_uarts.h"	//ToDo temporary
 #include "user-mn.h"
 #include "flexsea_board.h"
 #include "flexsea_system.h"
@@ -52,6 +53,10 @@
 //Map fsm case to an index:
 void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 			&mainFSM4, &mainFSM5, &mainFSM6, &mainFSM7,	&mainFSM8, &mainFSM9};
+
+//Test ToDo Remove:
+//Send BT data:
+uint8_t testString[4] = "JFD\n";
 
 //****************************************************************************
 // Function(s)
@@ -130,6 +135,10 @@ int main(void)
 		if(tb_1000ms_flag)
 		{
 			tb_1000ms_flag = 0;
+
+			//Test ToDo Remove:
+			//Send BT data:
+			//puts_expUart(testString, 4);
 		}
 	}
 }

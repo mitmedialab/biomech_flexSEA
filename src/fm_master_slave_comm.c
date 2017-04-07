@@ -64,8 +64,15 @@ void initMasterSlaveComm(void)
 			comm_str_2, rx_command_2, &rx_buf_circ_2, \
 			&packet[PORT_RS485_2][INBOUND], &packet[PORT_RS485_2][OUTBOUND]);
 
-	//Personalize specific fields:
-	//...
+	//SPI:
+	initCommPeriph(&commPeriph[PORT_SPI], PORT_SPI, MASTER, rx_buf_3, \
+				comm_str_3, rx_command_3, &rx_buf_circ_3, \
+				&packet[PORT_SPI][INBOUND], &packet[PORT_SPI][OUTBOUND]);
+
+	//Bluetooth:
+	initCommPeriph(&commPeriph[PORT_WIRELESS], PORT_WIRELESS, MASTER, rx_buf_5, \
+				comm_str_5, rx_command_5, &rx_buf_circ_5, \
+				&packet[PORT_WIRELESS][INBOUND], &packet[PORT_WIRELESS][OUTBOUND]);
 }
 
 //Did we receive new commands? Can we parse them?

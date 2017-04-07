@@ -212,16 +212,8 @@ void init_rs485_outputs(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-	// Enable GPIO Peripheral clock on ports E & F
-	__GPIOE_CLK_ENABLE();
+	// Enable GPIO Peripheral clock on port F
 	__GPIOF_CLK_ENABLE();
-
-	// Configure pin in output push/pull mode
-	GPIO_InitStructure.Pin = GPIO_PIN_10 | GPIO_PIN_11;
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStructure.Speed = GPIO_SPEED_LOW;
-	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
 
 	// Configure pin in output push/pull mode
 	GPIO_InitStructure.Pin = GPIO_PIN_11 | GPIO_PIN_12;
@@ -267,38 +259,6 @@ void rs485_set_mode(uint32_t port, uint8_t rx_tx)
 			//Standby: no transmission, no reception
 			HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, 1);	//RE
 			HAL_GPIO_WritePin(GPIOF, GPIO_PIN_11, 0);	//DE
-		}
-	}
-	else if(port == PORT_RS485_2)	//RS-485 #2 / USART6
-	{
-		//USART6 (RS-485 #2):
-		//===================
-		//RE4:		PE11
-		//DE4:		PE10
-
-		if(rx_tx == RS485_TX)
-		{
-			//Half-duplex TX (Receive disabled):
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, 1);	//RE
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, 1);	//DE
-		}
-		else if(rx_tx == RS485_RX)
-		{
-			//Half-duplex RX (Transmit disabled):
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, 0);	//RE
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, 0);	//DE
-		}
-		else if(rx_tx == RS485_RX_TX)
-		{
-			//Read & Write:
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, 0);	//RE
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, 1);	//DE
-		}
-		else
-		{
-			//Standby: no transmission, no reception
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, 1);	//RE
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, 0);	//DE
 		}
 	}
 }
@@ -524,7 +484,7 @@ void DMA1_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 
 void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 {
-	if(husart->Instance == USART1)		//RS-485 #1
+	if(husart->Instance == USART1)		//RS-485
 	{
 		//Peripheral clock enable:
 		__USART1_CLK_ENABLE();
@@ -542,45 +502,45 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	}
-	else if(husart->Instance == USART6)	//RS-485 #2
+	else if(husart->Instance == USART6)	//Execute
 	{
 		//Peripheral clock enable:
 		__USART6_CLK_ENABLE();
-		__GPIOC_CLK_ENABLE();
+		__GPIOG_CLK_ENABLE();
 
 		//GPIOs:
-		//PC6   ------> USART6_TX
-		//PC7   ------> USART6_RX
+		//PG14  ------> USART6_TX
+		//PG9   ------> USART6_RX
 
-		GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+		GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_14;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_PULLUP;	//Transceiver's R is Hi-Z when !RE=1
 		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 		GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
-		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 	}
 	else if(husart->Instance == USART3)	//Expansion port
 	{
 		//Peripheral clock enable:
 		__USART3_CLK_ENABLE();
-		__GPIOD_CLK_ENABLE();
+		__GPIOB_CLK_ENABLE();
 
 		//GPIOs:
-		//PD8   ------> USART3_TX
-		//PD9   ------> USART3_RX
+		//PB10  ------> USART3_TX
+		//PB11  ------> USART3_RX
 		//PB13  ------> USART3_CTS
 		//PB14  ------> USART3_RTS
-
-		GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_PULLUP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
-		HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 		GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_14;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
