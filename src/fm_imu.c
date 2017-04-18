@@ -36,6 +36,7 @@
 #include "fm_i2c.h"
 #include "fm_imu.h"
 #include "flexsea_global_structs.h"
+#include "flexsea_user_structs.h"
 #include "stm32f4xx_hal_i2c.h"
 
 //****************************************************************************
@@ -156,6 +157,15 @@ void IMUParseData(void)
 	imu.gyro.x = (int16_t)tmp[4];
 	imu.gyro.y = (int16_t)tmp[5];
 	imu.gyro.z = (int16_t)tmp[6];
+
+	//Copy to new structure: **ToDo unify
+	rigid1.mn.accel.x = imu.accel.x;
+	rigid1.mn.accel.y = imu.accel.y;
+	rigid1.mn.accel.z = imu.accel.z;
+
+	rigid1.mn.gyro.x = imu.gyro.x;
+	rigid1.mn.gyro.y = imu.gyro.y;
+	rigid1.mn.gyro.z = imu.gyro.z;
 }
 
 //===================
