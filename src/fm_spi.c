@@ -37,6 +37,7 @@
 #include <flexsea_comm.h>
 #include "flexsea_board.h"
 #include "flexsea_sys_def.h"
+#include "fm_timer.h"
 
 //****************************************************************************
 // Variable(s)
@@ -139,6 +140,9 @@ void init_spi6(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	static uint8_t dbg = 0;
+
+	//SPI:
 	static PacketWrapper* p = NULL; // TODO this start out as NULL, so how does the first buffer get allocated?
 	if(GPIO_Pin == GPIO_PIN_4)
 	{
@@ -164,6 +168,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 		// handle the new data however this device wants to
 		SPI_new_data_Callback();
+	}
+	else if(GPIO_Pin == GPIO_PIN_15)
+	{
+		timebases();
+
+		//SYNC line:
+		dbg ^= 1;
+		HAL_GPIO_WritePin(GPIOD, 1<<5, dbg);
 	}
 }
 

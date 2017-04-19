@@ -44,6 +44,7 @@
 #include "fm_spi.h"
 #include "fm_i2c.h"
 #include "fm_imu.h"
+#include "rigid.h"
 #include "usb_device.h"
 #include "user-mn.h"
 
@@ -63,7 +64,7 @@
 void init_peripherals(void)
 {
 	//Extra Power ON delay:
-	HAL_Delay(100);
+	//HAL_Delay(100);
 
 	//Hardware modules:
 	init_systick_timer();		//SysTick timer (1kHz)
@@ -78,6 +79,7 @@ void init_peripherals(void)
 	initHooks();
 	init_adc1();
 	init_spi4();				//Plan
+	initRigidIO();				//Interface with Rigid's other uC
 
 	#ifdef USE_UART3
 

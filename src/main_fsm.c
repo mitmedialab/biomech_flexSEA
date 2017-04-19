@@ -151,6 +151,9 @@ void mainFSM9(void)
 	rgbLedRefreshFade();
 	rgb_led_ui(0, 0, 0, new_cmd_led);    //ToDo add error codes
 	if(new_cmd_led) {new_cmd_led = 0;}
+
+	//Constant LED0 flashing while the code runs
+	LED0(rgbLedCenterPulse(12));
 }
 
 //10kHz time slot:

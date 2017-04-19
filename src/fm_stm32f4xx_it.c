@@ -63,9 +63,16 @@ void SPI4_IRQHandler(void)
 	HAL_SPI_IRQHandler(&spi4_handle);
 }
 
+//SPI:
 void EXTI4_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
+}
+
+//SYNC line:
+void EXTI15_10_IRQHandler(void)
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
 }
 
 //Should not be used, everything is done via DMA
@@ -164,7 +171,7 @@ void TIM7_IRQHandler(void)
 	HAL_TIM_IRQHandler(&htim7);
 
 	//FlexSEA timebase:
-	timebases();
+	//timebases();
 }
 
 void NMI_Handler(void)

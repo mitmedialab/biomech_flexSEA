@@ -50,6 +50,7 @@ void rgbLedSet(uint8_t r, uint8_t g, uint8_t b);
 void rgbLedRefresh(void);
 void rgbLedRefreshFade(void);
 uint8_t rgbLedGetFade(void);
+uint8_t rgbLedCenterPulse(uint8_t halfWidth);
 void rgbLedRefresh_testcode_blocking(void);
 
 //****************************************************************************
@@ -57,6 +58,7 @@ void rgbLedRefresh_testcode_blocking(void);
 //****************************************************************************
 
 #define FADE_PERIOD_MS				1000
-#define FADE_MIDPOINT				(FADE_PERIOD_MS/2)
+#define FADE_MIDPOINT				500
+#define FADE_MIDPOINT_UINT8			250
 
 #endif	//INC_RGBLED_H

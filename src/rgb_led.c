@@ -111,6 +111,15 @@ uint8_t rgbLedGetFade(void)
 	return rgbFade;
 }
 
+//Outputs 1 around the mid point
+uint8_t rgbLedCenterPulse(uint8_t halfWidth)
+{
+	if (rgbFade > (250-halfWidth))
+		return 1;
+	else
+		return 0;
+}
+
 //Call this function every ms. It will update the rgbFade variable.
 void rgbLedRefreshFade(void)
 {

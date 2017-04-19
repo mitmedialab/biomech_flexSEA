@@ -54,10 +54,6 @@
 void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 			&mainFSM4, &mainFSM5, &mainFSM6, &mainFSM7,	&mainFSM8, &mainFSM9};
 
-//Test ToDo Remove:
-//Send BT data:
-uint8_t testString[4] = "JFD\n";
-
 //****************************************************************************
 // Function(s)
 //****************************************************************************
@@ -125,20 +121,12 @@ int main(void)
 		if(tb_100ms_flag)
 		{
 			tb_100ms_flag = 0;
-
-			//Constant LED0 flashing while the code runs
-			toggle_led0 ^= 1;
-			LED0(toggle_led0);
 		}
 
 		//1000ms
 		if(tb_1000ms_flag)
 		{
 			tb_1000ms_flag = 0;
-
-			//Test ToDo Remove:
-			//Send BT data:
-			//puts_expUart(testString, 4);
 		}
 	}
 }
