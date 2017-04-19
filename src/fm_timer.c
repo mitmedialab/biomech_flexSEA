@@ -142,6 +142,7 @@ void init_timer_6(void)
 	HAL_TIM_Base_Start(&htim6);
 }
 
+/*
 //Timer 7: 10kHz timebase
 void init_timer_7(void)
 {
@@ -159,6 +160,7 @@ void init_timer_7(void)
 
 	HAL_TIM_Base_Start_IT(&htim7);
 }
+*/
 
 uint16_t readTimer6(void)
 {
