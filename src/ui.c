@@ -73,38 +73,6 @@ void init_leds(void)
 	HAL_GPIO_Init(GPIOF, &LED_InitStructure);
 }
 
-//SW1 pin
-void init_sw1()
-{
-	//SW1 on PE3
-
-	// Enable GPIO Peripheral clock
-	__GPIOE_CLK_ENABLE();
-
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	// Configure pin in output push/pull mode
-	GPIO_InitStructure.Pin = GPIO_PIN_3;
-	GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-	GPIO_InitStructure.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
-}
-
-uint8_t read_sw1(void)
-{
-	uint8_t state = 0;
-	GPIO_PinState bitstatus;
-	bitstatus = HAL_GPIO_ReadPin(GPIOE, 1 << 3);
-	state = bitstatus;
-	return state;
-}
-
-void init_switches(void)
-{
-	init_sw1();
-}
-
 void set_led_rgb(uint8_t r, uint8_t g, uint8_t b)
 {
 	//No fading, we use 1 or 0 for now.
@@ -252,18 +220,6 @@ void rgb_led_test_code_blocking(void)
 
 		//Waste some time:
 		for(delay = 0; delay < 75000000; delay++);
-	}
-}
-
-void user_button_test(void)
-{
-	if(read_sw1())
-	{
-		LED1(0);
-	}
-	else
-	{
-		LED1(1);
 	}
 }
 

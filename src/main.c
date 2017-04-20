@@ -37,8 +37,6 @@
 #include <master_slave_comm.h>
 #include <misc.h>
 #include <timer.h>
-#include <uarts.h>	//ToDo temporary
-#include <ui.h>
 #include "main.h"
 #include "main_fsm.h"
 #include "user-mn.h"
@@ -60,9 +58,6 @@ void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 
 int main(void)
 {
-	//Variables:
-	uint8_t toggle_led0 = 0;
-
 	//Prepare FlexSEA stack:
 	init_flexsea_payload_ptr();
 

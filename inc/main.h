@@ -42,45 +42,6 @@
 #include "stm32f4xx_hal.h"
 #include "cortexm/ExceptionHandlers.h"
 
-/*
-#include "stm32f4xx_hal_conf.h"
-#include "stm32f4xx_hal_cortex.h"
-#include "stm32f4xx_hal_uart.h"
-#include "stm32f4xx_hal_usart.h"
-#include "stm32f4xx_hal_gpio.h"
-#include "stm32f4xx_hal_adc.h"
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx_hal_spi.h"
-#include "stm32f4xx_hal_tim.h"
-
-#include "main_fsm.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
-#include "fm_timer.h"
-#include "fm_misc.h"
-#include "fm_ui.h"
-#include "rgb_led.h"
-#include "fm_uarts.h"
-#include "fm_adc.h"
-#include "fm_adv_analog.h"
-#include "fm_dio.h"
-#include "fm_spi.h"
-#include "fm_i2c.h"
-#include "fm_imu.h"
-#include "fm_pwr_out.h"
-#include "fm_batt.h"
-#include "flash_driver.h"
-#include "flash_logger.h"
-#include "comm_test.h"
-#include "flexsea_board.h"
-#include "../flexsea-user/inc/user-mn.h"
-#include "../flexsea-system/inc/flexsea_system.h"
-#include "../flexsea-comm/inc/flexsea.h"
-#include "../flexsea-system/test/flexsea-system_test-all.h"
-#include "../flexsea-comm/test/flexsea-comm_test-all.h"
-*/
-
-
 //****************************************************************************
 // Prototype(s):
 //****************************************************************************

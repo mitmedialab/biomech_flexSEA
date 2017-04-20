@@ -44,14 +44,10 @@
 //****************************************************************************
 
 void init_leds(void);
-void init_sw1();
-uint8_t read_sw1(void);
-void init_switches(void);
 void set_led_rgb(uint8_t r, uint8_t g, uint8_t b);
 void rgb_led_ui(uint8_t err_l0, uint8_t err_l1, uint8_t err_l2,
 		uint8_t new_comm);
 void rgb_led_test_code_blocking(void);
-void user_button_test(void);
 
 //****************************************************************************
 // Definition(s):

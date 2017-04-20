@@ -63,19 +63,13 @@
 //Initialize all the peripherals
 void init_peripherals(void)
 {
-	//Extra Power ON delay:
-	//HAL_Delay(100);
-
 	//Hardware modules:
 	init_systick_timer();		//SysTick timer (1kHz)
 	init_timer_6();				//For us delay function
-	//init_timer_7();			//10kHz timebase (now via Regulate's SYNC)
 	init_usart1(2000000);		//USART1 (RS-485 #1)
 	init_usart6(2000000);		//USART6 (RS-485 #2)
 	init_rs485_outputs();
 	init_leds();
-	init_switches();
-	init_dio();					//All inputs by default
 	initHooks();
 	init_adc1();
 	init_spi4();				//Plan
@@ -86,15 +80,6 @@ void init_peripherals(void)
 		init_usart3(230400);	//Expansion port
 
 	#endif
-
-	#ifdef USE_FLASH_MEM
-
-		init_spi5();			//SPI connected to FLASH
-		flashLogInit();			//Start the logger
-
-	#endif
-
-	//init_spi6();				//Expansion
 
 	#ifdef USE_I2C_1
 

@@ -103,9 +103,6 @@ void mainFSM5(void)
 //Case 6:
 void mainFSM6(void)
 {
-	//User switch:
-	manag1.sw1 = read_sw1();
-
 	//ADC:
 	startAdcConversion();
 }

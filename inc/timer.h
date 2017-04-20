@@ -61,7 +61,6 @@ extern void timer_sleep (timer_ticks_t ticks);
 
 void init_timer_6(void);
 uint16_t readTimer6(void);
-//void init_timer_7(void);
 void timebases(void);
 void delayUsBlocking(uint16_t us);
 void test_delayUsBlocking_blocking(void);

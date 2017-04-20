@@ -118,12 +118,9 @@ void timebases(void)
 		cnt_1000ms = 0;
 		tb_1000ms_flag = 1;
 	}
-
 }
 
-// ----------------------------------------------------------------------------
-
-//Timer 6: free running timer used by the µs delay functions
+//Timer 6: free running timer used by the us delay functions
 void init_timer_6(void)
 {
 	TIM_MasterConfigTypeDef sMasterConfig;
@@ -141,26 +138,6 @@ void init_timer_6(void)
 	//Start timer, no interrupts
 	HAL_TIM_Base_Start(&htim6);
 }
-
-/*
-//Timer 7: 10kHz timebase
-void init_timer_7(void)
-{
-	TIM_MasterConfigTypeDef sMasterConfig;
-
-	htim7.Instance = TIM7;
-	htim7.Init.Prescaler = 0;
-	htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim7.Init.Period = 8400;
-	HAL_TIM_Base_Init(&htim7);
-
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-	HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig);
-
-	HAL_TIM_Base_Start_IT(&htim7);
-}
-*/
 
 uint16_t readTimer6(void)
 {
@@ -187,43 +164,6 @@ void delayUsBlocking(uint16_t us)
 
 	//Waste time:
 	while(htim6.Instance->CNT < timerLimit);
-}
-
-//Blocking delay us test code:
-void test_delayUsBlocking_blocking(void)
-{
-	while(1)
-	{
-		//1us:
-		DEBUG_H0(1);
-		delayUsBlocking(1);
-		DEBUG_H0(0);
-		delayUsBlocking(1);
-
-		//2us
-		DEBUG_H0(1);
-		delayUsBlocking(2);
-		DEBUG_H0(0);
-		delayUsBlocking(2);
-
-		//5us:
-		DEBUG_H0(1);
-		delayUsBlocking(5);
-		DEBUG_H0(0);
-		delayUsBlocking(5);
-
-		//10us:
-		DEBUG_H0(1);
-		delayUsBlocking(10);
-		DEBUG_H0(0);
-		delayUsBlocking(10);
-
-		//100us:
-		DEBUG_H0(1);
-		delayUsBlocking(100);
-		DEBUG_H0(0);
-		delayUsBlocking(100);
-	}
 }
 
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
@@ -267,8 +207,46 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
 		/* Peripheral interrupt DeInit*/
 		HAL_NVIC_DisableIRQ(TIM7_IRQn);
-
 	}
-
 }
 
+//****************************************************************************
+// Test code:
+//****************************************************************************
+
+//Blocking delay us test code:
+void test_delayUsBlocking_blocking(void)
+{
+	while(1)
+	{
+		//1us:
+		DEBUG_H0(1);
+		delayUsBlocking(1);
+		DEBUG_H0(0);
+		delayUsBlocking(1);
+
+		//2us
+		DEBUG_H0(1);
+		delayUsBlocking(2);
+		DEBUG_H0(0);
+		delayUsBlocking(2);
+
+		//5us:
+		DEBUG_H0(1);
+		delayUsBlocking(5);
+		DEBUG_H0(0);
+		delayUsBlocking(5);
+
+		//10us:
+		DEBUG_H0(1);
+		delayUsBlocking(10);
+		DEBUG_H0(0);
+		delayUsBlocking(10);
+
+		//100us:
+		DEBUG_H0(1);
+		delayUsBlocking(100);
+		DEBUG_H0(0);
+		delayUsBlocking(100);
+	}
+}
