@@ -138,45 +138,33 @@ void init_spi6(void)
 	}
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void SPI_NSS_Callback(void)
 {
-	static uint8_t dbg = 0;
-
-	//SPI:
 	static PacketWrapper* p = NULL; // TODO this start out as NULL, so how does the first buffer get allocated?
-	if(GPIO_Pin == GPIO_PIN_4)
+
+	// At this point, the SPI transfer is complete, and packet->unpacked
+	// should contain COMM_STR_BUF_LEN bytes received from the master
+	/* TODO ******************/
+
+	// reset the SPI pointer and counter
+	spi4_handle.RxXferCount = COMM_STR_BUF_LEN;
+	spi4_handle.pRxBuffPtr = p->unpaked;
+	spi4_handle.pTxBuffPtr = aTxBuffer;    //Test
+
+	//Data for the next cycle:
+	//comm_str was already generated, now we place it in the buffer:
+	memcpy(aTxBuffer, comm_str_spi, COMM_STR_BUF_LEN);
+
+	if(HAL_SPI_TransmitReceive_IT(&spi4_handle, (uint8_t *) aTxBuffer,
+			(uint8_t *) aRxBuffer, COMM_STR_BUF_LEN) != HAL_OK)
 	{
-		// At this point, the SPI transfer is complete, and packet->unpacked
-		// should contain COMM_STR_BUF_LEN bytes received from the master
-		/* TODO ******************/
-
-		// reset the SPI pointer and counter
-		spi4_handle.RxXferCount = COMM_STR_BUF_LEN;
-		spi4_handle.pRxBuffPtr = p->unpaked;
-		spi4_handle.pTxBuffPtr = aTxBuffer;    //Test
-
-		//Data for the next cycle:
-		//comm_str was already generated, now we place it in the buffer:
-		memcpy(aTxBuffer, comm_str_spi, COMM_STR_BUF_LEN);
-
-		if(HAL_SPI_TransmitReceive_IT(&spi4_handle, (uint8_t *) aTxBuffer,
-				(uint8_t *) aRxBuffer, COMM_STR_BUF_LEN) != HAL_OK)
-		{
-			// Transfer error in transmission process
-			flexsea_error(SE_SEND_SERIAL_MASTER);
-		}
-
-		// handle the new data however this device wants to
-		SPI_new_data_Callback();
+		// Transfer error in transmission process
+		flexsea_error(SE_SEND_SERIAL_MASTER);
 	}
-	else if(GPIO_Pin == GPIO_PIN_15)
-	{
-		timebases();
 
-		//SYNC line:
-		dbg ^= 1;
-		HAL_GPIO_WritePin(GPIOD, 1<<5, dbg);
-	}
+	// handle the new data however this device wants to
+	SPI_new_data_Callback();
+
 }
 
 void SPI_new_data_Callback(void)

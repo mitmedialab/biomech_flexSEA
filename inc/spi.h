@@ -57,6 +57,7 @@ extern uint8_t aRxBuffer[COMM_STR_BUF_LEN];	//SPI RX buffer
 void init_spi4(void);
 void init_spi5(void);
 void init_spi6(void);
+void SPI_NSS_Callback(void);
 void SPI_new_data_Callback(void);
 
 //****************************************************************************

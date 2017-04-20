@@ -67,3 +67,18 @@ void initHooks(void)
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
 }
+
+//Pin interrupt on change callback:
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == GPIO_PIN_4)
+	{
+		//SPI NSS pin:
+		SPI_NSS_Callback();
+	}
+	else if(GPIO_Pin == GPIO_PIN_15)
+	{
+		//SYNC:
+		timebases();
+	}
+}
