@@ -36,12 +36,49 @@
 //****************************************************************************
 
 void initRigidIO(void);
-
+void readExecute(void);
 
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
 
+#define EX_I2C_ADDR					0x66	//7-bits: 0x33
+#define EX_I2C_TIMEOUT				10
+
+//EZI2C Buffer (Execute):
+#define EX_EZI2C_WBUF_SIZE			8
+#define EX_EZI2C_RBUF_SIZE			20
+#define EX_EZI2C_BUF_SIZE			(EX_EZI2C_WBUF_SIZE + EX_EZI2C_RBUF_SIZE)
+
+//EZI2C Shared memory locations (Execute):
+#define EX_MEM_W_CONTROL1			0
+#define EX_MEM_W_CONTROL2			1
+//#define UNUSED					2
+//#define UNUSED					3
+//#define UNUSED					4
+//#define UNUSED					5
+//#define UNUSED					6
+//#define UNUSED					7
+#define EX_MEM_R_MOT_ANGLE3			8
+#define EX_MEM_R_MOT_ANGLE2			9
+#define EX_MEM_R_MOT_ANGLE1			10
+#define EX_MEM_R_MOT_ANGLE0			11
+#define EX_MEM_R_MOT_VEL3			12
+#define EX_MEM_R_MOT_VEL2			13
+#define EX_MEM_R_MOT_VEL1			14
+#define EX_MEM_R_MOT_VEL0			15
+#define EX_MEM_R_STRAINH			16
+#define EX_MEM_R_STRAINL			17
+#define EX_MEM_R_CURRENT3			18
+#define EX_MEM_R_CURRENT2			19
+#define EX_MEM_R_CURRENT1			20
+#define EX_MEM_R_CURRENT0			21
+#define EX_MEM_R_PWMH				22
+#define EX_MEM_R_PWML				23
+#define EX_MEM_R_STATUSH			24
+#define EX_MEM_R_STATUSL			25
+//#define UNUSED					26
+//#define UNUSED					27
 
 #endif // INC_RIGID_H
 

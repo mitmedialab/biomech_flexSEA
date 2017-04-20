@@ -21,18 +21,23 @@
 
 #include "main.h"
 #include "rigid.h"
-
+#include "i2c.h"
+#include "stm32f4xx_hal_i2c.h"
 
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
 
+volatile uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
 
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
 
-//...
+static HAL_StatusTypeDef i2cWriteEx(uint8_t internal_reg_addr, uint8_t* pData,
+		uint16_t Size);
+static HAL_StatusTypeDef i2cReadEx(uint8_t internal_reg_addr, uint8_t *pData,
+		uint16_t Size);
 
 //****************************************************************************
 // Function(s)
@@ -62,4 +67,77 @@ void initRigidIO(void)
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
 	GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+}
+
+void readExecute(void)
+{
+	i2cReadEx(EX_MEM_R_MOT_ANGLE3, i2c3_tmp_buf, 18);
+}
+
+//****************************************************************************
+// Private Function(s)
+//****************************************************************************
+
+//***ToDo: this is copied from fm_batt. Can be much better! ****
+
+//Write data to the shared memory
+// uint8_t internal_reg_addr: internal register address of the IMU
+// uint8_t* pData: pointer to the data we want to send to that address
+// uint16_t Size: amount of bytes of data pointed to by pData
+
+static HAL_StatusTypeDef i2cWriteEx(uint8_t internal_reg_addr, uint8_t* pData,
+		uint16_t Size)
+{
+	uint8_t i = 0;
+	HAL_StatusTypeDef retVal;
+
+	i2c3_tmp_buf[0] = internal_reg_addr;
+	for(i = 1; i < Size + 1; i++)
+	{
+		i2c3_tmp_buf[i] = pData[i-1];
+	}
+
+	//Try to write it up to 5 times
+	for(i = 0; i < 5; i++)
+	{
+		retVal = HAL_I2C_Mem_Write(&hi2c3, EX_I2C_ADDR, (uint16_t) internal_reg_addr,
+					I2C_MEMADD_SIZE_8BIT, pData, Size, EX_I2C_TIMEOUT);
+
+		if(retVal == HAL_OK)
+		{
+			break;
+		}
+
+		HAL_Delay(10);
+	}
+
+	return retVal;
+}
+
+//Read data from the shared memory
+// uint8_t internal_reg_addr: internal register address of the IMU
+// uint8_t* pData: pointer to where we want to save the data from the IMU
+// uint16_t Size: amount of bytes we want to read
+static HAL_StatusTypeDef i2cReadEx(uint8_t internal_reg_addr, uint8_t *pData,
+		uint16_t Size)
+{
+	uint8_t i = 0;
+	HAL_StatusTypeDef retVal;
+
+	//>>> Copy of Execute's code - todo improve
+	//Currently having trouble detecting the flags to know when data is ready.
+	//For now I'll transfer the previous buffer.
+	for(i = 0; i < Size; i++)
+	{
+		pData[i] = i2c_3_r_buf[i];
+	}
+
+	//Store data:
+	//assign_i2c2_data(&i2c_2_r_buf);
+	//<<<<
+
+	retVal = HAL_I2C_Mem_Read(&hi2c3, EX_I2C_ADDR, (uint16_t) internal_reg_addr,
+	I2C_MEMADD_SIZE_8BIT, i2c_2_r_buf, Size, EX_I2C_TIMEOUT);
+
+	return retVal;
 }

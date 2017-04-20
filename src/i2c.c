@@ -36,16 +36,17 @@
 #include <imu.h>
 #include "main.h"
 #include "user-mn.h"
+#include "rigid.h"
 
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
 
-I2C_HandleTypeDef hi2c1, hi2c2;
+I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
 DMA_HandleTypeDef hdma_i2c1_tx;
 DMA_HandleTypeDef hdma_i2c1_rx;
 
-uint8_t i2c_2_r_buf[24];
+uint8_t i2c_2_r_buf[24], i2c_3_r_buf[EX_EZI2C_BUF_SIZE];
 int8_t i2c1FsmState = I2C1_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
 
@@ -198,6 +199,30 @@ void init_i2c2(void)
 void disable_i2c2(void)
 {
 	HAL_I2C_DeInit(&hi2c2);
+}
+
+// Initialize I2C3. Connected to Execute & Regulate
+void init_i2c3(void)
+{
+	//I2C_HandleTypeDef *hi2c3 contains our handle information
+	//set config for the initial state of the i2c.
+	hi2c3.Instance = I2C3;
+	hi2c3.Init.ClockSpeed = I2C3_CLOCK_RATE;  				//clock frequency
+	hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2; 				//for fast mode (doesn't matter now)
+	hi2c3.Init.OwnAddress1 = 0x0; 							//device address of the STM32 (doesn't matter)
+	hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;	//using 7 bit addresses
+	hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;  //disable dual address
+	hi2c3.Init.OwnAddress2 = 0x0;							//second device addr (doesn't matter)
+	hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;  //don't use 0x0 addr
+	hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED; 		//allow slave to stretch SCL
+	hi2c3.State = HAL_I2C_STATE_RESET;
+	HAL_I2C_Init(&hi2c3);
+}
+
+// Disable I2C and free the I2C handle.
+void disable_i2c3(void)
+{
+	HAL_I2C_DeInit(&hi2c3);
 }
 
 //Detects the end of a Master Receive:

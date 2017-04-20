@@ -97,13 +97,13 @@ void init_peripherals(void)
 
 		init_i2c2();
 
-		#ifdef USE_BATTBOARD
-
-			init_battery();
-
-		#endif	//USE_IMU
-
 	#endif	//USE_I2C_2
+
+	#ifdef USE_I2C_3
+
+		init_i2c3();
+
+	#endif	//USE_I2C_3
 
 	//USB
 	#ifdef USE_USB

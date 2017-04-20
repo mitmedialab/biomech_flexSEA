@@ -78,6 +78,8 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	i2c2_fsm();
+
+	readExecute();
 }
 
 //Case 3:
