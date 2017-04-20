@@ -33,9 +33,9 @@
 //****************************************************************************
 #include "flexsea_buffers.h"
 #include "main.h"
-#include "fm_master_slave_comm.h"
 #include <flexsea_payload.h>
 #include <flexsea_board.h>
+#include <master_slave_comm.h>
 #include <stdbool.h>
 
 //****************************************************************************

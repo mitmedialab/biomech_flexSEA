@@ -34,13 +34,13 @@
 // Include(s)
 //****************************************************************************
 
+#include <master_slave_comm.h>
+#include <misc.h>
+#include <timer.h>
+#include <uarts.h>	//ToDo temporary
+#include <ui.h>
 #include "main.h"
 #include "main_fsm.h"
-#include "fm_timer.h"
-#include "fm_master_slave_comm.h"
-#include "fm_ui.h"
-#include "fm_misc.h"
-#include "fm_uarts.h"	//ToDo temporary
 #include "user-mn.h"
 #include "flexsea_board.h"
 #include "flexsea_system.h"

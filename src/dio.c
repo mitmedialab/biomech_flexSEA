@@ -42,10 +42,10 @@
 //****************************************************************************
 
 #include <dio.h>
+#include <spi.h>
 #include "main.h"
 #include "flexsea.h"
 #include "flexsea_sys_def.h"
-#include "fm_spi.h"
 
 //****************************************************************************
 // Variable(s)
