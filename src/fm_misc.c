@@ -33,17 +33,17 @@
 // Include(s)
 //****************************************************************************
 
+#include <adc.h>
+#include <dio.h>
 #include "main.h"
 #include "fm_misc.h"
 #include <fm_master_slave_comm.h>
+#include <i2c.h>
+#include <imu.h>
 #include "fm_ui.h"
-#include "fm_dio.h"
 #include "fm_timer.h"
-#include "fm_adc.h"
 #include "fm_uarts.h"
 #include "fm_spi.h"
-#include "fm_i2c.h"
-#include "fm_imu.h"
 #include "rigid.h"
 #include "usb_device.h"
 #include "user-mn.h"
@@ -83,7 +83,7 @@ void init_peripherals(void)
 
 	#ifdef USE_UART3
 
-		init_usart3(115200);	//Expansion port
+		init_usart3(230400);	//Expansion port
 
 	#endif
 

@@ -13,10 +13,10 @@
 // Include(s)
 //****************************************************************************
 
+#include <adc.h>
+#include <i2c.h>
 #include "main.h"
 #include "fm_spi.h"
-#include "fm_i2c.h"
-#include "fm_adc.h"
 #include "fm_stm32f4xx_hal_spi.h"
 #include "fm_stm32f4xx_it.h"
 #include "fm_timer.h"

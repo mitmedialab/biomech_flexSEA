@@ -32,9 +32,9 @@
 // Include(s)
 //****************************************************************************
 
+#include <i2c.h>
+#include <imu.h>
 #include "main.h"
-#include "fm_i2c.h"
-#include "fm_imu.h"
 #include "flexsea_global_structs.h"
 #include "flexsea_user_structs.h"
 #include "stm32f4xx_hal_i2c.h"
