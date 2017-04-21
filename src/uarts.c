@@ -51,8 +51,8 @@ USART_HandleTypeDef husart3;		//Expansion port
 GPIO_InitTypeDef GPIO_InitStruct;
 DMA_HandleTypeDef hdma2_str2_ch4;	//DMA for RS-485 #1 RX
 DMA_HandleTypeDef hdma2_str7_ch4;	//DMA for RS-485 #1 TX
-DMA_HandleTypeDef hdma2_str1_ch5;	//DMA for RS-485 #2 RX
-DMA_HandleTypeDef hdma2_str6_ch5;	//DMA for RS-485 #2 TX
+DMA_HandleTypeDef hdma2_str1_ch5;	//DMA for UART-Execute RX
+DMA_HandleTypeDef hdma2_str6_ch5;	//DMA for UART-Execute TX
 DMA_HandleTypeDef hdma1_str1_ch4;	//DMA for USART3 RX
 DMA_HandleTypeDef hdma1_str3_ch4;	//DMA for USART3 TX
 
@@ -127,7 +127,7 @@ void init_usart1(uint32_t baudrate)
 	init_dma2_stream7_ch4();	//TX
 }
 
-//USART6 init function: RS-485 #2
+//USART6 init function: UART, Execute
 //TX and RX are done via DMA
 void init_usart6(uint32_t baudrate)
 {
@@ -320,15 +320,12 @@ uint8_t reception_rs485_1_blocking(void)
 	return 0;
 }
 
-//Sends a string via RS-485 #2 (USART6)
-void puts_rs485_2(uint8_t *str, uint16_t length)
+//Sends a string via UART (USART6)
+void puts_uart_ex(uint8_t *str, uint16_t length)
 {
 	unsigned int i = 0;
 	uint8_t *uart6_dma_buf_ptr;
 	uart6_dma_buf_ptr = (uint8_t*) &uart6_dma_tx_buf;
-
-	//Transmit enable
-	rs485_set_mode(PORT_RS485_2, RS485_TX);
 
 	//Copy str to tx buffer:
 	memcpy(uart6_dma_tx_buf, str, length);
@@ -342,7 +339,7 @@ void puts_rs485_2(uint8_t *str, uint16_t length)
 
 //Prepares the board for a Reply (reception). Blocking.
 //ToDo: add timeout
-uint8_t reception_rs485_2_blocking(void)
+uint8_t reception_uart_ex_blocking(void)
 {
 	int delay = 0;
 
@@ -356,7 +353,6 @@ uint8_t reception_rs485_2_blocking(void)
 	for(delay = 0; delay < 600; delay++);		//Short delay
 
 	//Receive enable
-	rs485_set_mode(PORT_RS485_2, RS485_RX);
 	tmp = USART6->DR;	//Read buffer to clear
 
 	//Start the DMA peripheral
@@ -419,7 +415,6 @@ void HAL_USART_TxCpltCallback(USART_HandleTypeDef *husart)
 	//Ready to start receiving?
 	if(husart->Instance == USART1)
 	{
-		//DEBUG_OUT_DIO4(0);	//ToDo remove, debug only
 		transceiver = PORT_RS485_1;
 	}
 	else if(husart->Instance == USART6)
@@ -443,9 +438,6 @@ void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 {
 	if(hdma->Instance == DMA2_Stream1)
 	{
-		//Clear the UART receiver. Might not be needed, but harmless
-		//empty_dr = USART6->DR;
-
 		//A false interrupt is generated when we configure the DMA.
 		//Return when it happens.
 		if(dmaRx2ConfigFlag == 1)
@@ -455,7 +447,7 @@ void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 	}
 
 	//Deal with FlexSEA buffers here:
-	update_rx_buf_array_485_2(uart6_dma_rx_buf, rs485_2_dma_xfer_len);
+	update_rx_buf_array_uart(uart6_dma_rx_buf, rs485_2_dma_xfer_len);
 	//Empty DMA buffer once it's copied:
 	memset(uart6_dma_rx_buf, 0, rs485_2_dma_xfer_len);
 	commPeriph[PORT_RS485_2].rx.bytesReadyFlag++;

@@ -93,7 +93,7 @@ void flexsea_send_serial_slave(PacketWrapper* p)
 	}
 	else if(port == PORT_RS485_2)
 	{
-		puts_rs485_2(str, length);
+		puts_uart_ex(str, length);
 	}
 	else
 	{
@@ -170,7 +170,7 @@ void flexsea_receive_from_slave(void)
 	transitionToReception(&commPeriph[PORT_RS485_1], \
 			reception_rs485_1_blocking);
 	transitionToReception(&commPeriph[PORT_RS485_2], \
-				reception_rs485_2_blocking);
+				reception_uart_ex_blocking);
 
 	//Did we get new bytes?
 	//=====================

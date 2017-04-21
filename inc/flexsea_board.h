@@ -78,8 +78,8 @@ uint8_t getSlaveCnt(uint8_t sub);
 #define COMM_MASTERS				3
 
 //Enabled the required FlexSEA Buffers for this board:
-#define ENABLE_FLEXSEA_BUF_1		//RS-485 #1
-#define ENABLE_FLEXSEA_BUF_2		//RS-485 #2
+#define ENABLE_FLEXSEA_BUF_1		//RS-485
+#define ENABLE_FLEXSEA_BUF_2		//Execute via UART
 #define ENABLE_FLEXSEA_BUF_3		//SPI
 #define ENABLE_FLEXSEA_BUF_4		//USB
 #define ENABLE_FLEXSEA_BUF_5		//Wireless
@@ -92,11 +92,11 @@ uint8_t getSlaveCnt(uint8_t sub);
 #define update_rx_buf_byte_485_1		update_rx_buf_byte_1
 #define update_rx_buf_array_485_1		update_rx_buf_array_1
 
-#define comm_str_485_2					comm_str_2
-#define unpack_payload_485_2			unpack_payload_2
-#define rx_command_485_2				rx_command_2
-#define update_rx_buf_byte_485_2		update_rx_buf_byte_2
-#define update_rx_buf_array_485_2		update_rx_buf_array_2
+#define comm_str_uart					comm_str_2
+#define unpack_payload_uart				unpack_payload_2
+#define rx_command_uart					rx_command_2
+#define update_rx_buf_byte_uart			update_rx_buf_byte_2
+#define update_rx_buf_array_uart		update_rx_buf_array_2
 
 #define comm_str_spi					comm_str_3
 #define unpack_payload_spi				unpack_payload_3

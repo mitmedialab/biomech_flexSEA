@@ -65,10 +65,10 @@ uint8_t reception_rs485_1_blocking(void);
 void DMA2_Str2_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma);
 void HAL_USART_TxCpltCallback(USART_HandleTypeDef *husart);
 
-//RS-485 #2:
+//UART - Execute:
 void init_usart6(uint32_t baudrate);
-void puts_rs485_2(uint8_t *str, uint16_t length);
-uint8_t reception_rs485_2_blocking(void);
+void puts_uart_ex(uint8_t *str, uint16_t length);
+uint8_t reception_uart_ex_blocking(void);
 void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma);
 
 //Other USART:
