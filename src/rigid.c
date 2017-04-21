@@ -22,13 +22,15 @@
 #include "main.h"
 #include "rigid.h"
 #include "i2c.h"
+#include "flexsea.h"
+#include "flexsea_user_structs.h"
 #include "stm32f4xx_hal_i2c.h"
 
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
 
-volatile uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
+uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -71,7 +73,15 @@ void initRigidIO(void)
 
 void readExecute(void)
 {
-	i2cReadEx(EX_MEM_R_MOT_ANGLE3, i2c3_tmp_buf, 18);
+	uint16_t index = EX_MEM_R_MOT_ANGLE3;
+	i2cReadEx(EX_MEM_R_MOT_ANGLE3, &i2c3_tmp_buf[EX_MEM_R_MOT_ANGLE3], 18);
+
+	*(rigid1.ex.enc_ang) = (int32_t) REBUILD_UINT32(i2c3_tmp_buf, &index);
+	*(rigid1.ex.enc_ang_vel) = (int32_t) REBUILD_UINT32(i2c3_tmp_buf, &index);
+	rigid1.ex.strain = REBUILD_UINT16(i2c3_tmp_buf, &index);
+	rigid1.ex.current = (int32_t) REBUILD_UINT32(i2c3_tmp_buf, &index);
+	rigid1.ex.ctrl.pwm = (int16_t)REBUILD_UINT16(i2c3_tmp_buf, &index);
+	rigid1.ex.status = REBUILD_UINT16(i2c3_tmp_buf, &index);
 }
 
 //****************************************************************************
@@ -137,7 +147,7 @@ static HAL_StatusTypeDef i2cReadEx(uint8_t internal_reg_addr, uint8_t *pData,
 	//<<<<
 
 	retVal = HAL_I2C_Mem_Read(&hi2c3, EX_I2C_ADDR, (uint16_t) internal_reg_addr,
-	I2C_MEMADD_SIZE_8BIT, i2c_2_r_buf, Size, EX_I2C_TIMEOUT);
+	I2C_MEMADD_SIZE_8BIT, i2c_3_r_buf, Size, EX_I2C_TIMEOUT);
 
 	return retVal;
 }

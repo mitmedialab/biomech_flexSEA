@@ -339,6 +339,41 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 		__I2C2_CLK_ENABLE();
 	}
+	else if(hi2c->Instance == I2C3)
+	{
+		/*Apparently I2C2 is buggy. AFter experimenting and reading on ST
+		 * forums I used the workaround of 1) not enabling the I2C clock before
+		 * the GPIO and 2) enabling SCL first, then SDA. It solved the "I2C is
+		 * always busy" error. */
+
+		GPIO_InitTypeDef GPIO_InitStruct;
+
+		//Enable peripheral and GPIO clockS
+		__GPIOA_CLK_ENABLE();
+		__GPIOC_CLK_ENABLE();
+
+		//SCL -> PA8
+		GPIO_InitStruct.Pin = GPIO_PIN_8;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF4_I2C3;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+		HAL_Delay(1);
+
+		//SDA -> PC9
+		GPIO_InitStruct.Pin = GPIO_PIN_9;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF4_I2C3;
+		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+		HAL_Delay(1);
+
+		__I2C3_CLK_ENABLE();
+	}
 }
 
 //I2C2 has optional pull-ups, controlled by PC2
