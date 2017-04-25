@@ -44,7 +44,7 @@
 #include "flexsea_board.h"
 #include "rgb_led.h"
 #include "user-mn.h"
-
+#include "cmd-Rigid.h"
 #include "flexsea_system.h"
 
 //****************************************************************************
@@ -89,7 +89,8 @@ void mainFSM2(void)
 	div %= 10;
 	if(!div)
 	{
-		tx_cmd_data_read_all_r(TX_N_DEFAULT);
+		//tx_cmd_data_read_all_r(TX_N_DEFAULT);
+		tx_cmd_rigid_r(TX_N_DEFAULT, 0);
 		packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, info, SEND_TO_SLAVE);
 	}
 }
