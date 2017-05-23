@@ -36,9 +36,6 @@
 //****************************************************************************
 
 #include "main.h"
-//#include <stdlib.h>
-//#include "stm32f4xx.h"
-//#include "stm32f4xx_hal.h"
 #include "flexsea_global_structs.h"
 
 //****************************************************************************
@@ -74,6 +71,10 @@ typedef enum {
 #define IMU_GYRO_CONFIG 		27
 #define IMU_ACCEL_CONFIG		28
 #define IMU_ACCEL_CONFIG2		29
+#define IMU_I2C_MASTER_CONTROL	36
+#define IMU_I2C_SLV0_ADDR		37
+#define IMU_I2C_SLV0_REG		38
+#define IMU_I2C_SLV0_CTRL		39
 #define IMU_FIFO_EN				0x23
 #define IMU_INT_PIN_CFG			55
 #define IMU_INT_ENABLE			56
@@ -95,6 +96,7 @@ typedef enum {
 #define IMU_GYRO_YOUT_L			70
 #define IMU_GYRO_ZOUT_H			71
 #define IMU_GYRO_ZOUT_L			72
+#define IMU_I2C_SLV0_DO			99
 #define IMU_FIFO_COUNT_L		115
 #define IMU_FIFO_R_W			116
 
@@ -135,6 +137,7 @@ typedef enum {
 #define AK8963_REG_ZOUT_H		0x08
 #define AK8963_REG_ST2			0x09  	//Data overflow bit 3 and data read error status bit 2
 #define AK8963_REG_CNTL1		0x0A  	//Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
+#define AK8963_REG_CNTL2		0x0B
 #define AK8963_REG_ASTC			0x0C  	//Self test control
 #define AK8963_REG_I2CDIS		0x0F  	//I2C disable
 #define AK8963_REG_ASAX			0x10  	//Fuse ROM x-axis sensitivity adjustment value
@@ -143,6 +146,8 @@ typedef enum {
 
 //Settings:
 #define AK8963_SET_CNTL1		0b00010110;	//16 bits readings, Cont. mode 2
+#define MPU9250_I2C_SLV_CTRL_EN			(1 << 7)
+#define MPU9250_I2C_SLV_CTRL_LENG_MASK   0x07
 
 //****************************************************************************
 // Public Function Prototype(s):
@@ -164,6 +169,7 @@ void imu_test_code_blocking(void);
 void IMUPrepareRead(void);
 void IMUReadAll(void);
 void IMUParseData(void);
+void imu_write_ak8963(uint8_t reg, uint8_t *val);
 
 /*
 void init_ak8963(void);

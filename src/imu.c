@@ -61,6 +61,8 @@ static HAL_StatusTypeDef imu_write(uint8_t internal_reg_addr, uint8_t* pData,
 //Initialize the IMU w/ default values in config registers
 void init_imu(void)
 {
+	uint8_t tmp = 0;
+
 	//Reset the IMU.
 	reset_imu();
 	HAL_Delay(25);
@@ -70,24 +72,44 @@ void init_imu(void)
 							D_IMU_ACCEL_CONFIG2 };
 	imu_write(IMU_CONFIG, config, 4);
 
-	/*
-	//Bypass I2C:
-	HAL_Delay(10);
-	config[0] = D_BYPASS_ENABLED;
-	imu_write(IMU_INT_PIN_CFG, config, 1);
-
-	//Disable Master:
-	HAL_Delay(10);
-	config[0] = 0;
+	//Enable Master:
+	config[0] = 0b00100000;
 	imu_write(IMU_USER_CTRL, config, 1);
 
-	//Bypass I2C:
-	HAL_Delay(10);
-	config[0] = D_BYPASS_ENABLED;
-	imu_write(IMU_INT_PIN_CFG, config, 1);
+	//Set Master 400kHz:
+	config[0] = 13;
+	imu_write(IMU_I2C_MASTER_CONTROL, config, 1);
+
+	//Slave 0 address (7bits):
+	config[0] = AK8963_ADDRESS;
+	imu_write(IMU_I2C_SLV0_ADDR, config, 1);
 
 	HAL_Delay(10);
-	*/
+
+	//Reset magneto:
+	tmp = 1;
+	imu_write_ak8963(AK8963_REG_CNTL2, &tmp);
+
+	//Put compass in continuous read mode:
+	tmp = 0b00010010;
+	imu_write_ak8963(AK8963_REG_CNTL1, &tmp);
+}
+
+void imu_write_ak8963(uint8_t reg, uint8_t *val)
+{
+	uint8_t config[4] = {0,0,0,0};
+
+	config[0] = AK8963_ADDRESS;
+	imu_write(IMU_I2C_SLV0_ADDR, config, 1);
+
+	config[0] = reg;
+	imu_write(IMU_I2C_SLV0_REG, config, 1);
+
+	config[0] = (*val);	//Continuous measurement 1, 16 bits
+	imu_write(IMU_I2C_SLV0_DO, config, 1);
+
+	config[0] = MPU9250_I2C_SLV_CTRL_EN | (1 & MPU9250_I2C_SLV_CTRL_LENG_MASK);	//Continuous measurement 1, 16 bits
+	imu_write(IMU_I2C_SLV0_CTRL, config, 1);
 }
 
 // Reset the IMU to default settings
@@ -102,26 +124,9 @@ void reset_imu(void)
 	//imu_write(IMU_SIGNAL_PATH_RESET, &config, 1);
 	HAL_Delay(200);
 
-	/*
-	config = 0x01;
-	imu_write(IMU_PWR_MGMT_1, &config, 1);
-	HAL_Delay(25);
-	*/
-
 	config = 0x00;
 	imu_write(IMU_PWR_MGMT_2, &config, 1);
 	HAL_Delay(10);
-
-
-	/*
-	config = 1;
-	imu_write(IMU_USER_CTRL, &config, 1);
-	HAL_Delay(10);
-
-	config = 0;
-	imu_write(IMU_SIGNAL_PATH_RESET, &config, 1);
-	HAL_Delay(10);
-	*/
 }
 
 //Sends the register address. Needed before a Read
@@ -135,16 +140,17 @@ void IMUPrepareRead(void)
 //Read all of the relevant IMU data (accel, gyro, temp)
 void IMUReadAll(void)
 {
-	HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 14);
+	//HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 14);
+	HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 20);
 }
 
 void IMUParseData(void)
 {
-	uint16_t tmp[7] = {0,0,0,0,0,0,0};
+	uint16_t tmp[10] = {0,0,0,0,0,0,0,0,0,0};
 	uint8_t i = 0, index = 0;
 
-	//Rebuilt 7x 16bits words:
-	for(i = 0; i < 7; i++)
+	//Rebuilt 10x 16bits words:
+	for(i = 0; i < 10; i++)
 	{
 		tmp[i] = ((uint16_t)i2c1_dma_rx_buf[index++] << 8) | ((uint16_t) i2c1_dma_rx_buf[index++]);
 	}
@@ -157,6 +163,9 @@ void IMUParseData(void)
 	imu.gyro.x = (int16_t)tmp[4];
 	imu.gyro.y = (int16_t)tmp[5];
 	imu.gyro.z = (int16_t)tmp[6];
+	imu.magneto.x = (int16_t)tmp[7];
+	imu.magneto.y = (int16_t)tmp[8];
+	imu.magneto.z = (int16_t)tmp[9];
 
 	//Copy to new structure: **ToDo unify
 	rigid1.mn.accel.x = imu.accel.x;
@@ -166,6 +175,10 @@ void IMUParseData(void)
 	rigid1.mn.gyro.x = imu.gyro.x;
 	rigid1.mn.gyro.y = imu.gyro.y;
 	rigid1.mn.gyro.z = imu.gyro.z;
+
+	rigid1.mn.magneto.x = imu.magneto.x;
+	rigid1.mn.magneto.y = imu.magneto.y;
+	rigid1.mn.magneto.z = imu.magneto.z;
 }
 
 //===================
