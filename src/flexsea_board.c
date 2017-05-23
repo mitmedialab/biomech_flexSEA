@@ -63,6 +63,8 @@ uint8_t board_sub1_id[SLAVE_BUS_1_CNT] = {FLEXSEA_EXECUTE_1, FLEXSEA_EXECUTE_3};
 //=========================
 uint8_t board_sub2_id[SLAVE_BUS_2_CNT] = {FLEXSEA_EXECUTE_2, FLEXSEA_EXECUTE_4};
 
+uint8_t board_sub3_id[SLAVE_BUS_3_CNT] = {FLEXSEA_MANAGE_1};
+
 //(make sure to update SLAVE_BUS_x_CNT in flexsea_board.h!)
 
 //===============
@@ -122,6 +124,7 @@ void flexsea_send_serial_master(PacketWrapper* p)
 
 	if(port == PORT_SPI)
 	{
+		commPeriph[PORT_SPI].tx.packetReady = 1;
 		//This will be sent during the next SPI transaction
 		memcpy(comm_str_spi, str, length);
 	}
@@ -144,8 +147,11 @@ void flexsea_receive_from_master(void)
 	//USB:
 	commPeriph[PORT_USB].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_USB], &packet[PORT_USB][INBOUND]);
 
+	//SPI:
+	//commPeriph[PORT_SPI].rx.unpackedPacketsAvailable = tryUnpacking(&commPeriph[PORT_SPI], &packet[PORT_SPI][INBOUND]);	//Legacy
+	commPeriph[PORT_SPI].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_SPI], &packet[PORT_SPI][INBOUND]);		//Circular buffer
+
 	//Incomplete, ToDo (flag won't be raised)
-	tryUnpacking(&commPeriph[PORT_SPI], &packet[PORT_SPI][INBOUND]);
 	tryUnpacking(&commPeriph[PORT_WIRELESS], &packet[PORT_WIRELESS][INBOUND]);
 }
 
@@ -154,7 +160,7 @@ void flexsea_start_receiving_from_master(void)
 	// start receive over SPI
 	if (HAL_SPI_GetState(&spi4_handle) == HAL_SPI_STATE_READY)
 	{
-		if(HAL_SPI_TransmitReceive_IT(&spi4_handle, (uint8_t *)aTxBuffer, (uint8_t *)aRxBuffer, COMM_STR_BUF_LEN) != HAL_OK)
+		if(HAL_SPI_TransmitReceive_IT(&spi4_handle, (uint8_t *)aTxBuffer4, (uint8_t *)aRxBuffer4, COMM_STR_BUF_LEN) != HAL_OK)
 		{
 			// Transfer error in transmission process
 			flexsea_error(SE_RECEIVE_FROM_MASTER);
@@ -174,8 +180,13 @@ void flexsea_receive_from_slave(void)
 
 	//Did we get new bytes?
 	//=====================
-	tryUnpacking(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);
-	tryUnpacking(&commPeriph[PORT_RS485_2], &packet[PORT_RS485_2][INBOUND]);
+	//tryUnpacking(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);
+	//tryUnpacking(&commPeriph[PORT_RS485_2], &packet[PORT_RS485_2][INBOUND]);
+
+	commPeriph[PORT_RS485_1].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);		//Circular buffer
+	commPeriph[PORT_RS485_2].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_2], &packet[PORT_RS485_2][INBOUND]);		//Circular buffer
+
+	commPeriph[PORT_EXP].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_EXP], &packet[PORT_EXP][INBOUND]);		//Circular buffer
 }
 
 uint8_t getBoardID(void)
@@ -192,6 +203,7 @@ uint8_t getBoardSubID(uint8_t sub, uint8_t idx)
 {
 	if(sub == 0){return board_sub1_id[idx];}
 	else if(sub == 1){return board_sub2_id[idx];}
+	else if(sub == 2){return board_sub3_id[idx];}
 
 	return 0;
 }
@@ -200,6 +212,7 @@ uint8_t getSlaveCnt(uint8_t sub)
 {
 	if(sub == 0){return SLAVE_BUS_1_CNT;}
 	else if(sub == 1){return SLAVE_BUS_2_CNT;}
+	else if(sub == 2){return SLAVE_BUS_3_CNT;}
 
 	return 0;
 }

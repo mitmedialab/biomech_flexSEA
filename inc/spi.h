@@ -17,9 +17,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *****************************************************************************
 	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy dot com.
-	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab 
+	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab
 	Biomechatronics research group <http://biomech.media.mit.edu/>
-	[Contributors] 
+	[Contributors]
 *****************************************************************************
 	[This file] fm_spi: SPI Slave
 *****************************************************************************
@@ -47,8 +47,10 @@ extern SPI_HandleTypeDef spi4_handle;
 extern SPI_HandleTypeDef spi5_handle;
 extern SPI_HandleTypeDef spi6_handle;
 
-extern uint8_t aTxBuffer[COMM_STR_BUF_LEN];	//SPI TX buffer
-extern uint8_t aRxBuffer[COMM_STR_BUF_LEN];	//SPI RX buffer
+extern uint8_t aTxBuffer4[COMM_STR_BUF_LEN];	//SPI TX buffer
+extern uint8_t aRxBuffer4[COMM_STR_BUF_LEN];	//SPI RX buffer
+
+extern uint8_t spi4Watch, spi6Watch;
 
 //****************************************************************************
 // Public Function Prototype(s):
@@ -59,14 +61,27 @@ void init_spi5(void);
 void init_spi6(void);
 void SPI_NSS_Callback(void);
 void SPI_new_data_Callback(void);
+void spi6Transmit(uint8_t *pData, uint16_t len);
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi);
+void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi);
+void completeSpiTransmit(void);
+void restartSpi(uint8_t port);
 
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
 
-//Interrupt priorities (lower number = higher priority)
-#define EXT4_IRQ_CHANNEL			7
-#define EXT4_IRQ_SUBCHANNEL			0
+#define SPI6_NSS(x) HAL_GPIO_WritePin(GPIOG, 1<<8, x);
+
+//Macros from newer Cube libs:
+#define UNUSED(x) ((void)(x))
+#define __HAL_SPI_CLEAR_OVRFLAG_NEW(__HANDLE__)		\
+do{													\
+	__IO uint32_t tmpreg_ovr = 0x00U;				\
+	tmpreg_ovr = (__HANDLE__)->Instance->DR;		\
+	tmpreg_ovr = (__HANDLE__)->Instance->SR;		\
+	UNUSED(tmpreg_ovr);								\
+} while(0)
 
 //Manage 0.1 SPI Hardware pins:
 //=============================
@@ -85,6 +100,4 @@ void SPI_new_data_Callback(void);
 //MISO6: 	PG12
 //SCK6: 	PG13
 
-
 #endif // INC_FM_SPI_H
-

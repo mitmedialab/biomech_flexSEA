@@ -44,7 +44,7 @@ extern TIM_HandleTypeDef htim7;
 //System Timer, 1ms ISR
 void SysTick_Handler(void)
 {
-	// Decrement to zero the counter used by the delay routine.
+	//Decrement to zero the counter used by the delay routine.
 	if(timer_delayCount != 0u)
 	{
 		--timer_delayCount;
@@ -144,7 +144,7 @@ void DMA2_Stream6_IRQHandler(void)
 //DMA1 Stream 0: I2C1 RX
 void DMA1_Stream0_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(hi2c1.hdmarx);
+	HAL_DMA_IRQHandler(hi2c1.hdmarx);
 }
 
 //DMA1 Stream 6: I2C1 TX
@@ -153,12 +153,23 @@ void DMA1_Stream6_IRQHandler(void)
 	HAL_DMA_IRQHandler(hi2c1.hdmatx);
 }
 
+//DMA1 Stream 2: I2C2 RX
+void DMA1_Stream2_IRQHandler(void)
+{
+	HAL_DMA_IRQHandler(hi2c2.hdmarx);
+}
+
+//DMA1 Stream 7: I2C2 TX
+void DMA1_Stream7_IRQHandler(void)
+{
+	HAL_DMA_IRQHandler(hi2c2.hdmatx);
+}
+
 //ADC DMA Interrupt
 void DMA2_Stream0_IRQHandler(void)
 {
 	HAL_DMA_IRQHandler(&hdma_adc1);
 }
-
 
 //USB:
 void OTG_FS_IRQHandler(void)

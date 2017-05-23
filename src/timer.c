@@ -35,6 +35,7 @@
 #include <dio.h>
 #include <timer.h>
 #include "main.h"
+#include "isr.h"
 
 //****************************************************************************
 // Variable(s)
@@ -67,7 +68,7 @@ void init_systick_timer(void)
 	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 	// SysTick_IRQn interrupt configuration
-	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(SysTick_IRQn, ISR_SYSTICK, ISR_SUB_SYSTICK);
 }
 
 void timer_sleep(timer_ticks_t ticks)
@@ -181,7 +182,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 		/* Peripheral clock enable */
 		__TIM7_CLK_ENABLE();
 		/* Peripheral interrupt init*/
-		HAL_NVIC_SetPriority(TIM7_IRQn, 2, 2);
+		HAL_NVIC_SetPriority(TIM7_IRQn, ISR_TIMER7, ISR_SUB_TIMER7);
 		HAL_NVIC_EnableIRQ(TIM7_IRQn);
 		/* USER CODE BEGIN TIM7_MspInit 1 */
 

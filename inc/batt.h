@@ -78,7 +78,10 @@
 //****************************************************************************
 
 void init_battery(void);
-void readBattery(void);
+//void readBattery(void);
+void battPrepareRead(void);
+void battReadAll(void);
+void battParseData(void);
 
 #endif //INC_FM_BATTBOARD_H
 

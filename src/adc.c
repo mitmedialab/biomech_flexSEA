@@ -34,6 +34,7 @@
 
 #include <adc.h>
 #include "main.h"
+#include "isr.h"
 
 //****************************************************************************
 // Variable(s)
@@ -185,6 +186,6 @@ static void initAdcDma(void)
 	hadc1.DMA_Handle = &hdma_adc1;
 
 	// DMA2_Stream0_IRQn interrupt configuration
-	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, ISR_DMA2_STREAM0, ISR_SUB_DMA2_STREAM0);
 	HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
 }

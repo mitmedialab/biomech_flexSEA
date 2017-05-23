@@ -36,6 +36,7 @@
 #include "stm32f4xx_hal.h"
 #include "usbd_def.h"
 #include "usbd_core.h"
+#include "isr.h"
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
@@ -79,7 +80,7 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
     __USB_OTG_FS_CLK_ENABLE();
 
     /* Peripheral interrupt init*/
-    HAL_NVIC_SetPriority(OTG_FS_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(OTG_FS_IRQn, ISR_USB, ISR_SUB_USB);
     HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
   /* USER CODE BEGIN USB_OTG_FS_MspInit 1 */
 

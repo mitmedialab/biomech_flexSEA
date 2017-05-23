@@ -57,13 +57,14 @@ extern DMA_HandleTypeDef hdma1_str3_ch4;	//DMA for USART3 TX
 //General:
 void init_rs485_outputs(void);
 void rs485_set_mode(uint32_t port, uint8_t rx_tx);
+void HAL_USART_TxCpltCallback(USART_HandleTypeDef *husart);
+void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart);
 
 //RS-485 #1:
 void init_usart1(uint32_t baudrate);
 void puts_rs485_1(uint8_t *str, uint16_t length);
 uint8_t reception_rs485_1_blocking(void);
 void DMA2_Str2_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma);
-void HAL_USART_TxCpltCallback(USART_HandleTypeDef *husart);
 
 //UART - Execute:
 void init_usart6(uint32_t baudrate);
@@ -104,29 +105,6 @@ void puts_expUart(uint8_t *str, uint16_t length);
 #define RS485_RX					0x01
 #define RS485_TX					0x02
 #define RS485_RX_TX					0x03
-
-//Interrupt priorities (lower number = higher priority)
-//ToDo: review this whole section
-#define UART1_IRQ_CHANNEL			6
-#define UART1_IRQ_SUBCHANNEL		0
-
-#define UART6_IRQ_CHANNEL			UART1_IRQ_CHANNEL
-#define UART6_IRQ_SUBCHANNEL		1
-
-#define UART3_IRQ_CHANNEL			8
-#define UART3_IRQ_SUBCHANNEL		0
-
-#define DMA_STR2_IRQ_CHANNEL		5	//UART1 RX
-#define DMA_STR2_IRQ_SUBCHANNEL		0
-
-#define DMA_STR1_IRQ_CHANNEL		5	//UART6 RX
-#define DMA_STR1_IRQ_SUBCHANNEL		1
-
-#define DMA_STR7_IRQ_CHANNEL		7	//UART1 TX
-#define DMA_STR7_IRQ_SUBCHANNEL		0
-
-#define DMA_STR6_IRQ_CHANNEL		7	//UART6 TX
-#define DMA_STR6_IRQ_SUBCHANNEL		1
 
 #endif // INC_UARTS_H
 

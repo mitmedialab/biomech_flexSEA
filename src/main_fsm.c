@@ -52,7 +52,6 @@
 //****************************************************************************
 
 uint8_t new_cmd_led = 0;
-uint8_t info[2] = {PORT_RS485_2, PORT_RS485_2};
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -81,6 +80,7 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	static uint8_t div = 0;
+	uint8_t info[2] = {PORT_RS485_2, PORT_RS485_2};
 	i2c2_fsm();
 
 	//readExecute();
@@ -126,24 +126,27 @@ void mainFSM6(void)
 void mainFSM7(void)
 {
 	static int sinceLastStreamSend[MAX_STREAMS] = {0};
-	uint8_t cp_str[256] = {0};
-	int i;
-	for(i=0;i<isStreaming;i++)
-		sinceLastStreamSend[i]++;
-
-	for(i=0;i<isStreaming;i++)
+	if(isStreaming)
 	{
-		if(sinceLastStreamSend[i] >= streamPeriods[i])
+		int i;
+		for(i=0;i<isStreaming;i++)
+			sinceLastStreamSend[i]++;
+
+		for(i=0;i<isStreaming;i++)
 		{
-			cp_str[P_XID] = streamReceivers[i];
-			(*flexsea_payload_ptr[streamCmds[i]][RX_PTYPE_READ]) (cp_str, &streamPortInfos[i]);
+			if(sinceLastStreamSend[i] >= streamPeriods[i])
+			{
+				//hopefully this works ok - assumption is that rx_r pure reads take no info from the cp_str
+				uint8_t cp_str[256] = {0};
+				cp_str[P_XID] = streamReceivers[i];
+				(*flexsea_payload_ptr[streamCmds[i]][RX_PTYPE_READ]) (cp_str, &streamPortInfos[i]);
 
-			sinceLastStreamSend[i] -= streamPeriods[i];
+				sinceLastStreamSend[i] -= streamPeriods[i];
 
-			//return so as not to try to send multiple messages in the same cycle
-			//since we already incremented counter, we will still average to the proper frequency
-			//assuming that it is possible to hit the desired frequencies all at once (based on perforamce of comm stack)
-			return;
+				//we return to avoid sending two msgs in one cycle
+				//since counters were already incremented, we will still try to hit other stream frequencies
+				return;
+			}
 		}
 	}
 }
@@ -194,6 +197,8 @@ void mainFSM10kHz(void)
 	//Did we receive new commands? Can we parse them?
 	parseMasterCommands(&new_cmd_led);
 	parseSlaveCommands(&new_cmd_led);
+
+	completeSpiTransmit();
 }
 
 //Asynchronous time slots:

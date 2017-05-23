@@ -34,9 +34,9 @@
 // Include(s)
 //****************************************************************************
 
+#include <batt.h>
 #include <i2c.h>
 #include "main.h"
-#include "fm_batt.h"
 #include "flexsea_global_structs.h"
 #include "stm32f4xx_hal_i2c.h"
 
@@ -50,10 +50,12 @@ volatile uint8_t i2c2_tmp_buf[BATT_MAX_BUF_SIZE];
 // Private Function Prototype(s)
 //****************************************************************************
 
+/*
 static HAL_StatusTypeDef battery_write(uint8_t internal_reg_addr, uint8_t* pData,
 		uint16_t Size);
 static HAL_StatusTypeDef battery_read(uint8_t internal_reg_addr, uint8_t *pData,
 		uint16_t Size);
+		*/
 
 //****************************************************************************
 // Public Function(s)
@@ -65,6 +67,7 @@ void init_battery(void)
 	//Nothing for now
 }
 
+/*
 //Read from Battery Board:
 void readBattery(void)
 {
@@ -75,11 +78,38 @@ void readBattery(void)
 	batt1.current = (int16_t)(batt1.rawBytes[4] << 8) + batt1.rawBytes[5];
 	batt1.temp = batt1.rawBytes[6];
 }
+*/
+
+//Sends the register address. Needed before a Read? Or always the same?
+void battPrepareRead(void)
+{
+	uint8_t i2c_2_t_buf[4] = {MEM_R_STATUS1, 0, 0, 0};
+	HAL_I2C_Master_Transmit_DMA(&hi2c2, BATT_ADDR, i2c_2_t_buf, 1);
+}
+
+//Read all of the relevant Battery data
+void battReadAll(void)
+{
+	HAL_I2C_Master_Receive_DMA(&hi2c2, BATT_ADDR, i2c2_dma_rx_buf, 7);
+}
+
+void battParseData(void)
+{
+	//Get bytes from I2C buffer:
+	memcpy(batt1.rawBytes, i2c2_dma_rx_buf, 7);
+
+	//Decode:
+	batt1.status = batt1.rawBytes[0];
+	batt1.voltage = (batt1.rawBytes[2] << 8) + batt1.rawBytes[3];
+	batt1.current = (int16_t)(batt1.rawBytes[4] << 8) + batt1.rawBytes[5];
+	batt1.temp = batt1.rawBytes[6];
+}
 
 //****************************************************************************
 // Private Function(s)
 //****************************************************************************
 
+/*
 //Write data to the shared memory
 // uint8_t internal_reg_addr: internal register address of the IMU
 // uint8_t* pData: pointer to the data we want to send to that address
@@ -141,6 +171,7 @@ static HAL_StatusTypeDef battery_read(uint8_t internal_reg_addr, uint8_t *pData,
 
 	return retVal;
 }
+*/
 
 //****************************************************************************
 // Test Function(s) - Use with care!

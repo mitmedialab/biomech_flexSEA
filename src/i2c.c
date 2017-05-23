@@ -37,18 +37,22 @@
 #include "main.h"
 #include "user-mn.h"
 #include "rigid.h"
+#include "batt.h"
+#include "isr.h"
 
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
 
 I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
-DMA_HandleTypeDef hdma_i2c1_tx;
-DMA_HandleTypeDef hdma_i2c1_rx;
+DMA_HandleTypeDef hdma_i2c1_tx, hdma_i2c1_rx;
+DMA_HandleTypeDef hdma_i2c2_tx, hdma_i2c2_rx;
 
 uint8_t i2c_2_r_buf[24], i2c_3_r_buf[EX_EZI2C_BUF_SIZE];
-int8_t i2c1FsmState = I2C1_FSM_DEFAULT;
+int8_t i2c1FsmState = I2C_FSM_DEFAULT;
+int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
+__attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -58,6 +62,8 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c);
 static void init_dma1_stream0_ch1(void);	//I2C1 RX
 static void init_dma1_stream6_ch1(void);	//I2C1 TX
+static void init_dma1_stream2_ch7(void);	//I2C2 RX
+static void init_dma1_stream7_ch7(void);	//I2C2 TX
 
 //****************************************************************************
 // Public Function(s)
@@ -66,21 +72,21 @@ static void init_dma1_stream6_ch1(void);	//I2C1 TX
 //I2C1 State machine. Reads IMU via IT + DMA.
 void i2c1_fsm(void)
 {
-	static uint8_t i2c_time_share = 0;
-
-	i2c_time_share++;
-	i2c_time_share %= 4;
-
 	#ifdef USE_I2C_1
 	#ifdef USE_IMU
 
+	static uint8_t i2c1_time_share = 0;
+
+	i2c1_time_share++;
+	i2c1_time_share %= 4;
+
 	//Subdivided in 4 slots (250Hz)
-	switch(i2c_time_share)
+	switch(i2c1_time_share)
 	{
 		//Case 0.0: Write register
 		case 0:
 
-			i2c1FsmState = I2C1_FSM_TX_ADDR;
+			i2c1FsmState = I2C_FSM_TX_ADDR;
 			IMUPrepareRead();
 
 			break;
@@ -88,10 +94,10 @@ void i2c1_fsm(void)
 		//Case 0.1: Read data via DMA
 		case 1:
 
-			if(i2c1FsmState == I2C1_FSM_TX_ADDR_DONE)
+			if(i2c1FsmState == I2C_FSM_TX_ADDR_DONE)
 			{
 				//Start reading:
-				i2c1FsmState = I2C1_FSM_RX_DATA;
+				i2c1FsmState = I2C_FSM_RX_DATA;
 				IMUReadAll();
 			}
 
@@ -100,7 +106,7 @@ void i2c1_fsm(void)
 		//Case 0.2: Parse data
 		case 2:
 
-			if(i2c1FsmState == I2C1_FSM_RX_DATA_DONE)
+			if(i2c1FsmState == I2C_FSM_RX_DATA_DONE)
 			{
 				//Decode received data
 				IMUParseData();
@@ -118,7 +124,7 @@ void i2c1_fsm(void)
 	}
 
 	//ToDo: recover from errors:
-	if(i2c1FsmState == I2C1_FSM_PROBLEM)
+	if(i2c1FsmState == I2C_FSM_PROBLEM)
 	{
 		//Deal with it
 	}
@@ -127,27 +133,67 @@ void i2c1_fsm(void)
 	#endif //USE_I2C_1
 }
 
+//I2C2 State machine. Reads Battery Board via IT + DMA.
 void i2c2_fsm(void)
 {
-	//Note: function named "fsm" for convention and future proof-ness, but
-	//as of now there is only one slot
-
 	#ifdef USE_I2C_2
+	#ifdef USE_BATTBOARD
 
-		#ifdef USE_BATTBOARD
+	static uint8_t i2c2_time_share = 0;
 
-			static uint8_t cnt = 0;
+	i2c2_time_share++;
+	i2c2_time_share %= 4;
 
-			cnt++;
-			cnt %= 4;
-			if(!cnt)
+	//Subdivided in 4 slots (250Hz)
+	switch(i2c2_time_share)
+	{
+		//Case 0.0: Write register
+		case 0:
+
+			i2c2FsmState = I2C_FSM_TX_ADDR;
+			battPrepareRead();
+
+			break;
+
+		//Case 0.1: Read data via DMA
+		case 1:
+
+			if(i2c2FsmState == I2C_FSM_TX_ADDR_DONE)
 			{
-				//Refresh battery once every 4 cycles (250Hz):
-				readBattery();
+				//Start reading:
+				i2c2FsmState = I2C_FSM_RX_DATA;
+				battReadAll();
 			}
 
-		#endif	//USE_BATTBOARD
+			break;
 
+		//Case 0.2: Parse data
+		case 2:
+
+			if(i2c2FsmState == I2C_FSM_RX_DATA_DONE)
+			{
+				//Decode received data
+				battParseData();
+			}
+
+			break;
+
+		//Case 0.3:
+		case 3:
+
+			break;
+
+		default:
+			break;
+	}
+
+	//ToDo: recover from errors:
+	if(i2c2FsmState == I2C_FSM_PROBLEM)
+	{
+		//Deal with it
+	}
+
+	#endif //USE_BATTBOARD
 	#endif //USE_I2C_2
 }
 
@@ -193,6 +239,10 @@ void init_i2c2(void)
 	hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED; 		//allow slave to stretch SCL
 	hi2c2.State = HAL_I2C_STATE_RESET;
 	HAL_I2C_Init(&hi2c2);
+
+	//DMA:
+	init_dma1_stream2_ch7();	//RX
+	init_dma1_stream7_ch7();	//TX
 }
 
 // Disable I2C and free the I2C handle.
@@ -228,16 +278,31 @@ void disable_i2c3(void)
 //Detects the end of a Master Receive:
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+	//I2C1:
 	if(hi2c->Instance == I2C1)
 	{
-		if(i2c1FsmState == I2C1_FSM_RX_DATA)
+		if(i2c1FsmState == I2C_FSM_RX_DATA)
 		{
 			//Indicate that it's done receiving:
-			i2c1FsmState = I2C1_FSM_RX_DATA_DONE;
+			i2c1FsmState = I2C_FSM_RX_DATA_DONE;
 		}
 		else
 		{
-			i2c1FsmState = I2C1_FSM_PROBLEM;
+			i2c1FsmState = I2C_FSM_PROBLEM;
+		}
+	}
+
+	//I2C2:
+	if(hi2c->Instance == I2C2)
+	{
+		if(i2c2FsmState == I2C_FSM_RX_DATA)
+		{
+			//Indicate that it's done receiving:
+			i2c2FsmState = I2C_FSM_RX_DATA_DONE;
+		}
+		else
+		{
+			i2c2FsmState = I2C_FSM_PROBLEM;
 		}
 	}
 }
@@ -245,16 +310,31 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 //Detects the end of a Master Transmit:
 void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+	//I2C1:
 	if(hi2c->Instance == I2C1)
 	{
-		if(i2c1FsmState == I2C1_FSM_TX_ADDR)
+		if(i2c1FsmState == I2C_FSM_TX_ADDR)
 		{
 			//Indicate that it's done transmitting:
-			i2c1FsmState = I2C1_FSM_TX_ADDR_DONE;
+			i2c1FsmState = I2C_FSM_TX_ADDR_DONE;
 		}
 		else
 		{
-			i2c1FsmState = I2C1_FSM_PROBLEM;
+			i2c1FsmState = I2C_FSM_PROBLEM;
+		}
+	}
+
+	//I2C2:
+	if(hi2c->Instance == I2C2)
+	{
+		if(i2c2FsmState == I2C_FSM_TX_ADDR)
+		{
+			//Indicate that it's done transmitting:
+			i2c2FsmState = I2C_FSM_TX_ADDR_DONE;
+		}
+		else
+		{
+			i2c2FsmState = I2C_FSM_PROBLEM;
 		}
 	}
 }
@@ -268,8 +348,6 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C1)
 	{
-		///// SET UP GPIO /////
-		//GPIO initialization constants
 		GPIO_InitTypeDef GPIO_InitStruct;
 
 		//Enable peripheral and GPIO clockS
@@ -280,26 +358,18 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 		 //SDA1	-> PB9 (pin 24 on MPU6500)
 
 		//Config inputs:
-		//We are configuring these pins.
 		GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;
-		//I2C wants to have open drain lines pulled up by resistors
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-		//Although we need pullups for I2C, we have them externally on
-		// the board.
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		//Set GPIO speed to fastest speed.
 		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-		//Assign function to pins.
 		GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
-		//Initialize the pins.
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-		///// SET UP NVIC ///// (interrupts!)
 		#if I2C1_USE_INT == 1
 
-			HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 1);    //event interrupt
+			HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 1);
 			HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
-			HAL_NVIC_SetPriority(I2C1_ER_IRQn, 0, 1);//error interrupt
+			HAL_NVIC_SetPriority(I2C1_ER_IRQn, 0, 1);
 			HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
 
 		#endif
@@ -386,7 +456,6 @@ void initOptionalPullUps(void)
 	GPIO_InitStruct.Pin = GPIO_PIN_2;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	//Set GPIO speed to fastest speed.
 	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -394,7 +463,7 @@ void initOptionalPullUps(void)
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, 1);
 }
 
-// Implement I2C MSP DeInit
+//Implement I2C MSP DeInit
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C1)
@@ -407,7 +476,7 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c)
 	}
 }
 
-//Using DMA1 Ch 1 Stream 0 for I2C1 TX
+//Using DMA1 Ch 1 Stream 0 for I2C1 RX
 static void init_dma1_stream0_ch1(void)
 {
 	//Enable clock
@@ -433,7 +502,7 @@ static void init_dma1_stream0_ch1(void)
 	HAL_DMA_Init(hi2c1.hdmarx);
 
 	//Interrupts:
-	HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, ISR_DMA1_STREAM0, ISR_SUB_DMA1_STREAM0);
 	HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
 }
 
@@ -463,6 +532,66 @@ static void init_dma1_stream6_ch1(void)
 	HAL_DMA_Init(hi2c1.hdmatx);
 
 	//Interrupts:
-	HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, ISR_DMA1_STREAM6, ISR_SUB_DMA1_STREAM6);
 	HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+}
+
+//Using DMA1 Ch 7 Stream 2 for I2C2 RX
+static void init_dma1_stream2_ch7(void)
+{
+	//Enable clock
+	__DMA1_CLK_ENABLE();
+
+	//Initialization:
+	hdma_i2c2_rx.Instance = DMA1_Stream2;
+	hdma_i2c2_rx.Init.Channel = DMA_CHANNEL_7;
+	hdma_i2c2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+	hdma_i2c2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+	hdma_i2c2_rx.Init.MemInc = DMA_MINC_ENABLE;
+	hdma_i2c2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+	hdma_i2c2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+	hdma_i2c2_rx.Init.Mode = DMA_NORMAL;
+	hdma_i2c2_rx.Init.Priority = DMA_PRIORITY_LOW;
+	hdma_i2c2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+
+	//Link DMA handle and I2C2 RX:
+	hi2c2.hdmarx = &hdma_i2c2_rx;
+	//hi2c2 is the parent:
+	hi2c2.hdmarx->Parent = &hi2c2;
+
+	HAL_DMA_Init(hi2c2.hdmarx);
+
+	//Interrupts:
+	HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, ISR_DMA1_STREAM2, ISR_SUB_DMA1_STREAM2);
+	HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+}
+
+//Using DMA1 Ch 7 Stream 7 for I2C2 TX
+static void init_dma1_stream7_ch7(void)
+{
+	//Enable clock
+	__DMA1_CLK_ENABLE();
+
+	//Initialization:
+	hdma_i2c2_tx.Instance = DMA1_Stream7;
+	hdma_i2c2_tx.Init.Channel = DMA_CHANNEL_7;
+	hdma_i2c2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+	hdma_i2c2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+	hdma_i2c2_tx.Init.MemInc = DMA_MINC_ENABLE;
+	hdma_i2c2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+	hdma_i2c2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+	hdma_i2c2_tx.Init.Mode = DMA_NORMAL;
+	hdma_i2c2_tx.Init.Priority = DMA_PRIORITY_LOW;
+	hdma_i2c2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+
+	//Link DMA handle and I2C2 TX:
+	hi2c2.hdmatx = &hdma_i2c2_tx;
+	//hi2c2 is the parent:
+	hi2c2.hdmatx->Parent = &hi2c2;
+
+	HAL_DMA_Init(hi2c2.hdmatx);
+
+	//Interrupts:
+	HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, ISR_DMA1_STREAM7, ISR_SUB_DMA1_STREAM7);
+	HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
 }
