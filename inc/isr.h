@@ -81,6 +81,10 @@
 #define ISR_DMA1_STREAM7		2	//I2C2 TX
 #define ISR_SUB_DMA1_STREAM7	4
 
+//I2C3:
+#define ISR_I2C3				0
+#define ISR_SUB_I2C3			0
+
 //SPI4 - Plan:
 #define ISR_SPI4				1
 #define ISR_SUB_SPI4			1

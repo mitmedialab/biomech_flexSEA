@@ -48,7 +48,7 @@ I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
 DMA_HandleTypeDef hdma_i2c1_tx, hdma_i2c1_rx;
 DMA_HandleTypeDef hdma_i2c2_tx, hdma_i2c2_rx;
 
-uint8_t i2c_2_r_buf[24], i2c_3_r_buf[EX_EZI2C_BUF_SIZE];
+uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE];
 int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
@@ -133,11 +133,10 @@ void i2c1_fsm(void)
 	#endif //USE_I2C_1
 }
 
-//I2C2 State machine. Reads Battery Board via IT + DMA.
+//I2C2 State machine. Expansion connector
 void i2c2_fsm(void)
 {
 	#ifdef USE_I2C_2
-	#ifdef USE_BATTBOARD
 
 	static uint8_t i2c2_time_share = 0;
 
@@ -151,7 +150,7 @@ void i2c2_fsm(void)
 		case 0:
 
 			i2c2FsmState = I2C_FSM_TX_ADDR;
-			battPrepareRead();
+			//battPrepareRead();
 
 			break;
 
@@ -162,7 +161,7 @@ void i2c2_fsm(void)
 			{
 				//Start reading:
 				i2c2FsmState = I2C_FSM_RX_DATA;
-				battReadAll();
+				//battReadAll();
 			}
 
 			break;
@@ -173,7 +172,7 @@ void i2c2_fsm(void)
 			if(i2c2FsmState == I2C_FSM_RX_DATA_DONE)
 			{
 				//Decode received data
-				battParseData();
+				//battParseData();
 			}
 
 			break;
@@ -193,7 +192,6 @@ void i2c2_fsm(void)
 		//Deal with it
 	}
 
-	#endif //USE_BATTBOARD
 	#endif //USE_I2C_2
 }
 
@@ -251,7 +249,7 @@ void disable_i2c2(void)
 	HAL_I2C_DeInit(&hi2c2);
 }
 
-// Initialize I2C3. Connected to Execute & Regulate
+// Initialize I2C3. Connected to Execute & Regulate. Slave interface.
 void init_i2c3(void)
 {
 	//I2C_HandleTypeDef *hi2c3 contains our handle information
@@ -259,7 +257,7 @@ void init_i2c3(void)
 	hi2c3.Instance = I2C3;
 	hi2c3.Init.ClockSpeed = I2C3_CLOCK_RATE;  				//clock frequency
 	hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2; 				//for fast mode (doesn't matter now)
-	hi2c3.Init.OwnAddress1 = 0x0; 							//device address of the STM32 (doesn't matter)
+	hi2c3.Init.OwnAddress1 = 0x44; 							//device address of the STM32 (8-bits)
 	hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;	//using 7 bit addresses
 	hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED;  //disable dual address
 	hi2c3.Init.OwnAddress2 = 0x0;							//second device addr (doesn't matter)
@@ -267,6 +265,9 @@ void init_i2c3(void)
 	hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED; 		//allow slave to stretch SCL
 	hi2c3.State = HAL_I2C_STATE_RESET;
 	HAL_I2C_Init(&hi2c3);
+
+	HAL_NVIC_SetPriority(I2C3_EV_IRQn, ISR_I2C3, ISR_SUB_I2C3);
+	HAL_NVIC_EnableIRQ(I2C3_EV_IRQn);
 }
 
 // Disable I2C and free the I2C handle.
@@ -336,6 +337,30 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 		{
 			i2c2FsmState = I2C_FSM_PROBLEM;
 		}
+	}
+}
+
+void i2c3Receive(void)
+{
+	HAL_I2C_Slave_Receive_IT(&hi2c3, i2c_3_r_buf, MN_WBUF_SIZE);
+	//HAL_I2C_Slave_Transmit_IT(&hi2c3, i2c_3_r_buf, 4);
+}
+
+//I2C Slave Receive callback:
+void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	if(hi2c->Instance == I2C3)
+	{
+		i2c3Receive();
+	}
+}
+
+//I2C Slave Transmit callback:
+void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	if(hi2c->Instance == I2C3)
+	{
+		i2c3Receive();
 	}
 }
 

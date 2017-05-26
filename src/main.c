@@ -44,6 +44,9 @@
 #include "flexsea_system.h"
 #include "flexsea_global_structs.h"
 
+//Test:
+#include "i2c.h"
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -74,6 +77,8 @@ int main(void)
 	//test_code_non_blocking();
 
 	init_user();
+
+	i2c3Receive();
 
 	//Infinite loop
 	while(1)
@@ -116,6 +121,9 @@ int main(void)
 		if(tb_100ms_flag)
 		{
 			tb_100ms_flag = 0;
+
+			//Test:
+			//i2c3Receive();
 		}
 
 		//1000ms
