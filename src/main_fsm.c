@@ -113,7 +113,7 @@ void mainFSM4(void)
 //Case 5:
 void mainFSM5(void)
 {
-
+	slaveTransmit(PORT_UART_EX);
 }
 
 //Case 6:

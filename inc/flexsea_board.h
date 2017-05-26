@@ -121,6 +121,8 @@ uint8_t getSlaveCnt(uint8_t sub);
 #define update_rx_buf_array_exp			update_rx_buf_array_6
 #define update_rx_buf_exp(x, y)			circ_buff_write(commPeriph[PORT_EXP].rx.circularBuff, (x), (y))
 
+#define PORT_UART_EX					PORT_RS485_2
+
 //===============
 //</FlexSEA User>
 
