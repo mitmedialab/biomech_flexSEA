@@ -351,6 +351,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C3)
 	{
+		decodeRegulate();
 		i2c3Receive();
 	}
 }

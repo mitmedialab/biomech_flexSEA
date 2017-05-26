@@ -46,6 +46,7 @@
 #include "user-mn.h"
 #include "cmd-Rigid.h"
 #include "flexsea_system.h"
+#include "spi.h"
 
 //****************************************************************************
 // Variable(s)

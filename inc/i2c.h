@@ -85,33 +85,6 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c);
 #define I2C_FSM_RX_DATA		3
 #define I2C_FSM_RX_DATA_DONE	4
 
-//From Regulate: ToDo move to rigidComm.c/h?
-
-//Manage:
-#define MN_WBUF_SIZE			12
-#define MN_RBUF_SIZE			4
-#define MN_BUF_SIZE				(MN_WBUF_SIZE + MN_RBUF_SIZE)
-
-//Manage shared memory locations:
-//(Re writes to Manage)
-#define MN_W_CONTROL1			0
-#define MN_W_CONTROL2			1
-#define MN_W_VB_MSB				2
-#define MN_W_VB_LSB				3
-#define MN_W_VG_MSB				4
-#define MN_W_VG_LSB				5
-#define MN_W_5V_MSB				6
-#define MN_W_5V_LSB				7
-#define MN_W_CURRENT_MSB		8
-#define MN_W_CURRENT_LSB		9
-#define MN_W_TEMP				10
-#define MN_W_STATUS				11
-//(Re reads from Manage) //ToDo
-#define MN_R_B0					0
-#define MN_R_B1					1
-#define MN_R_B2					2
-#define MN_R_B3					3
-
 //****************************************************************************
 // Shared variable(s)
 //****************************************************************************

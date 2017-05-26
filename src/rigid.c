@@ -84,6 +84,19 @@ void readExecute(void)
 	rigid1.ex.status = REBUILD_UINT16(i2c3_tmp_buf, &index);
 }
 
+//Decodes the bytes received over I2C
+void decodeRegulate(void)
+{
+	uint16_t index = MN_W_VB_MSB;
+
+	rigid1.re.vb = REBUILD_UINT16(i2c_3_r_buf, &index);
+	rigid1.re.vg = REBUILD_UINT16(i2c_3_r_buf, &index);
+	rigid1.re.v5 = REBUILD_UINT16(i2c_3_r_buf, &index);
+	rigid1.re.current = (int16_t)REBUILD_UINT16(i2c_3_r_buf, &index);
+	rigid1.re.temp = i2c_3_r_buf[index++];
+	rigid1.re.status = i2c_3_r_buf[index++];
+}
+
 //****************************************************************************
 // Private Function(s)
 //****************************************************************************
