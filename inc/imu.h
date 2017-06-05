@@ -75,6 +75,9 @@ typedef enum {
 #define IMU_I2C_SLV0_ADDR		37
 #define IMU_I2C_SLV0_REG		38
 #define IMU_I2C_SLV0_CTRL		39
+#define IMU_I2C_SLV1_ADDR		40
+#define IMU_I2C_SLV1_REG		41
+#define IMU_I2C_SLV1_CTRL		42
 #define IMU_FIFO_EN				0x23
 #define IMU_INT_PIN_CFG			55
 #define IMU_INT_ENABLE			56
@@ -97,6 +100,7 @@ typedef enum {
 #define IMU_GYRO_ZOUT_H			71
 #define IMU_GYRO_ZOUT_L			72
 #define IMU_I2C_SLV0_DO			99
+#define IMU_I2C_MST_DELAY_CTRL	103
 #define IMU_FIFO_COUNT_L		115
 #define IMU_FIFO_R_W			116
 
@@ -122,10 +126,12 @@ typedef enum {
 #define D_SIGNAL_PATH_RESET		0x07	//write to SIGNAL_PATH_RESET: reset signal paths only
 #define D_DEVICE_RESET			0x80	//write to PWR_MGMT_1: reset internal regs
 #define D_BYPASS_ENABLED		0x02	//Enables I2C bypass (no master, uC controls bus)
+#define D_BYPASS_DISABLED		0x00	//Disabled I2C bypass (master controls bus)
 #define D_USER_CTRL				0x01	//Disables master, resets all signal paths
 
 //Magnetometer Registers
 #define AK8963_ADDRESS   		0x0C	//7-bits
+#define AK8963_ADDRESS_8BITS	0x18
 #define AK8963_REG_WIA  		0x00 	//should return 0x48
 #define AK8963_REG_INFO			0x01
 #define AK8963_REG_ST1       	0x02  	//data ready status bit 0
@@ -143,6 +149,13 @@ typedef enum {
 #define AK8963_REG_ASAX			0x10  	//Fuse ROM x-axis sensitivity adjustment value
 #define AK8963_REG_ASAY			0x11  	//Fuse ROM y-axis sensitivity adjustment value
 #define AK8963_REG_ASAZ			0x12  	//Fuse ROM z-axis sensitivity adjustment value
+
+//From Invensense's demo code:
+#define SUPPORTS_AK89xx_HIGH_SENS	(0x10)
+#define AKM_POWER_DOWN          	(0x00 | SUPPORTS_AK89xx_HIGH_SENS)
+#define AKM_FUSE_ROM_ACCESS     	(0x0F | SUPPORTS_AK89xx_HIGH_SENS)
+#define BIT_I2C_READ        		(0x80)
+#define BIT_SLAVE_EN        		(0x80)
 
 //Settings:
 #define AK8963_SET_CNTL1		0b00010110;	//16 bits readings, Cont. mode 2

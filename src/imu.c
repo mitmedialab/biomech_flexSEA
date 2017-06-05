@@ -53,6 +53,8 @@ uint8_t i2c_ak8963_tmp_buf[6] = {0,0,0,0,0,0};
 
 static HAL_StatusTypeDef imu_write(uint8_t internal_reg_addr, uint8_t* pData,
 		uint16_t Size);
+static HAL_StatusTypeDef magneto_write(uint8_t internal_reg_addr, uint8_t* pData,
+		uint16_t Size);
 
 //****************************************************************************
 // Public Function(s)
@@ -63,36 +65,80 @@ void init_imu(void)
 {
 	uint8_t tmp = 0;
 
+	//Accel + Gyro:
+	//=============
+
 	//Reset the IMU.
 	reset_imu();
 	HAL_Delay(25);
 
-	// Initialize the config registers.
-	uint8_t config[4] = { D_IMU_CONFIG, D_IMU_GYRO_CONFIG, D_IMU_ACCEL_CONFIG, \
-							D_IMU_ACCEL_CONFIG2 };
+	//Initialize the config registers.
+	uint8_t config[4] = {D_IMU_CONFIG, D_IMU_GYRO_CONFIG, D_IMU_ACCEL_CONFIG, \
+							D_IMU_ACCEL_CONFIG2};
 	imu_write(IMU_CONFIG, config, 4);
+	HAL_Delay(1);
 
-	//Enable Master:
-	config[0] = 0b00100000;
+	//Magneto:
+	//========
+
+	//Disable Master, enable bypass:
+	config[0] = D_BYPASS_ENABLED;
+	imu_write(IMU_INT_PIN_CFG, config, 1);
+	HAL_Delay(1);
+	config[0] = 0x00;
 	imu_write(IMU_USER_CTRL, config, 1);
+	HAL_Delay(1);
+
+	//AK8963 basic config:
+	config[0] = AKM_POWER_DOWN;
+	magneto_write(AK8963_REG_CNTL1, config, 1);
+	HAL_Delay(1);
+	config[0] = AKM_FUSE_ROM_ACCESS;
+	magneto_write(AK8963_REG_CNTL1, config, 1);
+	HAL_Delay(1);
+	config[0] = AKM_POWER_DOWN;
+	magneto_write(AK8963_REG_CNTL1, config, 1);
+	HAL_Delay(1);
+
+	//Enable Master, disable bypass:
+	config[0] = D_BYPASS_DISABLED;
+	imu_write(IMU_INT_PIN_CFG, config, 1);
+	HAL_Delay(1);
+	config[0] = 0x20;
+	imu_write(IMU_USER_CTRL, config, 1);
+	HAL_Delay(1);
 
 	//Set Master 400kHz:
 	config[0] = 13;
 	imu_write(IMU_I2C_MASTER_CONTROL, config, 1);
+	HAL_Delay(1);
 
-	//Slave 0 address (7bits):
-	config[0] = AK8963_ADDRESS;
+	//Slave 0 (Reads from AKM):
+	config[0] = AK8963_ADDRESS | BIT_I2C_READ;
 	imu_write(IMU_I2C_SLV0_ADDR, config, 1);
+	HAL_Delay(1);
+	config[0] = AK8963_REG_ST1;
+	imu_write(IMU_I2C_SLV0_REG, config, 1);
+	HAL_Delay(1);
+	config[0] = BIT_SLAVE_EN | 8;
+	imu_write(IMU_I2C_SLV0_CTRL, config, 1);
+	HAL_Delay(1);
 
-	HAL_Delay(10);
+	//Slave 1 (Changes AKM measurement mode):
+	config[0] = AK8963_ADDRESS;
+	imu_write(IMU_I2C_SLV1_ADDR, config, 1);
+	HAL_Delay(1);
+	config[0] = AK8963_REG_CNTL1;
+	imu_write(IMU_I2C_SLV1_REG, config, 1);
+	HAL_Delay(1);
+	config[0] = BIT_SLAVE_EN | 1;
+	imu_write(IMU_I2C_SLV1_CTRL, config, 1);
+	HAL_Delay(1);
 
-	//Reset magneto:
-	tmp = 1;
-	imu_write_ak8963(AK8963_REG_CNTL2, &tmp);
-
-	//Put compass in continuous read mode:
-	tmp = 0b00010010;
-	imu_write_ak8963(AK8963_REG_CNTL1, &tmp);
+	//Trigger actions:
+	config[0] = 0x03;
+	imu_write(IMU_I2C_MST_DELAY_CTRL, config, 1);
+	HAL_Delay(1);
 }
 
 void imu_write_ak8963(uint8_t reg, uint8_t *val)
@@ -287,4 +333,46 @@ static HAL_StatusTypeDef imu_write(uint8_t internal_reg_addr, uint8_t* pData,
 	}
 
 	return retVal;
+}
+
+static HAL_StatusTypeDef magneto_write(uint8_t internal_reg_addr, uint8_t* pData,
+		uint16_t Size)
+{
+	uint8_t i = 0;
+	HAL_StatusTypeDef retVal;
+
+	i2c_tmp_buf[0] = internal_reg_addr;
+	for(i = 1; i < Size + 1; i++)
+	{
+		i2c_tmp_buf[i] = pData[i-1];
+	}
+
+	//Try to write it up to 3 times
+	for(i = 0; i < 3; i++)
+	{
+		retVal = HAL_I2C_Mem_Write(&hi2c1, AK8963_ADDRESS_8BITS, (uint16_t) internal_reg_addr,
+					I2C_MEMADD_SIZE_8BIT, pData, Size, IMU_BLOCK_TIMEOUT);
+
+		if(retVal == HAL_OK)
+		{
+			break;
+		}
+
+		HAL_Delay(10);
+	}
+
+	return retVal;
+}
+
+//****************************************************************************
+// Test Function(s)
+//****************************************************************************
+
+void imu_test_code_blocking(void)
+{
+	while(1)
+	{
+		init_imu();
+		HAL_Delay(50);
+	}
 }

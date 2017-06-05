@@ -65,7 +65,7 @@ uint8_t new_cmd_led = 0;
 //1kHz time slots:
 //================
 
-//Case 0: I2C1 + slaveComm
+//Case 0: slaveComm
 void mainFSM0(void)
 {
 	slaveTransmit(PORT_RS485_1);

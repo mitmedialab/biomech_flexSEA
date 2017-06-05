@@ -637,6 +637,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2057419407" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
@@ -717,6 +718,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.26258754" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
