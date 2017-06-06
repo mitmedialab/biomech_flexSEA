@@ -73,7 +73,7 @@ int main(void)
 	flexsea_start_receiving_from_master();
 
 	//Test code, use with care. Normal code might NOT run when enabled!
-	//test_code_blocking();
+	test_code_blocking();
 	//test_code_non_blocking();
 
 	init_user();

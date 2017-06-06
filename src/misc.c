@@ -45,8 +45,10 @@
 #include <uarts.h>
 #include <ui.h>
 #include "rigid.h"
+#include "eeprom.h"
 #include "usb_device.h"
 #include "user-mn.h"
+#include "eeprom.h"
 
 //****************************************************************************
 // Variable(s)
@@ -118,6 +120,20 @@ void init_peripherals(void)
 
 	#endif	//USE_COMM_TEST
 
+	#ifdef USE_EEPROM
+
+		//Unlock the Flash Program Erase controller
+		HAL_FLASH_Unlock();
+
+		//EEPROM Init
+		if(EE_Init() != EE_OK)
+		{
+			HAL_Delay(1);		//ToDo remove
+		}
+
+	#endif	//USE_EEPROM
+
+
 	//Software:
 	initMasterSlaveComm();
 
@@ -183,9 +199,10 @@ void test_code_blocking(void)
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	//rgb_led_test_code_blocking();
 	//user_button_test_blocking();
-	imu_test_code_blocking();
+	//imu_test_code_blocking();
 	//test_delayUsBlocking_blocking();
 	//fpu_testcode_blocking();
+	eeprom_test_code_blocking_1();
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 }
 
