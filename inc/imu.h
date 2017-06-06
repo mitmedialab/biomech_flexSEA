@@ -78,6 +78,7 @@ typedef enum {
 #define IMU_I2C_SLV1_ADDR		40
 #define IMU_I2C_SLV1_REG		41
 #define IMU_I2C_SLV1_CTRL		42
+#define IMU_I2C_SLV4_CTRL		52
 #define IMU_FIFO_EN				0x23
 #define IMU_INT_PIN_CFG			55
 #define IMU_INT_ENABLE			56
@@ -100,6 +101,7 @@ typedef enum {
 #define IMU_GYRO_ZOUT_H			71
 #define IMU_GYRO_ZOUT_L			72
 #define IMU_I2C_SLV0_DO			99
+#define IMU_I2C_SLV1_DO			100
 #define IMU_I2C_MST_DELAY_CTRL	103
 #define IMU_FIFO_COUNT_L		115
 #define IMU_FIFO_R_W			116
@@ -156,6 +158,9 @@ typedef enum {
 #define AKM_FUSE_ROM_ACCESS     	(0x0F | SUPPORTS_AK89xx_HIGH_SENS)
 #define BIT_I2C_READ        		(0x80)
 #define BIT_SLAVE_EN        		(0x80)
+#define AKM_SINGLE_MEASUREMENT  	(0x01 | SUPPORTS_AK89xx_HIGH_SENS)
+#define AKM_CONT_MEASUREMENT_1  	(0x02 | SUPPORTS_AK89xx_HIGH_SENS)
+#define AKM_CONT_MEASUREMENT_2  	(0x06 | SUPPORTS_AK89xx_HIGH_SENS)
 
 //Settings:
 #define AK8963_SET_CNTL1		0b00010110;	//16 bits readings, Cont. mode 2

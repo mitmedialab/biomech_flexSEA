@@ -63,7 +63,7 @@ static HAL_StatusTypeDef magneto_write(uint8_t internal_reg_addr, uint8_t* pData
 //Initialize the IMU w/ default values in config registers
 void init_imu(void)
 {
-	uint8_t tmp = 0;
+	//uint8_t tmp = 0;
 
 	//Accel + Gyro:
 	//=============
@@ -76,7 +76,7 @@ void init_imu(void)
 	uint8_t config[4] = {D_IMU_CONFIG, D_IMU_GYRO_CONFIG, D_IMU_ACCEL_CONFIG, \
 							D_IMU_ACCEL_CONFIG2};
 	imu_write(IMU_CONFIG, config, 4);
-	HAL_Delay(1);
+	HAL_Delay(10);
 
 	//Magneto:
 	//========
@@ -84,61 +84,66 @@ void init_imu(void)
 	//Disable Master, enable bypass:
 	config[0] = D_BYPASS_ENABLED;
 	imu_write(IMU_INT_PIN_CFG, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(10);
 	config[0] = 0x00;
 	imu_write(IMU_USER_CTRL, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(10);
 
 	//AK8963 basic config:
 	config[0] = AKM_POWER_DOWN;
 	magneto_write(AK8963_REG_CNTL1, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(100);
 	config[0] = AKM_FUSE_ROM_ACCESS;
 	magneto_write(AK8963_REG_CNTL1, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(100);
 	config[0] = AKM_POWER_DOWN;
 	magneto_write(AK8963_REG_CNTL1, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(100);
+	config[0] = AK8963_SET_CNTL1;	//Continuous 2, 16-bits
+	magneto_write(AK8963_REG_CNTL1, config, 1);
+	HAL_Delay(100);
 
-	//Enable Master, disable bypass:
+	//Disable bypass:
 	config[0] = D_BYPASS_DISABLED;
 	imu_write(IMU_INT_PIN_CFG, config, 1);
-	HAL_Delay(1);
-	config[0] = 0x20;
-	imu_write(IMU_USER_CTRL, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(10);
 
 	//Set Master 400kHz:
 	config[0] = 13;
+	//config[0] = 0x40;
 	imu_write(IMU_I2C_MASTER_CONTROL, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(10);
 
 	//Slave 0 (Reads from AKM):
 	config[0] = AK8963_ADDRESS | BIT_I2C_READ;
 	imu_write(IMU_I2C_SLV0_ADDR, config, 1);
-	HAL_Delay(1);
-	config[0] = AK8963_REG_ST1;
+	HAL_Delay(10);
+	config[0] = AK8963_REG_XOUT_L;
+	//config[0] = AK8963_REG_WIA;
 	imu_write(IMU_I2C_SLV0_REG, config, 1);
-	HAL_Delay(1);
-	config[0] = BIT_SLAVE_EN | 8;
+	HAL_Delay(10);
+	config[0] = BIT_SLAVE_EN | 7;
 	imu_write(IMU_I2C_SLV0_CTRL, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(10);
 
-	//Slave 1 (Changes AKM measurement mode):
-	config[0] = AK8963_ADDRESS;
-	imu_write(IMU_I2C_SLV1_ADDR, config, 1);
-	HAL_Delay(1);
-	config[0] = AK8963_REG_CNTL1;
-	imu_write(IMU_I2C_SLV1_REG, config, 1);
-	HAL_Delay(1);
-	config[0] = BIT_SLAVE_EN | 1;
-	imu_write(IMU_I2C_SLV1_CTRL, config, 1);
-	HAL_Delay(1);
-
+	/*
 	//Trigger actions:
 	config[0] = 0x03;
 	imu_write(IMU_I2C_MST_DELAY_CTRL, config, 1);
-	HAL_Delay(1);
+	HAL_Delay(10);
+	*/
+
+	/*
+	//Sampling rate:
+	config[0] = 1;	//ToDo what do we want?
+	imu_write(IMU_I2C_SLV4_CTRL, config, 1);
+	HAL_Delay(10);
+	*/
+
+	//Enable Master:
+	config[0] = 0x20;
+	imu_write(IMU_USER_CTRL, config, 1);
+	HAL_Delay(10);
 }
 
 void imu_write_ak8963(uint8_t reg, uint8_t *val)
@@ -179,26 +184,32 @@ void reset_imu(void)
 void IMUPrepareRead(void)
 {
 	uint8_t i2c_1_t_buf[4] = {IMU_ACCEL_XOUT_H, 0, 0, 0};
-	//uint8_t i2c_1_t_buf[4] = {IMU_GYRO_XOUT_H, 0, 0, 0};
 	HAL_I2C_Master_Transmit_DMA(&hi2c1, IMU_ADDR, i2c_1_t_buf, 1);
 }
 
 //Read all of the relevant IMU data (accel, gyro, temp)
 void IMUReadAll(void)
 {
-	//HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 14);
-	HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 20);
+	HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 21);
 }
 
 void IMUParseData(void)
 {
 	uint16_t tmp[10] = {0,0,0,0,0,0,0,0,0,0};
+	uint16_t first = 0;
 	uint8_t i = 0, index = 0;
 
-	//Rebuilt 10x 16bits words:
-	for(i = 0; i < 10; i++)
+	//Rebuilt 7x 16bits words (MSB first):
+	for(i = 0; i < 7; i++)
 	{
-		tmp[i] = ((uint16_t)i2c1_dma_rx_buf[index++] << 8) | ((uint16_t) i2c1_dma_rx_buf[index++]);
+		first = (uint16_t)i2c1_dma_rx_buf[index++] << 8;
+		tmp[i] = first | ((uint16_t) i2c1_dma_rx_buf[index++]);
+	}
+	//And 3x 16bits words (LSB first):
+	for(i = 0; i < 3; i++)
+	{
+		first = (uint16_t)i2c1_dma_rx_buf[index++];
+		tmp[i+7] = first | ((uint16_t) i2c1_dma_rx_buf[index++] << 8);
 	}
 
 	//Assign:
@@ -227,73 +238,6 @@ void IMUParseData(void)
 	rigid1.mn.magneto.z = imu.magneto.z;
 }
 
-//===================
-//AK8963 Magnetometer
-//===================
-
-/*
-void init_ak8963(void)
-{
-	uint8_t tries = 0, works = 0;
-
-	//First, can we talk to the sensor?
-	for(tries = 0; tries < 10; tries++)
-	{
-		if(ak8963_read_status() == 0x48)
-		{
-			works = 1;
-			break;
-		}
-		HAL_Delay(10);
-	}
-
-	if(works)
-	{
-		//Configures CNTL1:
-		HAL_Delay(10);
-		i2c_ak8963_tmp_buf[0] = AK8963_REG_CNTL1;
-		i2c_ak8963_tmp_buf[1] = AK8963_SET_CNTL1;
-      	I2C_1_MasterWriteBuf( AK8963_ADDRESS, (uint8_t *)i2c_ak8963_tmp_buf, 2, (I2C_1_MODE_COMPLETE_XFER ));
-		HAL_Delay(10);
-	}
-}
-
-//Reads WIA, supposed to return 0x48
-uint8_t ak8963_read_status(void)
-{
-	//i2c1_read(AK8963_ADDRESS, AK8963_REG_WIA, i2c_ak8963_tmp_buf, 1);
-	uint8_t status = 0;
-
-	//Start, address, Write mode
-	status = I2C_1_MasterSendStart(AK8963_ADDRESS, 0);
-	if(status != I2C_1_MSTR_NO_ERROR)
-		HAL_Delay(1);
-
-	//Write to register
-	status = I2C_1_MasterWriteByteTimeOut(0x00, 500);
-	if(status != I2C_1_MSTR_NO_ERROR)
-	{
-		//Release bus:
-		I2C_1_BUS_RELEASE;
-	}
-
-	I2C_1_MasterReadBuf(AK8963_ADDRESS, (uint8_t *)i2c_ak8963_tmp_buf, 1, (I2C_1_MODE_COMPLETE_XFER | I2C_1_MODE_REPEAT_START));
-
-	return i2c_ak8963_tmp_buf[0];
-}
-
-//Puts all the gyroscope values in the structure:
-void get_magneto_xyz(void)
-{
-	uint8_t tmp_data[8] = {0,0,0,0,0,0,0,0};
-
-	//According to the documentation it's X_L, X_H, Y_L, ...
-	//We need to read ST2 everytime, hence the 7th byte
-	i2c1_read(AK8963_ADDRESS, AK8963_REG_XOUT_L, tmp_data, 7);
-
-}
-*/
-
 //****************************************************************************
 // Private Function(s)
 //****************************************************************************
@@ -304,7 +248,6 @@ void get_magneto_xyz(void)
 // uint8_t internal_reg_addr: internal register address of the IMU
 // uint8_t* pData: pointer to the data we want to send to that address
 // uint16_t Size: amount of bytes of data pointed to by pData
-
 
 static HAL_StatusTypeDef imu_write(uint8_t internal_reg_addr, uint8_t* pData,
 		uint16_t Size)
