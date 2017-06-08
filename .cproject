@@ -117,6 +117,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
@@ -198,6 +199,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.330475997" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -307,6 +309,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
@@ -321,7 +324,7 @@
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.283410292" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.679795503" name="Size format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format" useByScannerDiscovery="false" value="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.sysv" valueType="enumerated"/>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals.846092651" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals.846092651" name="Show totals" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.844764257" name="Cross ARM GNU Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash.1037249244" name="Cross ARM GNU Create Flash Image" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.createflash"/>
@@ -498,6 +501,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.711861187" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -639,6 +643,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2057419407" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
@@ -720,6 +725,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.26258754" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
