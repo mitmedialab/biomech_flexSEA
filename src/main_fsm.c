@@ -86,6 +86,7 @@ void mainFSM2(void)
 
 	//readExecute();
 
+	/* Test code ToDo move to FSM
 	div++;
 	div %= 10;
 	if(!div)
@@ -94,6 +95,7 @@ void mainFSM2(void)
 		tx_cmd_rigid_r(TX_N_DEFAULT, 0);
 		packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, info, SEND_TO_SLAVE);
 	}
+	*/
 }
 
 //Case 3:
