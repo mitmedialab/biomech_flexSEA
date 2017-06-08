@@ -46,6 +46,7 @@
 
 //Test:
 #include "i2c.h"
+//#include "eeprom.h"
 
 //****************************************************************************
 // Variable(s)
@@ -73,12 +74,13 @@ int main(void)
 	flexsea_start_receiving_from_master();
 
 	//Test code, use with care. Normal code might NOT run when enabled!
-	test_code_blocking();
+	//test_code_blocking();
 	//test_code_non_blocking();
 
 	init_user();
 
-	i2c3Receive();
+	//i2c3Receive();
+	//resetCycleCountEEPROM();
 
 	//Infinite loop
 	while(1)
@@ -124,6 +126,7 @@ int main(void)
 
 			//Test:
 			//i2c3Receive();
+			//increaseCycleCountEEPROM();
 		}
 
 		//1000ms

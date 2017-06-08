@@ -202,7 +202,7 @@ void test_code_blocking(void)
 	//imu_test_code_blocking();
 	//test_delayUsBlocking_blocking();
 	//fpu_testcode_blocking();
-	eeprom_test_code_blocking_1();
+	//eeprom_test_code_blocking_1();
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 }
 
