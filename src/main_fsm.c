@@ -32,6 +32,7 @@
 // Include(s)
 //****************************************************************************
 
+#include "user-mn.h"
 #include <adc.h>
 #include <dio.h>
 #include <i2c.h>
@@ -43,7 +44,6 @@
 #include "flexsea_global_structs.h"
 #include "flexsea_board.h"
 #include "rgb_led.h"
-#include "user-mn.h"
 #include "cmd-Rigid.h"
 #include "flexsea_system.h"
 #include "spi.h"
@@ -80,8 +80,10 @@ void mainFSM1(void)
 //Case 2:
 void mainFSM2(void)
 {
+	/*
 	static uint8_t div = 0;
 	uint8_t info[2] = {PORT_RS485_2, PORT_RS485_2};
+	*/
 	i2c2_fsm();
 
 	//readExecute();
