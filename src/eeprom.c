@@ -61,9 +61,6 @@ uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
 uint16_t VarDataTab[NB_OF_VAR] = {0, 0, 0};
 //uint16_t VarValue,VarDataTmp = 0;
 
-//User code:
-uint16_t cycles = 0;
-
 /* Global variable used to store variable value in read sequence */
 uint16_t DataVar = 0;
 
@@ -779,44 +776,6 @@ void eeprom_test_code_blocking_1(void)
 	    HAL_Delay(2000);
 	}
 }
-
-uint16_t increaseCycleCountEEPROM(void)
-{
-	//Read current value:
-	uint16_t tmp = 0;
-	if((EE_ReadVariable(CYCLE_COUNT_ADDR,  &tmp)) != HAL_OK)
-	{
-		//Error
-		return 0;
-	}
-
-	//Store value in RAM for application code:
-	cycles = tmp;
-
-	//Write value + 1:
-	if(EE_WriteVariable(CYCLE_COUNT_ADDR,  (tmp + 1)) != HAL_OK)
-	{
-		//Error
-		return 0;
-	}
-
-	//Success
-	return 1;
-}
-
-uint16_t resetCycleCountEEPROM(void)
-{
-	//Write 0:
-	if(EE_WriteVariable(CYCLE_COUNT_ADDR, 0) != HAL_OK)
-	{
-		//Error
-		return 0;
-	}
-
-	//Success
-	return 1;
-}
-
 
 /**
   * @}

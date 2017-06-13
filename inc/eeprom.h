@@ -108,9 +108,6 @@
 #define FLASH_TYPEERASE_SECTORS         ((uint32_t)0x00U)  /*!< Sectors erase only          */
 #define FLASH_TYPEERASE_MASSERASE       ((uint32_t)0x01U)  /*!< Flash Mass erase activation */
 
-//User:
-#define CYCLE_COUNT_ADDR				0
-
 /* Exported types ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
@@ -118,8 +115,6 @@ uint16_t EE_Init(void);
 uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data);
 uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data);
 void eeprom_test_code_blocking_1(void);
-uint16_t increaseCycleCountEEPROM(void);
-uint16_t resetCycleCountEEPROM(void);
 
 #endif /* __EEPROM_H */
 

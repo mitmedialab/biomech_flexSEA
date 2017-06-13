@@ -80,24 +80,7 @@ void mainFSM1(void)
 //Case 2:
 void mainFSM2(void)
 {
-	/*
-	static uint8_t div = 0;
-	uint8_t info[2] = {PORT_RS485_2, PORT_RS485_2};
-	*/
 	i2c2_fsm();
-
-	//readExecute();
-
-	/* Test code ToDo move to FSM
-	div++;
-	div %= 10;
-	if(!div)
-	{
-		//tx_cmd_data_read_all_r(TX_N_DEFAULT);
-		tx_cmd_rigid_r(TX_N_DEFAULT, 0);
-		packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, info, SEND_TO_SLAVE);
-	}
-	*/
 }
 
 //Case 3:

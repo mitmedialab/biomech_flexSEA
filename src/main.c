@@ -44,9 +44,6 @@
 #include "flexsea_system.h"
 #include "flexsea_global_structs.h"
 
-//Test:
-//#include "eeprom.h"
-
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -77,8 +74,6 @@ int main(void)
 	//test_code_non_blocking();
 
 	init_user();
-
-	//resetCycleCountEEPROM();
 
 	//Infinite loop
 	while(1)
@@ -122,15 +117,15 @@ int main(void)
 		{
 			tb_100ms_flag = 0;
 
-			//Test:
-			//i2c3Receive();
-			//increaseCycleCountEEPROM();
+			//...
 		}
 
 		//1000ms
 		if(tb_1000ms_flag)
 		{
 			tb_1000ms_flag = 0;
+
+			//...
 		}
 	}
 }
