@@ -137,6 +137,9 @@ void init_peripherals(void)
 	//Software:
 	initMasterSlaveComm();
 
+	//Enable reception on I2C3 (Regulate):
+	i2c3Receive();
+
 	//All RGB LEDs OFF
 	LEDR(0);
 	LEDG(0);

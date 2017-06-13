@@ -45,7 +45,6 @@
 #include "flexsea_global_structs.h"
 
 //Test:
-#include "i2c.h"
 //#include "eeprom.h"
 
 //****************************************************************************
@@ -79,7 +78,6 @@ int main(void)
 
 	init_user();
 
-	//i2c3Receive();
 	//resetCycleCountEEPROM();
 
 	//Infinite loop
