@@ -113,6 +113,7 @@ uint8_t getSlaveCnt(uint8_t sub);
 #define rx_command_wireless				rx_command_5
 #define update_rx_buf_byte_wireless		update_rx_buf_byte_5
 #define update_rx_buf_array_wireless	update_rx_buf_array_5
+#define update_rx_buf_wireless(x, y)	circ_buff_write(commPeriph[PORT_WIRELESS].rx.circularBuff, (x), (y))
 
 #define comm_str_exp					comm_str_6
 #define unpack_payload_exp				unpack_payload_6

@@ -176,10 +176,10 @@ void mainFSM10kHz(void)
 	//Communication with our Master & Slave(s):
 	//=========================================
 
-	//SPI or USB reception from a Plan board:
+	//SPI, USB or Wireless reception from a Plan board:
 	flexsea_receive_from_master();
 
-	//RS-485 reception from an Execute board:
+	//RS-485 or UART reception from an Execute board:
 	flexsea_receive_from_slave();
 
 	//Did we receive new commands? Can we parse them?

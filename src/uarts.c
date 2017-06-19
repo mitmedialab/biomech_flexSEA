@@ -460,7 +460,8 @@ void DMA1_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 	}
 
 	//Deal with FlexSEA buffers here:
-	update_rx_buf_array_wireless(uart3_dma_rx_buf, uart3_dma_xfer_len);
+	//update_rx_buf_array_wireless(uart3_dma_rx_buf, uart3_dma_xfer_len);	//Legacy
+	update_rx_buf_wireless(uart3_dma_rx_buf, uart3_dma_xfer_len);			//Circular Buffer
 	//Empty DMA buffer once it's copied:
 	memset(uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
 	commPeriph[PORT_WIRELESS].rx.bytesReadyFlag++;
@@ -535,7 +536,7 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
 		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 	}
-	else if(husart->Instance == USART3)	//Expansion port
+	else if(husart->Instance == USART3)	//Bluetooth
 	{
 		//Peripheral clock enable:
 		__USART3_CLK_ENABLE();
@@ -560,6 +561,18 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		//Other Bluetooth pins:
+		__GPIOA_CLK_ENABLE();
+
+		//PA6  ------> P5 (Connection LED)
+		//PA7  ------> P8 (Comm LED)
+
+		GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	}
 	else
 	{

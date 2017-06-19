@@ -148,11 +148,10 @@ void flexsea_receive_from_master(void)
 	commPeriph[PORT_USB].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_USB], &packet[PORT_USB][INBOUND]);
 
 	//SPI:
-	//commPeriph[PORT_SPI].rx.unpackedPacketsAvailable = tryUnpacking(&commPeriph[PORT_SPI], &packet[PORT_SPI][INBOUND]);	//Legacy
-	commPeriph[PORT_SPI].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_SPI], &packet[PORT_SPI][INBOUND]);		//Circular buffer
+	commPeriph[PORT_SPI].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_SPI], &packet[PORT_SPI][INBOUND]);
 
-	//Incomplete, ToDo (flag won't be raised)
-	tryUnpacking(&commPeriph[PORT_WIRELESS], &packet[PORT_WIRELESS][INBOUND]);
+	//Wireless
+	commPeriph[PORT_WIRELESS].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_WIRELESS], &packet[PORT_WIRELESS][INBOUND]);
 }
 
 void flexsea_start_receiving_from_master(void)
@@ -180,12 +179,8 @@ void flexsea_receive_from_slave(void)
 
 	//Did we get new bytes?
 	//=====================
-	//tryUnpacking(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);
-	//tryUnpacking(&commPeriph[PORT_RS485_2], &packet[PORT_RS485_2][INBOUND]);
-
 	commPeriph[PORT_RS485_1].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);		//Circular buffer
 	commPeriph[PORT_RS485_2].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_2], &packet[PORT_RS485_2][INBOUND]);		//Circular buffer
-
 	commPeriph[PORT_EXP].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_EXP], &packet[PORT_EXP][INBOUND]);		//Circular buffer
 }
 

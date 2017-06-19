@@ -54,13 +54,17 @@
 //Prepares the structures:
 void initMasterSlaveComm(void)
 {
-	//Default state:
+	//USB:
 	initCommPeriph(&commPeriph[PORT_USB], PORT_USB, MASTER, rx_buf_4, \
 			comm_str_4, rx_command_4, &rx_buf_circ_4, \
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
+
+	//RS-485 #1:
 	initCommPeriph(&commPeriph[PORT_RS485_1], PORT_RS485_1, SLAVE, rx_buf_1, \
 			comm_str_1, rx_command_1, &rx_buf_circ_1, \
 			&packet[PORT_RS485_1][INBOUND], &packet[PORT_RS485_1][OUTBOUND]);
+
+	//UART:
 	initCommPeriph(&commPeriph[PORT_RS485_2], PORT_RS485_2, SLAVE, rx_buf_2, \
 			comm_str_2, rx_command_2, &rx_buf_circ_2, \
 			&packet[PORT_RS485_2][INBOUND], &packet[PORT_RS485_2][OUTBOUND]);

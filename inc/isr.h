@@ -63,7 +63,7 @@
 #define ISR_DMA2_STREAM6		4	//USART6 TX
 #define ISR_SUB_DMA2_STREAM6	1
 
-//UART DMA - Expansion:
+//UART DMA - Bluetooth:
 #define ISR_DMA1_STREAM1		5	//USART3 RX
 #define ISR_SUB_DMA1_STREAM1	0
 #define ISR_DMA1_STREAM3		4	//USART3 TX
