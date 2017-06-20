@@ -56,7 +56,7 @@
 /** @defgroup USBD_DESC_Private_Defines
   * @{
   */ 
-#define USBD_VID     1155
+#define USBD_VID     1155	//0x0483 = STMicroelectronics
 #define USBD_LANGID_STRING     1033
 #define USBD_MANUFACTURER_STRING     "MIT Biomechatronics"
 #define USBD_PID_FS     22336
