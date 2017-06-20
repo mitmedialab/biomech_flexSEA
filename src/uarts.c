@@ -41,6 +41,7 @@
 #include "flexsea_sys_def.h"
 #include "flexsea_board.h"
 #include "isr.h"
+#include "timer.h"
 
 //****************************************************************************
 // Variable(s)
@@ -548,12 +549,26 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		//PB13  ------> USART3_CTS
 		//PB14  ------> USART3_RTS
 
+		/*
 		GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_14;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+		*/
+		GPIO_InitStruct.Pin = GPIO_PIN_13;
+		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		GPIO_InitStruct.Pin = GPIO_PIN_14;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+		HAL_GPIO_WritePin(GPIOB, 1<<13, 0);
 
 		GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_11;
 		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -565,8 +580,24 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		//Other Bluetooth pins:
 		__GPIOA_CLK_ENABLE();
 
+		//PA4  ------> Reset
+		//PA5  ------> P4 (Factory reset)
 		//PA6  ------> P5 (Connection LED)
 		//PA7  ------> P8 (Comm LED)
+
+		GPIO_InitStruct.Pin = GPIO_PIN_4;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;		//RN-42 has a PU, we match it
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		BT_RST(1);
+
+		//P4 - Factory reset: we use input w/ PU to avoid messing with it
+		GPIO_InitStruct.Pin = GPIO_PIN_5;
+		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 		GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -579,6 +610,15 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		//Invalid peripheral
 		flexsea_error(SE_INVALID_USART);
 	}
+}
+
+void resetBluetooth(void)
+{
+	BT_RST(1);
+	delayUsBlocking(10);
+	BT_RST(0);
+	delayUsBlocking(10);
+	BT_RST(1);
 }
 
 //Using DMA2 Ch 4 Stream 2 for USART1 RX

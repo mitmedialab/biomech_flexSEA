@@ -80,6 +80,7 @@ void init_peripherals(void)
 	#ifdef USE_UART3
 
 		init_usart3(230400);	//Expansion port
+		BT_RST(0);
 
 	#endif
 
@@ -144,6 +145,8 @@ void init_peripherals(void)
 	LEDR(0);
 	LEDG(0);
 	LEDB(0);
+
+	resetBluetooth();
 }
 
 //Computes a bunch of stuff to maximize calculations:

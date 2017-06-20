@@ -76,11 +76,15 @@ void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma);
 void init_usart3(uint32_t baudrate);
 void puts_expUart(uint8_t *str, uint16_t length);
 
+void resetBluetooth(void);
+
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
 
 #define UART_TIMEOUT		5000	//ms?
+
+#define BT_RST(x) HAL_GPIO_WritePin(GPIOA, 1<<4, x);
 
 //Baud = fck/(8*(2-OVER8)*USARTDIV) and OVER8 = 1 so Baud = fck/(8*USARTDIV)
 //USARTDIV = fck / (8*Baud)
