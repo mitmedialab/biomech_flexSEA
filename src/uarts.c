@@ -180,7 +180,7 @@ void init_usart3(uint32_t baudrate)
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(USART3_IRQn, ISR_UART3, ISR_SUB_UART3);
-	HAL_NVIC_EnableIRQ(USART3_IRQn);
+	//HAL_NVIC_EnableIRQ(USART3_IRQn);
 
 	//UART3 module:
 	husart3.Init.BaudRate = baudrate;
@@ -201,8 +201,8 @@ void init_usart3(uint32_t baudrate)
 	USART3->CR3 |= USART_CR3_ONEBIT;	//1 sample per bit
 	USART3->CR3 |= USART_CR3_DMAR;		//Enable DMA Reception
 	USART3->CR3 |= USART_CR3_DMAT;		//Enable DMA Transmission
-	USART3->CR3 |= USART_CR3_CTSE;		//Enable CTS
-	USART3->CR3 |= USART_CR3_RTSE;		//Enable RTS
+	//USART3->CR3 |= USART_CR3_CTSE;		//Enable CTS
+	//USART3->CR3 |= USART_CR3_RTSE;		//Enable RTS
 
 	init_dma1_stream1_ch4();
 	init_dma1_stream3_ch4();
@@ -360,8 +360,7 @@ uint8_t reception_uart_ex_blocking(void)
 	return 0;
 }
 
-//Sends a string via the expansion's port UART (USART3)
-//Note: this is sending via interrupt, but not using the DMA
+//Sends a string over Bluetooth (USART3)
 void puts_expUart(uint8_t *str, uint16_t length)
 {
 	unsigned int i = 0;
