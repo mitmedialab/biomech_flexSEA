@@ -8,7 +8,7 @@
 	Biomechatronics research group <http://biomech.media.mit.edu/>
 	[Contributors]
 *****************************************************************************
-	[This file] Cycle Tester EEPROM API
+	[This file] FlexSEA-Mn EEPROM API
 *****************************************************************************
 	[Change log] (Convention: YYYY-MM-DD | author | comment)
 	* 2017-06-13 | jfduval | Initial GPL-3.0 release
@@ -19,8 +19,8 @@
 // Include(s)
 //****************************************************************************
 
+#include <eeprom_user.h>
 #include "main.h"
-#include "cycle.h"
 #include "flexsea_system.h"
 #include "flexsea_sys_def.h"
 #include "flexsea.h"
@@ -30,8 +30,11 @@
 // Variable(s)
 //****************************************************************************
 
-//User code:
+//Cycle tester:
 uint16_t cycles = 0;
+
+//Angle map:
+uint16_t angleMap[EE_ANGLE_CNT];
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -98,6 +101,76 @@ uint16_t resetCycleCountEEPROM(void)
 
 	//Success
 	return 1;
+}
+
+//Fills the array with zeros:
+void initAngleMapRAM(void)
+{
+	uint8_t i = 0;
+
+	for(i = 0; i < EE_ANGLE_CNT; i++)
+	{
+		angleMap[i] = 0;
+	}
+}
+
+uint8_t writeAngleMapEEPROM(void)
+{
+	uint8_t i = 0;
+
+	for(i = 0; i < EE_ANGLE_CNT; i++)
+	{
+		//Write value (index for now):
+		if(EE_WriteVariable(ANGLE_MAP_ADDR + i, i) != HAL_OK)
+		{
+			//Error
+			return 0;
+		}
+	}
+
+	//Success
+	return 1;
+}
+
+uint8_t readAngleMapEEPROM(void)
+{
+	uint8_t i = 0;
+	uint16_t tmp = 0;
+
+	for(i = 0; i < EE_ANGLE_CNT; i++)
+	{
+		//Write value (index for now):
+		if(EE_ReadVariable(ANGLE_MAP_ADDR + i, &tmp) != HAL_OK)
+		{
+			//Error
+			return 0;
+		}
+		else
+		{
+			angleMap[i] = tmp;
+		}
+	}
+
+	//Success
+	return 1;
+}
+
+void testAngleMapEEPROMblocking(void)
+{
+	volatile uint8_t ret1 = 0, ret2 = 0;
+
+	while(1)
+	{
+		initAngleMapRAM();
+
+	//	ret1 = writeAngleMapEEPROM();
+
+	//	HAL_Delay(2000);
+
+		ret2 = readAngleMapEEPROM();
+
+		HAL_Delay(2000);
+	}
 }
 
 //****************************************************************************

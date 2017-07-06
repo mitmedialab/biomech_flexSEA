@@ -209,6 +209,7 @@ void test_code_blocking(void)
 	//test_delayUsBlocking_blocking();
 	//fpu_testcode_blocking();
 	//eeprom_test_code_blocking_1();
+	testAngleMapEEPROMblocking();
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 }
 

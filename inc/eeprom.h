@@ -52,6 +52,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include "eeprom_user.h"
 
 /* Exported constants --------------------------------------------------------*/
 /* EEPROM emulation firmware error codes */
@@ -101,7 +102,7 @@
 #define PAGE_FULL             ((uint8_t)0x80)
 
 /* Variables' number */
-#define NB_OF_VAR             ((uint8_t)0x03)
+#define NB_OF_VAR             ((uint8_t)EE_CNT)
 
 //Hacks - copied from newer libs:
 //===============================

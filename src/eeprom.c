@@ -57,9 +57,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 //Test code:
-uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
+uint16_t VirtAddVarTab[NB_OF_VAR];
 uint16_t VarDataTab[NB_OF_VAR] = {0, 0, 0};
-//uint16_t VarValue,VarDataTmp = 0;
 
 /* Global variable used to store variable value in read sequence */
 uint16_t DataVar = 0;
@@ -740,7 +739,7 @@ static uint16_t EE_PageTransfer(uint16_t VirtAddress, uint16_t Data)
 //Emulated EEPROM test code. Do not use in continuous - FLASH is only good for 10k cycles!
 void eeprom_test_code_blocking_1(void)
 {
-	uint16_t val = 0;
+	//uint16_t val = 0;
 
 	while(1)
 	{

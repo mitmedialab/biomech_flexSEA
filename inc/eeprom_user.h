@@ -8,7 +8,7 @@
 	Biomechatronics research group <http://biomech.media.mit.edu/>
 	[Contributors]
 *****************************************************************************
-	[This file] Cycle Tester EEPROM API
+	[This file] FlexSEA-Mn EEPROM API
 *****************************************************************************
 	[Change log] (Convention: YYYY-MM-DD | author | comment)
 	* 2017-06-13 | jfduval | Initial GPL-3.0 release
@@ -34,16 +34,29 @@ extern uint16_t cycles;
 // Public Function Prototype(s):
 //****************************************************************************
 
+//Cycle Tester:
 uint16_t increaseCycleCountEEPROM(void);
 uint16_t resetCycleCountEEPROM(void);
 uint16_t readCycleCountEEPROM(uint16_t *cc);
+
+//Angle Maps:
+void initAngleMapRAM(void);
+uint8_t writeAngleMapEEPROM(void);
+uint8_t readAngleMapEEPROM(void);
+void testAngleMapEEPROMblocking(void);
 
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
 
-//User:
-#define CYCLE_COUNT_ADDR				0
+#define EE_ANGLE_CNT					128
+#define EE_CYCLE_TESTER_CNT				3
+//Total memory size (keep < 256):
+#define EE_CNT							(EE_ANGLE_CNT + EE_CYCLE_TESTER_CNT)
+
+//Memory areas:
+#define ANGLE_MAP_ADDR					0
+#define CYCLE_COUNT_ADDR				(EE_ANGLE_CNT + 1)
 
 
 #endif // INC_CYCLE_H
