@@ -190,14 +190,25 @@ void I2C3_EV_IRQHandler(void)
 	HAL_I2C_EV_IRQHandler(&hi2c3);
 }
 
+//We use this function to catch all other errors (easier to debug):
+void genericFaultHandler(uint8_t i, uint8_t major)
+{
+	if(major)
+	{
+		while(1);
+	}
+}
+
 void NMI_Handler(void)
 {
+	genericFaultHandler(0, 0);
 }
 
 void HardFault_Handler(void)
 {
 	/* Go to infinite loop when Hard Fault exception occurs */
-	while(1)
+	genericFaultHandler(1, 1);
+	//while(1)
 	{
 	}
 }
@@ -205,7 +216,8 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
 	/* Go to infinite loop when Memory Manage exception occurs */
-	while(1)
+	genericFaultHandler(2, 1);
+	//while(1)
 	{
 	}
 }
@@ -213,7 +225,8 @@ void MemManage_Handler(void)
 void BusFault_Handler(void)
 {
 	/* Go to infinite loop when Bus Fault exception occurs */
-	while(1)
+	genericFaultHandler(3, 1);
+	//while(1)
 	{
 	}
 }
@@ -221,19 +234,23 @@ void BusFault_Handler(void)
 void UsageFault_Handler(void)
 {
 	/* Go to infinite loop when Usage Fault exception occurs */
-	while(1)
+	genericFaultHandler(4, 1);
+	//while(1)
 	{
 	}
 }
 
 void SVC_Handler(void)
 {
+	genericFaultHandler(5, 0);
 }
 
 void DebugMon_Handler(void)
 {
+	genericFaultHandler(6, 0);
 }
 
 void PendSV_Handler(void)
 {
+	genericFaultHandler(7, 0);
 }
