@@ -71,6 +71,7 @@ void initRigidIO(void)
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
 }
 
+/*
 void readExecute(void)
 {
 	uint16_t index = EX_MEM_R_MOT_ANGLE3;
@@ -83,6 +84,7 @@ void readExecute(void)
 	rigid1.ex.ctrl.pwm = (int16_t)REBUILD_UINT16(i2c3_tmp_buf, &index);
 	rigid1.ex.status = REBUILD_UINT16(i2c3_tmp_buf, &index);
 }
+*/
 
 //Decodes the bytes received over I2C
 void decodeRegulate(void)
@@ -108,6 +110,7 @@ void decodeRegulate(void)
 // uint8_t* pData: pointer to the data we want to send to that address
 // uint16_t Size: amount of bytes of data pointed to by pData
 
+/*
 static HAL_StatusTypeDef i2cWriteEx(uint8_t internal_reg_addr, uint8_t* pData,
 		uint16_t Size)
 {
@@ -164,3 +167,4 @@ static HAL_StatusTypeDef i2cReadEx(uint8_t internal_reg_addr, uint8_t *pData,
 
 	return retVal;
 }
+*/
