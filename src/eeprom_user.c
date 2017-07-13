@@ -121,7 +121,7 @@ uint8_t writeAngleMapEEPROM(void)
 	for(i = 0; i < EE_ANGLE_CNT; i++)
 	{
 		//Write value (index for now):
-		if(EE_WriteVariable(ANGLE_MAP_ADDR + i, i) != HAL_OK)
+		if(EE_WriteVariable(ANGLE_MAP_ADDR + i, angleMap[i]) != HAL_OK)
 		{
 			//Error
 			return 0;
