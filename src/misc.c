@@ -74,7 +74,13 @@ void init_peripherals(void)
 	init_leds();
 	initHooks();
 	init_adc1();
-	init_spi4();				//Plan
+
+	#ifdef USE_SPI_PLAN
+
+		init_spi4();			//Plan
+
+	#endif //USE_SPI_PLAN
+
 	initRigidIO();				//Interface with Rigid's other uC
 
 	#ifdef USE_UART3
