@@ -71,13 +71,13 @@ void mainFSM0(void)
 	slaveTransmit(PORT_RS485_1);
 }
 
-//Case 1: I2C2
+//Case 1: I2C1 - IMU
 void mainFSM1(void)
 {
 	i2c1_fsm();
 }
 
-//Case 2:
+//Case 2: I2C2 - Unused
 void mainFSM2(void)
 {
 	i2c2_fsm();
