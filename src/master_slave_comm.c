@@ -38,6 +38,7 @@
 #include <master_slave_comm.h>
 #include <stdbool.h>
 #include "spi.h"
+#include "flexsea_cmd_stream.h"
 
 //****************************************************************************
 // Variable(s)
@@ -165,6 +166,45 @@ void slaveTransmit(Port port)
 			}
 
 			flexsea_send_serial_slave(p);
+		}
+	}
+}
+
+void autoStream(void)
+{
+	static int sinceLastStreamSend[MAX_STREAMS] = {0};
+
+	if(isStreaming)
+	{
+		int i;
+		for(i = 0; i < isStreaming; i++)
+		{
+			sinceLastStreamSend[i]++;
+		}
+
+		for(i = 0; i < isStreaming; i++)
+		{
+			if(sinceLastStreamSend[i] >= streamPeriods[i])
+			{
+				uint8_t cp_str[256] = {0};
+
+				//Determine what offset to use:
+				streamCurrentOffset[i]++;
+				if(streamCurrentOffset[i] > streamIndex[i][1])
+				{
+					streamCurrentOffset[i] = streamIndex[i][0];
+				}
+
+				cp_str[P_XID] = streamReceivers[i];
+				cp_str[P_DATA1] = streamCurrentOffset[i];
+				(*flexsea_payload_ptr[streamCmds[i]][RX_PTYPE_READ]) (cp_str, &streamPortInfos[i]);
+
+				sinceLastStreamSend[i] -= streamPeriods[i];
+
+				//we return to avoid sending two msgs in one cycle
+				//since counters were already incremented, we will still try to hit other stream frequencies
+				return;
+			}
 		}
 	}
 }
