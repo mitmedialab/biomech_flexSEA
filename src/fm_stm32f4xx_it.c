@@ -19,6 +19,7 @@
 #include <timer.h>
 #include <uarts.h>
 #include "main.h"
+#include "ui.h"
 #include "fm_stm32f4xx_hal_spi.h"
 #include "fm_stm32f4xx_it.h"
 
@@ -190,12 +191,23 @@ void I2C3_EV_IRQHandler(void)
 	HAL_I2C_EV_IRQHandler(&hi2c3);
 }
 
+//****************************************************************************
+// Fault & Exceptions
+//****************************************************************************
+
 //We use this function to catch all other errors (easier to debug):
 void genericFaultHandler(uint8_t i, uint8_t major)
 {
 	if(major)
 	{
-		while(1);
+		while(1){LEDR(1);}
+	}
+	else
+	{
+		//White
+		LEDR(1);
+		LEDG(1);
+		LEDB(1);
 	}
 }
 
@@ -206,38 +218,26 @@ void NMI_Handler(void)
 
 void HardFault_Handler(void)
 {
-	/* Go to infinite loop when Hard Fault exception occurs */
+	//Go to infinite loop when Hard Fault exception occurs
 	genericFaultHandler(1, 1);
-	//while(1)
-	{
-	}
 }
 
 void MemManage_Handler(void)
 {
-	/* Go to infinite loop when Memory Manage exception occurs */
+	//Go to infinite loop when Memory Manage exception occurs
 	genericFaultHandler(2, 1);
-	//while(1)
-	{
-	}
 }
 
 void BusFault_Handler(void)
 {
-	/* Go to infinite loop when Bus Fault exception occurs */
+	//Go to infinite loop when Bus Fault exception occurs
 	genericFaultHandler(3, 1);
-	//while(1)
-	{
-	}
 }
 
 void UsageFault_Handler(void)
 {
-	/* Go to infinite loop when Usage Fault exception occurs */
+	//Go to infinite loop when Usage Fault exception occurs
 	genericFaultHandler(4, 1);
-	//while(1)
-	{
-	}
 }
 
 void SVC_Handler(void)
@@ -253,4 +253,11 @@ void DebugMon_Handler(void)
 void PendSV_Handler(void)
 {
 	genericFaultHandler(7, 0);
+}
+
+//Processor ends up here if an unexpected interrupt occurs or a specific
+// handler is not present in the application code.
+void Default_Handler(void)
+{
+	genericFaultHandler(8, 1);
 }

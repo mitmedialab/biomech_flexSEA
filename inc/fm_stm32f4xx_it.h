@@ -51,6 +51,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
+void genericFaultHandler(uint8_t i, uint8_t major);
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);
@@ -59,6 +60,8 @@ void UsageFault_Handler(void);
 void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
+void Default_Handler(void);
+
 void SysTick_Handler(void);
 void SPIx_IRQHandler(void);	//ToDo Wrong, should be 1
 void USART1_IRQHandler(void);
