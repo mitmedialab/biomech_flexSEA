@@ -54,6 +54,8 @@
 // Variable(s)
 //****************************************************************************
 
+uint32_t causeOfLastReset = 0;
+
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
@@ -153,6 +155,15 @@ void init_peripherals(void)
 	LEDB(0);
 
 	resetBluetooth();
+}
+
+void saveCauseOFLastReset(void)
+{
+	//Save it:
+	causeOfLastReset = RCC->CSR & 0xFE000000;
+
+	//Clear flags:
+	RCC->CSR &= ~RCC_CSR_RMVF;
 }
 
 //Computes a bunch of stuff to maximize calculations:

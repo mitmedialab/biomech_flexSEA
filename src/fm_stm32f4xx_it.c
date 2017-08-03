@@ -204,10 +204,13 @@ void genericFaultHandler(uint8_t i, uint8_t major)
 	}
 	else
 	{
-		//White
-		LEDR(1);
-		LEDG(1);
-		LEDB(1);
+		while(1)
+		{
+			//White
+			LEDR(1);
+			LEDG(1);
+			LEDB(1);
+		}
 	}
 }
 

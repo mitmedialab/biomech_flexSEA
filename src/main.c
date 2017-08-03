@@ -58,6 +58,8 @@ void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 
 int main(void)
 {
+	//saveCauseOFLastReset();
+
 	//Prepare FlexSEA stack:
 	init_flexsea_payload_ptr();
 

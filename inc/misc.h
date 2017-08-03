@@ -47,6 +47,7 @@
 //****************************************************************************
 
 void init_peripherals(void);
+void saveCauseOFLastReset(void);
 void test_code_blocking(void);
 void test_code_non_blocking(void);
 

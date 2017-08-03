@@ -195,7 +195,7 @@ void i2c2_fsm(void)
 	#endif //USE_I2C_2
 }
 
-// Initialize i2c1. Currently connected to the IMU and the digital pot
+// Initialize i2c1. Currently connected to the IMU
 void init_i2c1(void)
 {
 	hi2c1.Instance = I2C1;
@@ -343,7 +343,6 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 void i2c3Receive(void)
 {
 	HAL_I2C_Slave_Receive_IT(&hi2c3, i2c_3_r_buf, MN_WBUF_SIZE);
-	//HAL_I2C_Slave_Transmit_IT(&hi2c3, i2c_3_r_buf, 4);
 }
 
 //I2C Slave Receive callback:
