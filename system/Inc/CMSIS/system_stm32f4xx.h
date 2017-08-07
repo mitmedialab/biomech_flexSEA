@@ -74,6 +74,8 @@
                variable is updated automatically.
   */
 extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Clock) */
+extern __I uint8_t AHBPrescTable[16];
+extern __I uint8_t APBPrescTable[8];
 
 
 /**

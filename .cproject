@@ -69,11 +69,11 @@
 									<listOptionValue builtIn="false" value="../system/Inc"/>
 									<listOptionValue builtIn="false" value="../system/Inc/CMSIS"/>
 									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal"/>
+									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal/Legacy"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.408245818" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
@@ -107,6 +107,7 @@
 									<listOptionValue builtIn="false" value="../system/Inc"/>
 									<listOptionValue builtIn="false" value="../system/Inc/CMSIS"/>
 									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal"/>
+									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal/Legacy"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
@@ -121,7 +122,6 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/DpEb31/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
 									<listOptionValue builtIn="false" value="NULL=0"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
@@ -217,7 +217,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="flexsea-manage/main.c|test/*|common|common/src|system/Src/stm32f4-hal/stm32f4xx_hal_spi.c|flexsea-system/test/*|flexsea-comm/test/*|flexsea-user/test/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-manage/main.c|test/*|common|common/src|flexsea-system/test/*|flexsea-comm/test/*|flexsea-user/test/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -277,6 +277,7 @@
 									<listOptionValue builtIn="false" value="../system/Inc"/>
 									<listOptionValue builtIn="false" value="../system/Inc/CMSIS"/>
 									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal"/>
+									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal/Legacy"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
@@ -288,7 +289,6 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.179867850" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
@@ -301,6 +301,7 @@
 									<listOptionValue builtIn="false" value="../system/Inc"/>
 									<listOptionValue builtIn="false" value="../system/Inc/CMSIS"/>
 									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal"/>
+									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal/Legacy"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
@@ -315,7 +316,6 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/DpEb31/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="USE_FULL_ASSERT"/>
 									<listOptionValue builtIn="false" value="NULL=0"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
@@ -521,7 +521,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="flexsea-user/test|flexsea-user/test/*|flexsea-system/test|flexsea-comm/test|test/*|common|system/Src/stm32f4-hal/stm32f4xx_hal_spi.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-user/test|flexsea-user/test/*|flexsea-system/test|flexsea-comm/test|test/*|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-comm/test"/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-system/test"/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-user/test"/>
@@ -747,7 +747,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="test/test_main.c|common|common/src|system/Src/stm32f4-hal/stm32f4xx_hal_spi.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|test/test_main.c|common|common/src|system/Src/stm32f4-hal/stm32f4xx_hal_spi.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

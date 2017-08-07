@@ -38,6 +38,7 @@
 #include "main.h"
 #include "flexsea.h"
 #include "flexsea_sys_def.h"
+#include "stm32_hal_legacy.h"
 
 //****************************************************************************
 // Variable(s)
