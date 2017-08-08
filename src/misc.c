@@ -67,6 +67,8 @@ uint32_t causeOfLastReset = 0;
 //Initialize all the peripherals
 void init_peripherals(void)
 {
+	SystemCoreClockUpdate();
+
 	//Hardware modules:
 	init_systick_timer();		//SysTick timer (1kHz)
 	init_timer_6();				//For us delay function
@@ -222,7 +224,7 @@ void test_code_blocking(void)
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	//rgb_led_test_code_blocking();
 	//user_button_test_blocking();
-	//imu_test_code_blocking();
+	imu_test_code_blocking();
 	//test_delayUsBlocking_blocking();
 	//fpu_testcode_blocking();
 	//eeprom_test_code_blocking_1();

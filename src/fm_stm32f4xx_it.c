@@ -186,6 +186,18 @@ void TIM7_IRQHandler(void)
 	//timebases();
 }
 
+//I2C1 Event Handler
+void I2C1_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(&hi2c1);
+}
+
+//I2C1 Error Handler
+void I2C1_ER_IRQHandler(void)
+{
+  HAL_I2C_ER_IRQHandler(&hi2c1);
+}
+
 void I2C3_EV_IRQHandler(void)
 {
 	HAL_I2C_EV_IRQHandler(&hi2c3);

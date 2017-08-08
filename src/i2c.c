@@ -60,8 +60,10 @@ __attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c);
-static void init_dma1_stream0_ch1(void);	//I2C1 RX
-static void init_dma1_stream6_ch1(void);	//I2C1 TX
+//static void init_dma1_stream0_ch1(void);	//I2C1 RX
+static void init_dma1_stream0_ch1(I2C_HandleTypeDef *i2cHandle);
+//static void init_dma1_stream6_ch1(void);	//I2C1 TX
+static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle);
 static void init_dma1_stream2_ch7(void);	//I2C2 RX
 static void init_dma1_stream7_ch7(void);	//I2C2 TX
 
@@ -195,7 +197,7 @@ void i2c2_fsm(void)
 	#endif //USE_I2C_2
 }
 
-// Initialize i2c1. Currently connected to the IMU
+// Initialize I2C1. Currently connected to the IMU
 void init_i2c1(void)
 {
 	hi2c1.Instance = I2C1;
@@ -207,12 +209,18 @@ void init_i2c1(void)
 	hi2c1.Init.OwnAddress2 = 0x0;							//second device addr (doesn't matter)
 	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;  //don't use 0x0 addr
 	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED; 		//allow slave to stretch SCL
-	hi2c1.State = HAL_I2C_STATE_RESET;
+	//hi2c1.State = HAL_I2C_STATE_RESET;
 	HAL_I2C_Init(&hi2c1);
 
 	//DMA:
-	init_dma1_stream0_ch1();	//RX
-	init_dma1_stream6_ch1();	//TX
+	init_dma1_stream0_ch1(&hi2c1);	//RX
+	init_dma1_stream6_ch1(&hi2c1);	//TX
+
+	//ToDo: adjust priorities:
+	HAL_NVIC_SetPriority(I2C1_ER_IRQn, 0, 1);
+	HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
+	HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 2);
+	HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
 }
 
 // Disable I2C and free the I2C handle.
@@ -377,7 +385,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 		//Enable peripheral and GPIO clockS
 		__GPIOB_CLK_ENABLE();
-		__I2C1_CLK_ENABLE();
+		//__I2C1_CLK_ENABLE();
 
 		 //SCL1	-> PB8 (pin 23 on MPU6500)
 		 //SDA1	-> PB9 (pin 24 on MPU6500)
@@ -398,6 +406,9 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 			HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
 
 		#endif
+
+		HAL_Delay(1);
+		__I2C1_CLK_ENABLE();
 	}
 	else if(hi2c->Instance == I2C2)
 	{
@@ -502,7 +513,7 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c)
 }
 
 //Using DMA1 Ch 1 Stream 0 for I2C1 RX
-static void init_dma1_stream0_ch1(void)
+static void init_dma1_stream0_ch1(I2C_HandleTypeDef *i2cHandle)
 {
 	//Enable clock
 	__DMA1_CLK_ENABLE();
@@ -519,12 +530,17 @@ static void init_dma1_stream0_ch1(void)
 	hdma_i2c1_rx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
+	HAL_DMA_Init(&hdma_i2c1_rx);
+	__HAL_LINKDMA(i2cHandle, hdmarx, hdma_i2c1_rx);
+
+	/*
 	//Link DMA handle and I2C1 RX:
 	hi2c1.hdmarx = &hdma_i2c1_rx;
 	//hi2c1 is the parent:
 	hi2c1.hdmarx->Parent = &hi2c1;
 
 	HAL_DMA_Init(hi2c1.hdmarx);
+	*/
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, ISR_DMA1_STREAM0, ISR_SUB_DMA1_STREAM0);
@@ -532,7 +548,7 @@ static void init_dma1_stream0_ch1(void)
 }
 
 //Using DMA1 Ch 1 Stream 6 for I2C1 TX
-static void init_dma1_stream6_ch1(void)
+static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle)
 {
 	//Enable clock
 	__DMA1_CLK_ENABLE();
@@ -549,12 +565,17 @@ static void init_dma1_stream6_ch1(void)
 	hdma_i2c1_tx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
+	HAL_DMA_Init(&hdma_i2c1_tx);
+	__HAL_LINKDMA(i2cHandle,hdmatx,hdma_i2c1_tx);
+
+	/*
 	//Link DMA handle and I2C1 TX:
 	hi2c1.hdmatx = &hdma_i2c1_tx;
 	//hi2c1 is the parent:
 	hi2c1.hdmatx->Parent = &hi2c1;
 
 	HAL_DMA_Init(hi2c1.hdmatx);
+	*/
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, ISR_DMA1_STREAM6, ISR_SUB_DMA1_STREAM6);
