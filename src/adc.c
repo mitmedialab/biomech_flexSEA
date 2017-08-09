@@ -171,7 +171,6 @@ static void initAdcDma(void)
 	hdma_adc1.Init.MemInc = DMA_MINC_ENABLE;
 	hdma_adc1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
 	hdma_adc1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-	//hdma_adc1.Init.Mode = DMA_NORMAL;
 	hdma_adc1.Init.Mode = DMA_CIRCULAR;
 	hdma_adc1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 	hdma_adc1.Init.MemBurst = DMA_MBURST_SINGLE;

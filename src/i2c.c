@@ -37,7 +37,6 @@
 #include "main.h"
 #include "user-mn.h"
 #include "rigid.h"
-#include "batt.h"
 #include "isr.h"
 
 //****************************************************************************
@@ -124,40 +123,20 @@ void i2c2_fsm(void)
 	//Subdivided in 4 slots (250Hz)
 	switch(i2c2_time_share)
 	{
-		//Case 0.0: Write register
+		//Case 0:
 		case 0:
-
-			i2c2FsmState = I2C_FSM_TX_ADDR;
-			//battPrepareRead();
-
 			break;
 
-		//Case 0.1: Read data via DMA
+		//Case 1:
 		case 1:
-
-			if(i2c2FsmState == I2C_FSM_TX_ADDR_DONE)
-			{
-				//Start reading:
-				i2c2FsmState = I2C_FSM_RX_DATA;
-				//battReadAll();
-			}
-
 			break;
 
-		//Case 0.2: Parse data
+		//Case 2:
 		case 2:
-
-			if(i2c2FsmState == I2C_FSM_RX_DATA_DONE)
-			{
-				//Decode received data
-				//battParseData();
-			}
-
 			break;
 
-		//Case 0.3:
+		//Case 3:
 		case 3:
-
 			break;
 
 		default:
