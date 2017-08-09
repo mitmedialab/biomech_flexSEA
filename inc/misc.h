@@ -42,12 +42,16 @@
 // Shared variable(s)
 //****************************************************************************
 
+extern IWDG_HandleTypeDef hiwdg;
+
 //****************************************************************************
 // Public Function Prototype(s):
 //****************************************************************************
 
 void init_peripherals(void);
+void init_iwdg(void);
 void saveCauseOFLastReset(void);
+void test_iwdg_blocking(void);
 void test_code_blocking(void);
 void test_code_non_blocking(void);
 
@@ -55,8 +59,11 @@ void test_code_non_blocking(void);
 // Definition(s):
 //****************************************************************************
 
-#define MAX_I	25
-#define MAX_J	25
+#define MAX_I			25
+#define MAX_J			25
+
+//Watchdog:
+#define IWDG_RELOAD		50	//50 = 25ms when prescaler = 4
 
 #endif // INC_MISC_H
 

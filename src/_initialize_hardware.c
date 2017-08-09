@@ -29,11 +29,9 @@
 
 // Forward declarations.
 
-void
-__initialize_hardware(void);
+void __initialize_hardware(void);
 
-void
-configure_system_clock(void);
+void configure_system_clock(void);
 
 // ----------------------------------------------------------------------------
 
@@ -46,8 +44,7 @@ configure_system_clock(void);
 // After Reset the Cortex-M processor is in Thread mode,
 // priority is Privileged, and the Stack is set to Main.
 
-void
-__initialize_hardware(void)
+void __initialize_hardware(void)
 {
   // Call the CSMSIS system initialisation routine.
   SystemInit();
@@ -111,8 +108,7 @@ SysTick_Handler(void)
  * @param  None
  * @retval None
  */
-void
-configure_system_clock(void)
+void configure_system_clock(void)
 {
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;

@@ -46,6 +46,7 @@
 #include "cmd-Rigid.h"
 #include "flexsea_system.h"
 #include "spi.h"
+#include "misc.h"
 
 //****************************************************************************
 // Variable(s)
@@ -85,7 +86,8 @@ void mainFSM2(void)
 //Case 3:
 void mainFSM3(void)
 {
-
+	//Refresh watchdog to avoid a reset:
+	HAL_IWDG_Refresh(&hiwdg);
 }
 
 //Case 4: User Functions

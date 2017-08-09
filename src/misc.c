@@ -55,6 +55,7 @@
 //****************************************************************************
 
 uint32_t causeOfLastReset = 0;
+IWDG_HandleTypeDef hiwdg;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -151,12 +152,28 @@ void init_peripherals(void)
 	//Enable reception on I2C3 (Regulate):
 	i2c3Receive();
 
+	//Independent Watchdog:
+	init_iwdg();
+	HAL_IWDG_Refresh(&hiwdg);
+
 	//All RGB LEDs OFF
 	LEDR(0);
 	LEDG(0);
 	LEDB(0);
 
 	resetBluetooth();
+}
+
+void init_iwdg(void)
+{
+	hiwdg.Instance = IWDG;
+	hiwdg.Init.Prescaler = IWDG_PRESCALER_4;
+	hiwdg.Init.Reload = IWDG_RELOAD;
+
+	if(HAL_IWDG_Init(&hiwdg) != HAL_OK)
+	{
+		//ToDo...
+	}
 }
 
 void saveCauseOFLastReset(void)
@@ -216,6 +233,34 @@ void fpu_testcode_blocking(void)
 	}
 }
 
+void test_iwdg_blocking(void)
+{
+	uint16_t cnt = 0;
+
+	LEDR(1);
+	LEDG(1);
+
+	//The IWDG should break that loop...
+	while(1)
+	{
+		//This shouldn't cause a reset:
+		for(cnt = 0; cnt < 300; cnt++)
+		{
+			//Refresh watchdog to avoid a reset:
+			HAL_IWDG_Refresh(&hiwdg);
+			HAL_Delay(10);
+		}
+
+		//This should:
+		for(cnt = 0; cnt < 10; cnt++)
+		{
+			//Refresh watchdog to avoid a reset:
+			HAL_IWDG_Refresh(&hiwdg);
+			HAL_Delay(50);
+		}
+	}
+}
+
 void test_code_blocking(void)
 {
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -224,11 +269,12 @@ void test_code_blocking(void)
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 	//rgb_led_test_code_blocking();
 	//user_button_test_blocking();
-	imu_test_code_blocking();
+	//imu_test_code_blocking();
 	//test_delayUsBlocking_blocking();
 	//fpu_testcode_blocking();
 	//eeprom_test_code_blocking_1();
 	//testAngleMapEEPROMblocking();
+	//test_iwdg_blocking();
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 }
 
