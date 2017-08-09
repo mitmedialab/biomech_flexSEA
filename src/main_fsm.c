@@ -86,8 +86,7 @@ void mainFSM2(void)
 //Case 3:
 void mainFSM3(void)
 {
-	//Refresh watchdog to avoid a reset:
-	HAL_IWDG_Refresh(&hiwdg);
+	independentWatchdog();
 }
 
 //Case 4: User Functions

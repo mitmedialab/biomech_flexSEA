@@ -50,6 +50,7 @@ extern IWDG_HandleTypeDef hiwdg;
 
 void init_peripherals(void);
 void init_iwdg(void);
+void independentWatchdog(void);
 void saveCauseOFLastReset(void);
 void test_iwdg_blocking(void);
 void test_code_blocking(void);

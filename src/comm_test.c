@@ -81,7 +81,6 @@ void comm_test(void)
 		//Prepare and send command:
 		tx_cmd_tools_comm_test_r(TX_N_DEFAULT, 1, 20, packetIndex);
 		packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, info, SEND_TO_SLAVE);
-		//slaveComm[0].transceiverState = TRANS_STATE_TX_THEN_RX;
 	}
 	else if(cnt == 1)
 	{

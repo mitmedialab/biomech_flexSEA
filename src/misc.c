@@ -152,10 +152,6 @@ void init_peripherals(void)
 	//Enable reception on I2C3 (Regulate):
 	i2c3Receive();
 
-	//Independent Watchdog:
-	init_iwdg();
-	HAL_IWDG_Refresh(&hiwdg);
-
 	//All RGB LEDs OFF
 	LEDR(0);
 	LEDG(0);
@@ -173,6 +169,21 @@ void init_iwdg(void)
 	if(HAL_IWDG_Init(&hiwdg) != HAL_OK)
 	{
 		//ToDo...
+	}
+}
+
+void independentWatchdog(void)
+{
+	static uint8_t firstTime = 1;
+	if(firstTime)
+	{
+		init_iwdg();
+		HAL_IWDG_Refresh(&hiwdg);
+	}
+	else
+	{
+		//Refresh watchdog to avoid a reset:
+		HAL_IWDG_Refresh(&hiwdg);
 	}
 }
 
