@@ -64,8 +64,6 @@ static HAL_StatusTypeDef magneto_write(uint8_t internal_reg_addr, uint8_t* pData
 //Initialize the IMU w/ default values in config registers
 void init_imu(void)
 {
-	//uint8_t tmp = 0;
-
 	//Accel + Gyro:
 	//=============
 
@@ -79,6 +77,7 @@ void init_imu(void)
 	imu_write(IMU_CONFIG, config, 4);
 	HAL_Delay(10);
 
+	/*
 	//Magneto:
 	//========
 
@@ -131,6 +130,7 @@ void init_imu(void)
 	config[0] = 0x20;
 	imu_write(IMU_USER_CTRL, config, 1);
 	HAL_Delay(10);
+	*/
 }
 
 void imu_write_ak8963(uint8_t reg, uint8_t *val)
@@ -167,18 +167,11 @@ void reset_imu(void)
 	HAL_Delay(10);
 }
 
-//Sends the register address. Needed before a Read
-void IMUPrepareRead(void)
-{
-	uint8_t i2c_1_t_buf[4] = {IMU_ACCEL_XOUT_H, 0, 0, 0};
-	HAL_I2C_Master_Transmit_DMA(&hi2c1, IMU_ADDR, i2c_1_t_buf, 1);
-}
-
 //Read all of the relevant IMU data (accel, gyro, temp)
 void IMUReadAll(void)
 {
 	HAL_StatusTypeDef retVal;
-	//HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 21);
+
 	retVal = HAL_I2C_Mem_Read_DMA(&hi2c1, IMU_ADDR, (uint16_t) IMU_ACCEL_XOUT_H,
 								I2C_MEMADD_SIZE_8BIT, i2c1_dma_rx_buf, 21);
 }

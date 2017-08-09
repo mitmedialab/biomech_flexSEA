@@ -69,7 +69,7 @@ static void init_dma1_stream7_ch7(void);	//I2C2 TX
 // Public Function(s)
 //****************************************************************************
 
-//I2C1 State machine. Reads IMU via IT + DMA.
+//I2C1 State machine. Reads IMU via DMA.
 void i2c1_fsm(void)
 {
 	#ifdef USE_I2C_1
@@ -83,51 +83,28 @@ void i2c1_fsm(void)
 	//Subdivided in 4 slots (250Hz)
 	switch(i2c1_time_share)
 	{
-		//Case 0.0: Write register
+		//Case 0: Start the read process
 		case 0:
 
-			i2c1FsmState = I2C_FSM_TX_ADDR;
-			//IMUPrepareRead();
-			i2c1FsmState = I2C_FSM_TX_ADDR_DONE;
+			IMUReadAll();
+			i2c1FsmState = I2C_FSM_RX_DATA;
 
 			break;
 
-		//Case 0.1: Read data via DMA
+		//Cases 1-3: Decode data (when available)
 		case 1:
-
-			if(i2c1FsmState == I2C_FSM_TX_ADDR_DONE)
-			{
-				//Start reading:
-				i2c1FsmState = I2C_FSM_RX_DATA;
-				IMUReadAll();
-			}
-
-			break;
-
-		//Case 0.2: Parse data
 		case 2:
+		case 3:
 
 			if(i2c1FsmState == I2C_FSM_RX_DATA_DONE)
 			{
-				//Decode received data
 				IMUParseData();
+				i2c1FsmState = I2C_FSM_DEFAULT;
 			}
-
-			break;
-
-		//Case 0.3:
-		case 3:
-
 			break;
 
 		default:
 			break;
-	}
-
-	//ToDo: recover from errors:
-	if(i2c1FsmState == I2C_FSM_PROBLEM)
-	{
-		//Deal with it
 	}
 
 	#endif //USE_IMU
@@ -208,14 +185,13 @@ void init_i2c1(void)
 	hi2c1.Init.OwnAddress2 = 0x0;							//second device addr (doesn't matter)
 	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED;  //don't use 0x0 addr
 	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED; 		//allow slave to stretch SCL
-	//hi2c1.State = HAL_I2C_STATE_RESET;
 	HAL_I2C_Init(&hi2c1);
 
 	//DMA:
 	init_dma1_stream0_ch1(&hi2c1);	//RX
 	init_dma1_stream6_ch1(&hi2c1);	//TX
 
-	//ToDo: adjust priorities:
+	//I2C Event & Error interrupts:
 	HAL_NVIC_SetPriority(I2C1_ER_IRQn, ISR_I2C1_ER, ISR_SUB_I2C1_ER);
 	HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
 	HAL_NVIC_SetPriority(I2C1_EV_IRQn, ISR_I2C1_EV, ISR_SUB_I2C1_EV);
@@ -307,15 +283,8 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 	//I2C1:
 	if(hi2c->Instance == I2C1)
 	{
-		if(i2c1FsmState == I2C_FSM_RX_DATA)
-		{
-			//Indicate that it's done receiving:
-			i2c1FsmState = I2C_FSM_RX_DATA_DONE;
-		}
-		else
-		{
-			i2c1FsmState = I2C_FSM_PROBLEM;
-		}
+		//Indicate that it's done receiving:
+		i2c1FsmState = I2C_FSM_RX_DATA_DONE;
 	}
 }
 
@@ -388,7 +357,6 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 		//Enable peripheral and GPIO clockS
 		__GPIOB_CLK_ENABLE();
-		//__I2C1_CLK_ENABLE();
 
 		 //SCL1	-> PB8 (pin 23 on MPU6500)
 		 //SDA1	-> PB9 (pin 24 on MPU6500)

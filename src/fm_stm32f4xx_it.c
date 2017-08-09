@@ -181,9 +181,6 @@ void OTG_FS_IRQHandler(void)
 void TIM7_IRQHandler(void)
 {
 	HAL_TIM_IRQHandler(&htim7);
-
-	//FlexSEA timebase:
-	//timebases();
 }
 
 //I2C1 Event Handler

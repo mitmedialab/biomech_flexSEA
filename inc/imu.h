@@ -184,17 +184,10 @@ void reset_imu(void);			//reset IMU registers to default
 void disable_imu(void);			//disable the IMU by shutting down clocks, etc.
 void imu_test_code_blocking(void);
 
-void IMUPrepareRead(void);
+//void IMUPrepareRead(void);
 void IMUReadAll(void);
 void IMUParseData(void);
 void imu_write_ak8963(uint8_t reg, uint8_t *val);
-
-/*
-void init_ak8963(void);
-uint8_t ak8963_read_status(void);
-void test_ak8963_blocking(void);
-void get_magneto_xyz(void);
-*/
 
 #endif //INC_FM_IMU_H
 
