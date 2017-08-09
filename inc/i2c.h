@@ -56,7 +56,6 @@ void disable_i2c3(void);
 void initOptionalPullUps(void);
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c);
-
 void i2c3Receive(void);
 void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c);
@@ -67,7 +66,6 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c);
 
 //set to 1 if we want to use interrupt driven I2C.
 #define I2C1_USE_INT 			0
-//#define I2C1_CLOCK_RATE 		100000 	//in Hz, corresponds to "Regular Speed" I2C
 #define I2C1_CLOCK_RATE 		400000 	//in Hz, corresponds to "Full Speed" I2C
 #define I2C2_CLOCK_RATE 		400000 	//in Hz, corresponds to "Full Speed" I2C
 #define I2C3_CLOCK_RATE 		400000 	//in Hz, corresponds to "Full Speed" I2C
@@ -80,9 +78,9 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c);
 //I2C State Machine:
 #define I2C_FSM_PROBLEM			-1
 #define I2C_FSM_DEFAULT			0
-#define I2C_FSM_TX_ADDR		1
+#define I2C_FSM_TX_ADDR			1
 #define I2C_FSM_TX_ADDR_DONE	2
-#define I2C_FSM_RX_DATA		3
+#define I2C_FSM_RX_DATA			3
 #define I2C_FSM_RX_DATA_DONE	4
 
 //****************************************************************************

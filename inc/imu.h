@@ -131,42 +131,6 @@ typedef enum {
 #define D_BYPASS_DISABLED		0x00	//Disabled I2C bypass (master controls bus)
 #define D_USER_CTRL				0x01	//Disables master, resets all signal paths
 
-//Magnetometer Registers
-#define AK8963_ADDRESS   		0x0C	//7-bits
-#define AK8963_ADDRESS_8BITS	0x18
-#define AK8963_REG_WIA  		0x00 	//should return 0x48
-#define AK8963_REG_INFO			0x01
-#define AK8963_REG_ST1       	0x02  	//data ready status bit 0
-#define AK8963_REG_XOUT_L    	0x03  	//data
-#define AK8963_REG_XOUT_H    	0x04
-#define AK8963_REG_YOUT_L    	0x05
-#define AK8963_REG_YOUT_H		0x06
-#define AK8963_REG_ZOUT_L		0x07
-#define AK8963_REG_ZOUT_H		0x08
-#define AK8963_REG_ST2			0x09  	//Data overflow bit 3 and data read error status bit 2
-#define AK8963_REG_CNTL1		0x0A  	//Power down (0000), single-measurement (0001), self-test (1000) and Fuse ROM (1111) modes on bits 3:0
-#define AK8963_REG_CNTL2		0x0B
-#define AK8963_REG_ASTC			0x0C  	//Self test control
-#define AK8963_REG_I2CDIS		0x0F  	//I2C disable
-#define AK8963_REG_ASAX			0x10  	//Fuse ROM x-axis sensitivity adjustment value
-#define AK8963_REG_ASAY			0x11  	//Fuse ROM y-axis sensitivity adjustment value
-#define AK8963_REG_ASAZ			0x12  	//Fuse ROM z-axis sensitivity adjustment value
-
-//From Invensense's demo code:
-#define SUPPORTS_AK89xx_HIGH_SENS	(0x10)
-#define AKM_POWER_DOWN          	(0x00 | SUPPORTS_AK89xx_HIGH_SENS)
-#define AKM_FUSE_ROM_ACCESS     	(0x0F | SUPPORTS_AK89xx_HIGH_SENS)
-#define BIT_I2C_READ        		(0x80)
-#define BIT_SLAVE_EN        		(0x80)
-#define AKM_SINGLE_MEASUREMENT  	(0x01 | SUPPORTS_AK89xx_HIGH_SENS)
-#define AKM_CONT_MEASUREMENT_1  	(0x02 | SUPPORTS_AK89xx_HIGH_SENS)
-#define AKM_CONT_MEASUREMENT_2  	(0x06 | SUPPORTS_AK89xx_HIGH_SENS)
-
-//Settings:
-#define AK8963_SET_CNTL1		0b00010110;	//16 bits readings, Cont. mode 2
-#define MPU9250_I2C_SLV_CTRL_EN			(1 << 7)
-#define MPU9250_I2C_SLV_CTRL_LENG_MASK   0x07
-
 //****************************************************************************
 // Public Function Prototype(s):
 //****************************************************************************
@@ -184,10 +148,8 @@ void reset_imu(void);			//reset IMU registers to default
 void disable_imu(void);			//disable the IMU by shutting down clocks, etc.
 void imu_test_code_blocking(void);
 
-//void IMUPrepareRead(void);
 void IMUReadAll(void);
 void IMUParseData(void);
-void imu_write_ak8963(uint8_t reg, uint8_t *val);
 
 #endif //INC_FM_IMU_H
 
