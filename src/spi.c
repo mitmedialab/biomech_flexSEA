@@ -70,7 +70,8 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi);
 // Public Function(s)
 //****************************************************************************
 
-//SPI4 peripheral initialization. SPI4 is used to communicate with the Plan board
+//SPI4 peripheral initialization. SPI4 is used to communicate with the Plan
+//board, via the expansion connector.
 void init_spi4(void)
 {
 	//Configure SPI4 in Mode 0, Slave
@@ -96,7 +97,7 @@ void init_spi4(void)
 	}
 }
 
-//SPI5 peripheral initialization. SPI5 is connected to the FLASH
+//SPI5 peripheral initialization. SPI5 is connected to the SD card
 void init_spi5(void)
 {
 	//Configure SPI5 in Mode 0, Master
@@ -122,32 +123,6 @@ void init_spi5(void)
 	}
 }
 
-//SPI6 peripheral initialization. SPI6 is available on the Expansion connector
-void init_spi6(void)
-{
-	//Configure SPI6 in Mode 0, Master
-	//CPOL = 0 --> clock is low when idle
-	//CPHA = 0 --> data is sampled at the first edge
-
-	spi6_handle.Instance = SPI6;
-	spi6_handle.Init.Direction = SPI_DIRECTION_2LINES; 				// Full duplex
-	spi6_handle.Init.Mode = SPI_MODE_MASTER;     					// Master
-	spi6_handle.Init.DataSize = SPI_DATASIZE_8BIT; 					// 8bits words
-	spi6_handle.Init.CLKPolarity = SPI_POLARITY_LOW;    			// clock is low when idle (CPOL = 0)
-	spi6_handle.Init.CLKPhase = SPI_PHASE_1EDGE;    				// data sampled at first (rising) edge (CPHA = 0)
-	spi6_handle.Init.NSS = SPI_NSS_SOFT; 							// Chip select
-	spi6_handle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;	// SPI frequency is APB2 frequency (84MHz) / Prescaler
-	spi6_handle.Init.FirstBit = SPI_FIRSTBIT_MSB;					// data is transmitted MSB first
-	spi6_handle.Init.TIMode = SPI_TIMODE_DISABLED;					//
-	spi6_handle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLED;
-	spi6_handle.Init.CRCPolynomial = 7;
-
-	if(HAL_SPI_Init(&spi6_handle) != HAL_OK)
-	{
-		flexsea_error(SE_INIT_SPI);
-	}
-}
-
 void SPI_NSS_Callback(void)
 {
 	//At this point, the SPI transfer is complete
@@ -164,29 +139,9 @@ void SPI_new_data_Callback(void)
 	memset(aRxBuffer4, 0, 48);
 }
 
-void spi6Transmit(uint8_t *pData, uint16_t len)
-{
-	if(!spi6Block)	//Don't try sending while configuring or restarting
-	{
-		//Select slave:
-		SPI6_NSS(0);
-		spi6Watch++;
-
-		memcpy(aTxBuffer6, pData, len);
-		HAL_SPI_TransmitReceive_IT(&spi6_handle, (uint8_t *) aTxBuffer6, (uint8_t *) aRxBuffer6, len);
-	}
-	else
-	{
-		catch++;
-	}
-}
-
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-	if(hspi->Instance == SPI6)	//Expansion port
-	{
-		endSpi6TxFlag = 1;
-	}
+
 }
 
 //Error callback
@@ -197,14 +152,6 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 		//Re-init the bus:
 		init_spi4();
 		errorCnt++;
-	}
-	else if(hspi->Instance == SPI6)	//Expansion
-	{
-		//Re-init the bus:
-		spi6Block = 1;
-		init_spi6();
-		errorCnt++;
-		spi6Block = 0;
 	}
 }
 
@@ -260,40 +207,6 @@ void completeSpiTransmit(void)
 			//flexsea_error(SE_SEND_SERIAL_MASTER); (un-implemented)
 		}
 	}
-
-	if(endSpi6TxFlag)
-	{
-		SPI6_NSS(1);
-		endSpi6TxFlag = 0;
-
-		//Overrun?
-		spi6_sr = SPI6->SR;
-		if(spi6_sr & SPI_SR_OVR)
-		{
-			spi6Block = 1;
-			//We had an overrun condition:
-			__HAL_SPI_CLEAR_OVRFLAG_NEW(&spi6_handle);
-			init_spi6();
-			ovrCnt++;
-			spi6Block = 0;
-		}
-
-		//Busy when it shouldn't be?
-		if(__HAL_SPI_GET_FLAG(&spi6_handle, SPI_FLAG_BSY))
-		{
-			spi6Block = 1;
-			SPI6->SR &= ~SPI_SR_BSY;
-			busyCnt++;
-			spi6Block = 0;
-		}
-
-		//Update buffers:
-		//update_rx_buf_array_exp(aRxBuffer6, 48);	//Legacy
-		update_rx_buf_exp(aRxBuffer6, 48);			//Using circular buffer
-		//Empty DMA buffer once it's copied:
-		memset(aRxBuffer6, 0, 48);
-		commPeriph[PORT_EXP].rx.bytesReadyFlag = 1;
-	}
 }
 
 //When all else fails...
@@ -311,15 +224,6 @@ void restartSpi(uint8_t port)
 		__HAL_SPI_CLEAR_OVRFLAG_NEW(&spi4_handle);
 		SPI4->SR &= ~SPI_SR_BSY;
 		init_spi4();
-	}
-	else if(port == 6)
-	{
-		spi6Block = 1;
-		spi6Watch = 0;
-		__HAL_SPI_CLEAR_OVRFLAG_NEW(&spi6_handle);
-		SPI6->SR &= ~SPI_SR_BSY;
-		init_spi6();
-		spi6Block = 0;
 	}
 
 	badCommCnt++;
@@ -368,7 +272,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		HAL_NVIC_SetPriority(EXTI4_IRQn, ISR_EXTI4, ISR_SUB_EXTI4);
 		HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 	}
-	else if(hspi->Instance == SPI5)    //FLASH, SPI Master
+	else if(hspi->Instance == SPI5)    //SD card, SPI Master
 	{
 		//Enable GPIO clock
 		__GPIOF_CLK_ENABLE();
@@ -393,44 +297,6 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		//Enable interrupts/NVIC for SPI data lines
 		HAL_NVIC_SetPriority(SPI5_IRQn, ISR_SPI5, ISR_SPI5);
 		HAL_NVIC_EnableIRQ(SPI5_IRQn);
-	}
-	else if(hspi->Instance == SPI6)    //Expansion connector, SPI Master
-	{
-		//Enable GPIO clock
-		__GPIOG_CLK_ENABLE();
-		//Enable peripheral clock
-		__SPI6_CLK_ENABLE();
-
-		//SPI6 pins:
-		//=-=-=-=-=
-		//NSS6: 	PG8
-		//MOSI6: 	PG14
-		//MISO6: 	PG12
-		//SCK6: 	PG13
-
-		//All but NSS:
-		GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_12 | GPIO_PIN_13
-				| GPIO_PIN_14;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-		GPIO_InitStruct.Pull = GPIO_NOPULL;
-		GPIO_InitStruct.Alternate = GPIO_AF5_SPI6;
-		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-		//NSS as PP output
-		GPIO_InitStruct.Pin =  GPIO_PIN_8;
-		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-		GPIO_InitStruct.Pull = GPIO_PULLUP;
-		//GPIO_InitStruct.Alternate = GPIO_AF5_SPI6;
-		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-		//Start with pin high:
-		SPI6_NSS(1);
-
-		//Enable interrupts/NVIC for SPI data lines
-		HAL_NVIC_SetPriority(SPI6_IRQn, ISR_SPI6, ISR_SUB_SPI6);
-		HAL_NVIC_EnableIRQ(SPI6_IRQn);
 	}
 	else
 	{
