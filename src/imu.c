@@ -38,6 +38,7 @@
 #include "flexsea_global_structs.h"
 #include "flexsea_user_structs.h"
 #include "stm32f4xx_hal_i2c.h"
+#include "timer.h"
 
 //****************************************************************************
 // Variable(s)
@@ -126,20 +127,6 @@ void init_imu(void)
 	imu_write(IMU_I2C_SLV0_CTRL, config, 1);
 	HAL_Delay(10);
 
-	/*
-	//Trigger actions:
-	config[0] = 0x03;
-	imu_write(IMU_I2C_MST_DELAY_CTRL, config, 1);
-	HAL_Delay(10);
-	*/
-
-	/*
-	//Sampling rate:
-	config[0] = 1;	//ToDo what do we want?
-	imu_write(IMU_I2C_SLV4_CTRL, config, 1);
-	HAL_Delay(10);
-	*/
-
 	//Enable Master:
 	config[0] = 0x20;
 	imu_write(IMU_USER_CTRL, config, 1);
@@ -190,7 +177,10 @@ void IMUPrepareRead(void)
 //Read all of the relevant IMU data (accel, gyro, temp)
 void IMUReadAll(void)
 {
-	HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 21);
+	HAL_StatusTypeDef retVal;
+	//HAL_I2C_Master_Receive_DMA(&hi2c1, IMU_ADDR, i2c1_dma_rx_buf, 21);
+	retVal = HAL_I2C_Mem_Read_DMA(&hi2c1, IMU_ADDR, (uint16_t) IMU_ACCEL_XOUT_H,
+								I2C_MEMADD_SIZE_8BIT, i2c1_dma_rx_buf, 21);
 }
 
 void IMUParseData(void)
@@ -313,9 +303,26 @@ static HAL_StatusTypeDef magneto_write(uint8_t internal_reg_addr, uint8_t* pData
 
 void imu_test_code_blocking(void)
 {
+	HAL_StatusTypeDef retVal;
+
 	while(1)
 	{
+		/*
 		init_imu();
 		HAL_Delay(50);
+		*/
+
+		/*
+		//Old code:
+		IMUPrepareRead();
+		delayUsBlocking(100);
+		IMUReadAll();
+		HAL_Delay(1);
+		*/
+
+		//New approach:
+		retVal = HAL_I2C_Mem_Read_DMA(&hi2c1, IMU_ADDR, (uint16_t) IMU_ACCEL_XOUT_H,
+							I2C_MEMADD_SIZE_8BIT, i2c1_dma_rx_buf, 21);
+		HAL_Delay(1);
 	}
 }

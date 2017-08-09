@@ -60,10 +60,8 @@ __attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c);
-//static void init_dma1_stream0_ch1(void);	//I2C1 RX
-static void init_dma1_stream0_ch1(I2C_HandleTypeDef *i2cHandle);
-//static void init_dma1_stream6_ch1(void);	//I2C1 TX
-static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle);
+static void init_dma1_stream0_ch1(I2C_HandleTypeDef *i2cHandle);	//I2C1 RX
+static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle);	//I2C1 TX
 static void init_dma1_stream2_ch7(void);	//I2C2 RX
 static void init_dma1_stream7_ch7(void);	//I2C2 TX
 
@@ -89,7 +87,8 @@ void i2c1_fsm(void)
 		case 0:
 
 			i2c1FsmState = I2C_FSM_TX_ADDR;
-			IMUPrepareRead();
+			//IMUPrepareRead();
+			i2c1FsmState = I2C_FSM_TX_ADDR_DONE;
 
 			break;
 
@@ -217,9 +216,9 @@ void init_i2c1(void)
 	init_dma1_stream6_ch1(&hi2c1);	//TX
 
 	//ToDo: adjust priorities:
-	HAL_NVIC_SetPriority(I2C1_ER_IRQn, 0, 1);
+	HAL_NVIC_SetPriority(I2C1_ER_IRQn, ISR_I2C1_ER, ISR_SUB_I2C1_ER);
 	HAL_NVIC_EnableIRQ(I2C1_ER_IRQn);
-	HAL_NVIC_SetPriority(I2C1_EV_IRQn, 0, 2);
+	HAL_NVIC_SetPriority(I2C1_EV_IRQn, ISR_I2C1_EV, ISR_SUB_I2C1_EV);
 	HAL_NVIC_EnableIRQ(I2C1_EV_IRQn);
 }
 
@@ -284,8 +283,26 @@ void disable_i2c3(void)
 	HAL_I2C_DeInit(&hi2c3);
 }
 
-//Detects the end of a Master Receive:
+//Detects the end of a Master Receive (when DMA Mem isn't used):
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+	//I2C2:
+	if(hi2c->Instance == I2C2)
+	{
+		if(i2c2FsmState == I2C_FSM_RX_DATA)
+		{
+			//Indicate that it's done receiving:
+			i2c2FsmState = I2C_FSM_RX_DATA_DONE;
+		}
+		else
+		{
+			i2c2FsmState = I2C_FSM_PROBLEM;
+		}
+	}
+}
+
+//Detects the end of a Master Receive in DMA Mem mode:
+void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	//I2C1:
 	if(hi2c->Instance == I2C1)
@@ -298,20 +315,6 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 		else
 		{
 			i2c1FsmState = I2C_FSM_PROBLEM;
-		}
-	}
-
-	//I2C2:
-	if(hi2c->Instance == I2C2)
-	{
-		if(i2c2FsmState == I2C_FSM_RX_DATA)
-		{
-			//Indicate that it's done receiving:
-			i2c2FsmState = I2C_FSM_RX_DATA_DONE;
-		}
-		else
-		{
-			i2c2FsmState = I2C_FSM_PROBLEM;
 		}
 	}
 }
@@ -530,17 +533,9 @@ static void init_dma1_stream0_ch1(I2C_HandleTypeDef *i2cHandle)
 	hdma_i2c1_rx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c1_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
+	//Link DMA handle and I2C1 RX:
 	HAL_DMA_Init(&hdma_i2c1_rx);
 	__HAL_LINKDMA(i2cHandle, hdmarx, hdma_i2c1_rx);
-
-	/*
-	//Link DMA handle and I2C1 RX:
-	hi2c1.hdmarx = &hdma_i2c1_rx;
-	//hi2c1 is the parent:
-	hi2c1.hdmarx->Parent = &hi2c1;
-
-	HAL_DMA_Init(hi2c1.hdmarx);
-	*/
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, ISR_DMA1_STREAM0, ISR_SUB_DMA1_STREAM0);
@@ -565,17 +560,9 @@ static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle)
 	hdma_i2c1_tx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c1_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
+	//Link DMA handle and I2C1 TX:
 	HAL_DMA_Init(&hdma_i2c1_tx);
 	__HAL_LINKDMA(i2cHandle,hdmatx,hdma_i2c1_tx);
-
-	/*
-	//Link DMA handle and I2C1 TX:
-	hi2c1.hdmatx = &hdma_i2c1_tx;
-	//hi2c1 is the parent:
-	hi2c1.hdmatx->Parent = &hi2c1;
-
-	HAL_DMA_Init(hi2c1.hdmatx);
-	*/
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, ISR_DMA1_STREAM6, ISR_SUB_DMA1_STREAM6);
