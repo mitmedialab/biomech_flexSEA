@@ -82,43 +82,8 @@ void timer_sleep(timer_ticks_t ticks)
 //Timebases for all the main functions:
 void timebases(void)
 {
-	static unsigned int cnt_1ms = 0, cnt_10ms = 0;
-	static unsigned int cnt_100ms = 0, cnt_1000ms = 0;
-
 	//100us flag:
 	tb_100us_flag = 1;
-
-	//1ms flag:
-	cnt_1ms++;
-	if (cnt_1ms >= 10)
-	{
-		cnt_1ms = 0;
-		tb_1ms_flag = 1;
-	}
-
-	//10ms flag:
-	cnt_10ms++;
-	if (cnt_10ms >= 100)
-	{
-		cnt_10ms = 0;
-		tb_10ms_flag = 1;
-	}
-
-	//100ms flag:
-	cnt_100ms++;
-	if (cnt_100ms >= 1000)
-	{
-		cnt_100ms = 0;
-		tb_100ms_flag = 1;
-	}
-
-	//1s flag:
-	cnt_1000ms++;
-	if (cnt_1000ms >= 10000)
-	{
-		cnt_1000ms = 0;
-		tb_1000ms_flag = 1;
-	}
 }
 
 //Timer 6: free running timer used by the us delay functions

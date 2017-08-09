@@ -43,10 +43,6 @@
 
 extern volatile uint8_t tb_100us_flag;
 extern volatile uint8_t tb_100us_timeshare;
-extern volatile uint8_t tb_1ms_flag;
-extern volatile uint8_t tb_10ms_flag;
-extern volatile uint8_t tb_100ms_flag;
-extern volatile uint8_t tb_1000ms_flag;
 
 typedef uint32_t timer_ticks_t;
 

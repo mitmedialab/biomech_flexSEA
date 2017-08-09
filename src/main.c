@@ -96,36 +96,5 @@ int main(void)
 			//Keep it short!
 			mainFSM10kHz();
 		}
-
-		//1ms
-		if(tb_1ms_flag)
-		{
-			tb_1ms_flag = 0;
-
-		}
-
-		//10ms
-		if(tb_10ms_flag)
-		{
-			tb_10ms_flag = 0;
-
-			//...
-		}
-
-		//100ms
-		if(tb_100ms_flag)
-		{
-			tb_100ms_flag = 0;
-
-			//...
-		}
-
-		//1000ms
-		if(tb_1000ms_flag)
-		{
-			tb_1000ms_flag = 0;
-
-			//...
-		}
 	}
 }
