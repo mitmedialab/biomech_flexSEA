@@ -43,18 +43,13 @@
 
 extern volatile uint8_t tb_100us_flag;
 extern volatile uint8_t tb_100us_timeshare;
-
 typedef uint32_t timer_ticks_t;
-
-extern volatile timer_ticks_t timer_delayCount;
 
 //****************************************************************************
 // Public Function Prototype(s):
 //****************************************************************************
 
 extern void init_systick_timer(void);
-extern void timer_sleep (timer_ticks_t ticks);
-
 void init_timer_6(void);
 uint16_t readTimer6(void);
 void timebases(void);
@@ -64,8 +59,6 @@ void test_delayUsBlocking_blocking(void);
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
-
-#define TIMER_FREQUENCY_HZ (10000u)
 
 #endif // INC_TIMER_H
 

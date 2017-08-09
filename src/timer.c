@@ -71,14 +71,6 @@ void init_systick_timer(void)
 	HAL_NVIC_SetPriority(SysTick_IRQn, ISR_SYSTICK, ISR_SUB_SYSTICK);
 }
 
-void timer_sleep(timer_ticks_t ticks)
-{
-	timer_delayCount = ticks;
-
-	// Busy wait until the SysTick decrements the counter to zero.
-	while (timer_delayCount != 0u);
-}
-
 //Timebases for all the main functions:
 void timebases(void)
 {
@@ -141,17 +133,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 
 	if (htim_base->Instance == TIM7)
 	{
-		/* USER CODE BEGIN TIM7_MspInit 0 */
-
-		/* USER CODE END TIM7_MspInit 0 */
-		/* Peripheral clock enable */
 		__TIM7_CLK_ENABLE();
-		/* Peripheral interrupt init*/
+
 		HAL_NVIC_SetPriority(TIM7_IRQn, ISR_TIMER7, ISR_SUB_TIMER7);
 		HAL_NVIC_EnableIRQ(TIM7_IRQn);
-		/* USER CODE BEGIN TIM7_MspInit 1 */
-
-		/* USER CODE END TIM7_MspInit 1 */
 	}
 
 }
@@ -165,13 +150,8 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
 	if (htim_base->Instance == TIM7)
 	{
-		/* USER CODE BEGIN TIM7_MspDeInit 0 */
-
-		/* USER CODE END TIM7_MspDeInit 0 */
-		/* Peripheral clock disable */
 		__TIM7_CLK_DISABLE();
 
-		/* Peripheral interrupt DeInit*/
 		HAL_NVIC_DisableIRQ(TIM7_IRQn);
 	}
 }

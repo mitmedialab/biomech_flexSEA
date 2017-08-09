@@ -45,13 +45,7 @@ extern TIM_HandleTypeDef htim7;
 //System Timer, 1ms ISR
 void SysTick_Handler(void)
 {
-	//Decrement to zero the counter used by the delay routine.
-	if(timer_delayCount != 0u)
-	{
-		--timer_delayCount;
-	}
-
-	//For USB delays:
+	//HAL timebase:
 	HAL_IncTick();
 	HAL_SYSTICK_IRQHandler();
 }
