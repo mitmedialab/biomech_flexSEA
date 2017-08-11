@@ -100,6 +100,9 @@ void IMUReadAll(void)
 
 	retVal = HAL_I2C_Mem_Read_DMA(&hi2c1, IMU_ADDR, (uint16_t) IMU_ACCEL_XOUT_H,
 								I2C_MEMADD_SIZE_8BIT, i2c1_dma_rx_buf, 15);
+
+	if(retVal == HAL_OK){i2c1FsmState = I2C_FSM_RX_DATA;}
+	else{i2c1FsmState = I2C_FSM_PROBLEM;}
 }
 
 void IMUParseData(void)

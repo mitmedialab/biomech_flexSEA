@@ -75,6 +75,7 @@ void i2c1_fsm(void)
 	#ifdef USE_IMU
 
 	static uint8_t i2c1_time_share = 0;
+	static uint8_t errorCounter = 0;
 
 	i2c1_time_share++;
 	i2c1_time_share %= 4;
@@ -86,7 +87,6 @@ void i2c1_fsm(void)
 		case 0:
 
 			IMUReadAll();
-			i2c1FsmState = I2C_FSM_RX_DATA;
 
 			break;
 
@@ -99,11 +99,24 @@ void i2c1_fsm(void)
 			{
 				IMUParseData();
 				i2c1FsmState = I2C_FSM_DEFAULT;
+				errorCounter = 0;
 			}
 			break;
 
 		default:
 			break;
+	}
+
+	//Error management:
+	if(i2c1FsmState == I2C_FSM_PROBLEM)
+	{
+		errorCounter++;
+		i2c1FsmState = I2C_FSM_DEFAULT;
+	}
+
+	if(errorCounter > 5)
+	{
+		//FlexSEA Error code
 	}
 
 	#endif //USE_IMU
