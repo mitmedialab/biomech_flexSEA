@@ -1,13 +1,18 @@
-//****************************************************************************
-// MIT Media Lab - Biomechatronics
-// Jean-Francois (Jeff) Duval
-// jfduval@media.it.edu
-// 05/2015
-//****************************************************************************
-// fm_stm32f4xx_it: Interrupt Handlers
-//****************************************************************************
-// Licensing: Please refer to 'software_license.txt'
-//****************************************************************************
+/****************************************************************************
+	[Project] FlexSEA: Flexible & Scalable Electronics Architecture
+	[Sub-project] 'flexsea-manage' Mid-level computing, and networking
+	Copyright (C) 2017 Dephy, Inc. <http://dephy.com/>
+*****************************************************************************
+	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy dot com.
+	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab
+	Biomechatronics research group <http://biomech.media.mit.edu/>
+	[Contributors]
+*****************************************************************************
+	[This file] fm_stm32f4xx_it: Interrupt Handlers
+*****************************************************************************
+	[Change log] (Convention: YYYY-MM-DD | author | comment)
+	*
+****************************************************************************/
 
 //****************************************************************************
 // Include(s)
@@ -20,7 +25,6 @@
 #include <uarts.h>
 #include "main.h"
 #include "ui.h"
-#include "fm_stm32f4xx_hal_spi.h"
 #include "fm_stm32f4xx_it.h"
 
 //****************************************************************************
