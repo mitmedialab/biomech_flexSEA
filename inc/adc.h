@@ -40,12 +40,17 @@ void init_adc1(void);
 unsigned int get_adc1(uint16_t idx);	// get value at analog input channel idx
 void startAdcConversion(void);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
+int8_t readInternalTempSensor(void);
 
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
 
-#define ADC_CHANNELS	4
+#define ADC_CHANNELS	5		//4 external channels + internal temp sensor
+
+#define V25_TICKS		943		//760mV/3.3V * 4096 = 943
+#define VSENSE_SLOPE	400		//1/2.5mV
+#define TICK_TO_V		1241	//ticks/V
 
 #endif 	// INC_FM_ADC_H
 

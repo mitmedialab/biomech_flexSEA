@@ -30,6 +30,7 @@
 ADC_HandleTypeDef hadc1;
 ADC_ChannelConfTypeDef sConfig;
 ADC_MultiModeTypeDef multimode;
+int8_t temperature = 0;
 
 DMA_HandleTypeDef hdma_adc1;
 __IO volatile uint16_t adc_results[ADC_CHANNELS];
@@ -96,6 +97,12 @@ void init_adc1(void)
 	sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
 	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
+	//Internal temperature sensor:
+	sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;
+	sConfig.Rank = 5;
+	sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+	HAL_ADC_ConfigChannel(&hadc1, &sConfig);
+
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&adc_results, ADC_CHANNELS);
 }
 
@@ -117,6 +124,14 @@ void startAdcConversion(void)
 unsigned int get_adc1(uint16_t idx)
 {
 	return adc_results[idx];
+}
+
+//The ADC reads the sensor. This function converts the result to degrees.
+int8_t readInternalTempSensor(void)
+{
+	temperature = ((VSENSE_SLOPE * (adc_results[ADC_CHANNELS-1] - V25_TICKS) \
+					/ TICK_TO_V) + 25);
+	return temperature;
 }
 
 //Code branches here after conversion is done:
