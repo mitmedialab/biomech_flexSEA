@@ -37,6 +37,7 @@
 #include "user-mn.h"
 #include "eeprom.h"
 #include <math.h>
+#include "svm.h"
 #include "arm_math.h"
 
 //****************************************************************************
@@ -319,6 +320,7 @@ void test_code_blocking(void)
 	//eeprom_test_code_blocking_1();
 	//testAngleMapEEPROMblocking();
 	//test_iwdg_blocking();
+	test_svm_blocking();
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 }
 
