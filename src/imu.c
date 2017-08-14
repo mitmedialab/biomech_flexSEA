@@ -56,6 +56,16 @@ void init_imu(void)
 	reset_imu();
 	HAL_Delay(25);
 
+	rigid1.mn.accel.x = 0;
+	rigid1.mn.accel.y = 0;
+	rigid1.mn.accel.z = 0;
+	rigid1.mn.gyro.x = 0;
+	rigid1.mn.gyro.y = 0;
+	rigid1.mn.gyro.z = 0;
+	rigid1.mn.magneto.x = 0;
+	rigid1.mn.magneto.y = 0;
+	rigid1.mn.magneto.z = 0;
+
 	//Initialize the config registers.
 	uint8_t config[4] = {D_IMU_CONFIG, D_IMU_GYRO_CONFIG, D_IMU_ACCEL_CONFIG, \
 							D_IMU_ACCEL_CONFIG2};
@@ -125,10 +135,6 @@ void IMUParseData(void)
 	rigid1.mn.gyro.x = imu.gyro.x;
 	rigid1.mn.gyro.y = imu.gyro.y;
 	rigid1.mn.gyro.z = imu.gyro.z;
-
-	rigid1.mn.magneto.x = 0;
-	rigid1.mn.magneto.y = 0;
-	rigid1.mn.magneto.z = 0;
 }
 
 //****************************************************************************

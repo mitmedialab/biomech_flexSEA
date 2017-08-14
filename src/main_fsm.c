@@ -74,7 +74,7 @@ void mainFSM2(void)
 //Case 3:
 void mainFSM3(void)
 {
-	independentWatchdog();
+	//independentWatchdog();
 
 	readInternalTempSensor();
 }
