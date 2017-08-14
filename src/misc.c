@@ -257,9 +257,9 @@ void fpu_testcode_blocking(void)
 	long long myRes = 0;
 	while(1)
 	{
-		DEBUG_H0(1);
+		//DEBUG_H0(1);
 		myRes = bunchOfUselessMath();
-		DEBUG_H0(0);
+		//DEBUG_H0(0);
 		delayUsBlocking(10);
 
 		if(myRes != 0)
@@ -320,7 +320,7 @@ void test_code_blocking(void)
 	//eeprom_test_code_blocking_1();
 	//testAngleMapEEPROMblocking();
 	//test_iwdg_blocking();
-	test_svm_blocking();
+	//test_svm_blocking();
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 }
 

@@ -34,6 +34,7 @@
 #include "flexsea_system.h"
 #include "spi.h"
 #include "misc.h"
+#include "svm.h"
 
 //****************************************************************************
 // Variable(s)
@@ -153,6 +154,8 @@ void mainFSM10kHz(void)
 	parseSlaveCommands(&new_cmd_led);
 
 	completeSpiTransmit();
+
+	svmBackgroundMath();
 }
 
 //Asynchronous time slots:
