@@ -164,6 +164,8 @@ void init_iwdg(void)
 
 void independentWatchdog(void)
 {
+	#ifdef USE_WATCHDOG
+
 	static uint8_t firstTime = 1;
 	if(firstTime)
 	{
@@ -175,6 +177,8 @@ void independentWatchdog(void)
 		//Refresh watchdog to avoid a reset:
 		HAL_IWDG_Refresh(&hiwdg);
 	}
+
+	#endif	//USE_INDEPEDENT_WATCHDOG
 }
 
 void saveCauseOFLastReset(void)

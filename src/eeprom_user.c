@@ -66,6 +66,7 @@ uint16_t increaseCycleCountEEPROM(void)
 	}
 
 	//Success
+	cycles = tmp + 1;	//Account for the +1 just added
 	return 1;
 }
 

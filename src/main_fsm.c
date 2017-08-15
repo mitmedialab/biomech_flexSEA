@@ -74,7 +74,7 @@ void mainFSM2(void)
 //Case 3:
 void mainFSM3(void)
 {
-	//independentWatchdog();
+	independentWatchdog();
 
 	readInternalTempSensor();
 }
@@ -155,7 +155,9 @@ void mainFSM10kHz(void)
 
 	completeSpiTransmit();
 
+	#ifdef USE_SVM
 	svmBackgroundMath();
+	#endif	//USE_SVM
 }
 
 //Asynchronous time slots:
