@@ -153,6 +153,17 @@ void mainFSM10kHz(void)
 	parseMasterCommands(&new_cmd_led);
 	parseSlaveCommands(&new_cmd_led);
 
+	/*
+	//Test: ToDo: this trick can be integrated in the stack, with a programmable
+	//number of passes.
+	if(commPeriph[PORT_USB].rx.bytesReadyFlag > 0)
+	{
+		//We still have bytes available, let's call the functions a second time
+		flexsea_receive_from_master();
+		parseMasterCommands(&new_cmd_led);
+	}
+	*/
+
 	completeSpiTransmit();
 
 	#ifdef USE_SVM
