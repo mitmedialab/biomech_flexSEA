@@ -36,6 +36,9 @@
 #include <flexsea_comm.h>
 #include "flexsea_board.h"
 
+//ToDo remove, debug only:
+#include "dio.h"
+
 /* USER CODE BEGIN INCLUDE */
 
 /* USER CODE END INCLUDE */
@@ -265,12 +268,28 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
 	uint32_t tLen = 0;
 	uint8_t retVal = 0;
+	volatile uint8_t mod = 0;
+	volatile static uint8_t loss = 0;
 
 	//ToDo add better overflow detection here
-	tLen = ((*Len) > COMM_PERIPH_ARR_LEN) ? COMM_PERIPH_ARR_LEN : (*Len);
+	if((*Len) > COMM_PERIPH_ARR_LEN)
+	{
+		tLen = COMM_PERIPH_ARR_LEN;
+		loss++;
+	}
+	else
+	{
+		tLen = (*Len);
+	}
 
 	update_rx_buf_usb(UserRxBufferFS, tLen);
-	commPeriph[PORT_USB].rx.bytesReadyFlag = 1;
+
+	//Raise flag(s):
+	if(tLen > COMM_STR_BUF_LEN)
+	{
+		mod = tLen / COMM_STR_BUF_LEN;
+	}
+	commPeriph[PORT_USB].rx.bytesReadyFlag += (1 + mod);
 
 	//Buffers for next packet:
 	USBD_CDC_SetRxBuffer(hUsbDevice_0, UserRxBufferFS);
