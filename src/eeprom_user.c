@@ -25,6 +25,7 @@
 #include "flexsea_sys_def.h"
 #include "flexsea.h"
 #include "eeprom.h"
+#include "misc.h"
 
 //****************************************************************************
 // Variable(s)
@@ -127,6 +128,9 @@ uint8_t writeAngleMapEEPROM(void)
 			//Error
 			return 0;
 		}
+
+		//EE_WriteVariable is slow: prevent a Watchdog reset:
+		independentWatchdog();
 	}
 
 	//Success
@@ -150,6 +154,9 @@ uint8_t readAngleMapEEPROM(void)
 		{
 			angleMap[i] = tmp;
 		}
+
+		//EE_ReadVariable is slow: prevent a Watchdog reset:
+		independentWatchdog();
 	}
 
 	//Success
