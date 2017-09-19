@@ -26,6 +26,10 @@
 #include "rigid.h"
 #include "isr.h"
 
+#ifdef USE_6CH_AMP
+#include "strain.h"
+#endif	//USE_6CH_AMP
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -48,8 +52,8 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c);
 static void init_dma1_stream0_ch1(I2C_HandleTypeDef *i2cHandle);	//I2C1 RX
 static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle);	//I2C1 TX
-static void init_dma1_stream2_ch7(void);	//I2C2 RX
-static void init_dma1_stream7_ch7(void);	//I2C2 TX
+static void init_dma1_stream2_ch7(I2C_HandleTypeDef *i2cHandle);	//I2C2 RX
+static void init_dma1_stream7_ch7(I2C_HandleTypeDef *i2cHandle);	//I2C2 TX
 
 //****************************************************************************
 // Public Function(s)
@@ -116,6 +120,7 @@ void i2c2_fsm(void)
 	#ifdef USE_I2C_2
 
 	static uint8_t i2c2_time_share = 0;
+	static uint8_t errorCounter = 0;
 
 	i2c2_time_share++;
 	i2c2_time_share %= 4;
@@ -123,30 +128,43 @@ void i2c2_fsm(void)
 	//Subdivided in 4 slots (250Hz)
 	switch(i2c2_time_share)
 	{
-		//Case 0:
+		//Case 0: Start the read process
 		case 0:
+
+			#ifdef USE_6CH_AMP
+			get_6ch_strain();
+			#endif	//USE_6CH_AMP
+
 			break;
 
-		//Case 1:
+		//Case 1-3: Decode data (when available)
 		case 1:
-			break;
-
-		//Case 2:
 		case 2:
-			break;
-
-		//Case 3:
 		case 3:
+
+			if(i2c2FsmState == I2C_FSM_RX_DATA_DONE)
+			{
+				decode6chAmp();
+				i2c2FsmState = I2C_FSM_DEFAULT;
+				errorCounter = 0;
+			}
+
 			break;
 
 		default:
 			break;
 	}
 
-	//ToDo: recover from errors:
+	//Error management:
 	if(i2c2FsmState == I2C_FSM_PROBLEM)
 	{
-		//Deal with it
+		errorCounter++;
+		i2c2FsmState = I2C_FSM_DEFAULT;
+	}
+
+	if(errorCounter > 5)
+	{
+		//FlexSEA Error code
 	}
 
 	#endif //USE_I2C_2
@@ -186,8 +204,6 @@ void disable_i2c1(void)
 // Initialize i2c2. Currently connected to the expansion connector
 void init_i2c2(void)
 {
-	//I2C_HandleTypeDef *hi2c2 contains our handle information
-	//set config for the initial state of the i2c.
 	hi2c2.Instance = I2C2;
 	hi2c2.Init.ClockSpeed = I2C2_CLOCK_RATE;  				//clock frequency
 	hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2; 				//for fast mode (doesn't matter now)
@@ -201,8 +217,8 @@ void init_i2c2(void)
 	HAL_I2C_Init(&hi2c2);
 
 	//DMA:
-	init_dma1_stream2_ch7();	//RX
-	init_dma1_stream7_ch7();	//TX
+	init_dma1_stream2_ch7(&hi2c2);	//RX
+	init_dma1_stream7_ch7(&hi2c2);	//TX
 }
 
 // Disable I2C and free the I2C handle.
@@ -432,21 +448,21 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 	}
 }
 
-//I2C2 has optional pull-ups, controlled by PC2
+//I2C2 has optional pull-ups, controlled by PC14
 void initOptionalPullUps(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 
 	__GPIOC_CLK_ENABLE();
 
-	GPIO_InitStruct.Pin = GPIO_PIN_2;
+	GPIO_InitStruct.Pin = GPIO_PIN_14;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	//Always ON:
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
 }
 
 //Implement I2C MSP DeInit
@@ -517,7 +533,7 @@ static void init_dma1_stream6_ch1(I2C_HandleTypeDef *i2cHandle)
 }
 
 //Using DMA1 Ch 7 Stream 2 for I2C2 RX
-static void init_dma1_stream2_ch7(void)
+static void init_dma1_stream2_ch7(I2C_HandleTypeDef *i2cHandle)
 {
 	//Enable clock
 	__DMA1_CLK_ENABLE();
@@ -534,12 +550,9 @@ static void init_dma1_stream2_ch7(void)
 	hdma_i2c2_rx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
-	//Link DMA handle and I2C2 RX:
-	hi2c2.hdmarx = &hdma_i2c2_rx;
-	//hi2c2 is the parent:
-	hi2c2.hdmarx->Parent = &hi2c2;
-
-	HAL_DMA_Init(hi2c2.hdmarx);
+	//Link DMA handle and I2C1 RX:
+	HAL_DMA_Init(&hdma_i2c2_rx);
+	__HAL_LINKDMA(i2cHandle, hdmarx, hdma_i2c2_rx);
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, ISR_DMA1_STREAM2, ISR_SUB_DMA1_STREAM2);
@@ -547,7 +560,7 @@ static void init_dma1_stream2_ch7(void)
 }
 
 //Using DMA1 Ch 7 Stream 7 for I2C2 TX
-static void init_dma1_stream7_ch7(void)
+static void init_dma1_stream7_ch7(I2C_HandleTypeDef *i2cHandle)
 {
 	//Enable clock
 	__DMA1_CLK_ENABLE();
@@ -564,12 +577,9 @@ static void init_dma1_stream7_ch7(void)
 	hdma_i2c2_tx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
-	//Link DMA handle and I2C2 TX:
-	hi2c2.hdmatx = &hdma_i2c2_tx;
-	//hi2c2 is the parent:
-	hi2c2.hdmatx->Parent = &hi2c2;
-
-	HAL_DMA_Init(hi2c2.hdmatx);
+	//Link DMA handle and I2C1 TX:
+	HAL_DMA_Init(&hdma_i2c2_tx);
+	__HAL_LINKDMA(i2cHandle,hdmatx,hdma_i2c2_tx);
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, ISR_DMA1_STREAM7, ISR_SUB_DMA1_STREAM7);
