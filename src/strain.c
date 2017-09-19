@@ -57,7 +57,7 @@ void get_6ch_strain(void)
 {
 	HAL_StatusTypeDef retVal;
 
-	retVal = HAL_I2C_Mem_Read_DMA(&hi2c1, I2C_SLAVE_ADDR_6CH, (uint16_t) MEM_R_CH1_H,
+	retVal = HAL_I2C_Mem_Read_DMA(&hi2c2, I2C_SLAVE_ADDR_6CH, (uint16_t) MEM_R_CH1_H,
 								I2C_MEMADD_SIZE_8BIT, i2c2_dma_rx_buf, 9);
 
 	if(retVal == HAL_OK){i2c2FsmState = I2C_FSM_RX_DATA;}

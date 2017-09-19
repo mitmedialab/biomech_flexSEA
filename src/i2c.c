@@ -257,19 +257,6 @@ void disable_i2c3(void)
 //Detects the end of a Master Receive (when DMA Mem isn't used):
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
-	//I2C2:
-	if(hi2c->Instance == I2C2)
-	{
-		if(i2c2FsmState == I2C_FSM_RX_DATA)
-		{
-			//Indicate that it's done receiving:
-			i2c2FsmState = I2C_FSM_RX_DATA_DONE;
-		}
-		else
-		{
-			i2c2FsmState = I2C_FSM_PROBLEM;
-		}
-	}
 }
 
 //Detects the end of a Master Receive in DMA Mem mode:
@@ -280,6 +267,12 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 	{
 		//Indicate that it's done receiving:
 		i2c1FsmState = I2C_FSM_RX_DATA_DONE;
+	}
+
+	else if(hi2c->Instance == I2C2)
+	{
+		//Indicate that it's done receiving:
+		i2c2FsmState = I2C_FSM_RX_DATA_DONE;
 	}
 }
 

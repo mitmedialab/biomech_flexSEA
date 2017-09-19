@@ -55,7 +55,7 @@ void decode6chAmp(void);
 //****************************************************************************
 
 //6-ch Strain Amplifier:
-#define I2C_SLAVE_ADDR_6CH		0x66	//I'm assuming this is 7bits
+#define I2C_SLAVE_ADDR_6CH		0xCC	//8 bits (7 = 0x66)
 #define MEM_R_CH1_H				8		//First Read address of the EZI2C mem
 
 //****************************************************************************
