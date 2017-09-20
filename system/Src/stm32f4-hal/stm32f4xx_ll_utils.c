@@ -42,7 +42,7 @@
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else
-//#define assert_param(expr) ((void)0U)	Already defined in hal_conf.h
+//#define assert_param(expr) ((void)0U)	//Already defined in hal_conf.h
 #endif /* USE_FULL_ASSERT */
 
 /** @addtogroup STM32F4xx_LL_Driver
