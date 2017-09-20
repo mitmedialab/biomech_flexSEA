@@ -171,9 +171,9 @@ void testAngleMapEEPROMblocking(void)
 	{
 		initAngleMapRAM();
 
-	//	ret1 = writeAngleMapEEPROM();
-
-	//	HAL_Delay(2000);
+		//ret1 = writeAngleMapEEPROM();
+		//HAL_Delay(2000);
+		(void)ret1;
 
 		ret2 = readAngleMapEEPROM();
 

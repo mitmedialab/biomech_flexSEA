@@ -269,7 +269,7 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 	uint32_t tLen = 0;
 	uint8_t retVal = 0;
 	volatile uint8_t mod = 0;
-	volatile static uint8_t loss = 0;
+	static volatile uint8_t loss = 0;
 
 	//ToDo add better overflow detection here
 	if((*Len) > COMM_PERIPH_ARR_LEN)
