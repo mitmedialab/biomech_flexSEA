@@ -26,6 +26,7 @@
 #include "i2c.h"
 #include "strain.h"
 #include "flexsea_global_structs.h"
+#include "flexsea_user_structs.h"
 #include "flexsea.h"
 
 //****************************************************************************
@@ -121,6 +122,9 @@ void unpackCompressed6ch(uint8_t *buf, uint16_t *v0, uint16_t *v1, uint16_t *v2,
 void decode6chAmp(void)
 {
 	strain_6ch_bytes_to_words(i2c2_dma_rx_buf);
+
+	//Copy to genVar (GUI):
+	for(int i = 0; i < 6; i++){rigid1.mn.genVar[i] = ext_strain[i];}
 }
 
 void compress6chTestCodeBlocking(void)
