@@ -41,17 +41,6 @@ uint8_t ext_strain_bytes[12];
 // Function(s)
 //****************************************************************************
 
-//Reassembles the bytes we read in words
-void strain_6ch_bytes_to_words(uint8_t *buf)
-{
-	ext_strain[0] = ((((uint16_t)buf[0] << 8) & 0xFF00) | (uint16_t)buf[1]);
-	ext_strain[1] = ((((uint16_t)buf[2] << 8) & 0xFF00) | (uint16_t)buf[3]);
-	ext_strain[2] = ((((uint16_t)buf[4] << 8) & 0xFF00) | (uint16_t)buf[5]);
-	ext_strain[3] = ((((uint16_t)buf[6] << 8) & 0xFF00) | (uint16_t)buf[7]);
-	ext_strain[4] = ((((uint16_t)buf[8] << 8) & 0xFF00) | (uint16_t)buf[9]);
-	ext_strain[5] = ((((uint16_t)buf[10] << 8) & 0xFF00) | (uint16_t)buf[11]);
-}
-
 //Get latest readings from the 6-ch strain sensor. Uses the Compressed version,
 //9 bytes, 12-bits per sensor.
 void get_6ch_strain(void) 
@@ -111,17 +100,20 @@ uint8_t compressAndSplit6ch(uint8_t *buf, uint16_t ch0, uint16_t ch1, uint16_t c
 void unpackCompressed6ch(uint8_t *buf, uint16_t *v0, uint16_t *v1, uint16_t *v2, \
 							uint16_t *v3, uint16_t *v4, uint16_t *v5)
 {
-	*v0 = ((*(buf+0) << 8 | *(buf+1)) >> 4) << 4;
-	*v1 = (((*(buf+1) << 8 | *(buf+2))) & 0xFFF) << 4;
-	*v2 = ((*(buf+3) << 8 | *(buf+4)) >> 4) << 4;
-	*v3 = (((*(buf+4) << 8 | *(buf+5))) & 0xFFF) << 4;
-	*v4 = ((*(buf+6) << 8 | *(buf+7)) >> 4) << 4;
-	*v5 = (((*(buf+7) << 8 | *(buf+8))) & 0xFFF) << 4;
+	*v0 = ((*(buf+0) << 8 | *(buf+1)) >> 4);
+	*v1 = (((*(buf+1) << 8 | *(buf+2))) & 0xFFF);
+	*v2 = ((*(buf+3) << 8 | *(buf+4)) >> 4);
+	*v3 = (((*(buf+4) << 8 | *(buf+5))) & 0xFFF);
+	*v4 = ((*(buf+6) << 8 | *(buf+7)) >> 4);
+	*v5 = (((*(buf+7) << 8 | *(buf+8))) & 0xFFF);
 }
 
 void decode6chAmp(void)
 {
-	strain_6ch_bytes_to_words(i2c2_dma_rx_buf);
+	//strain_6ch_bytes_to_words(i2c2_dma_rx_buf);
+	unpackCompressed6ch(i2c2_dma_rx_buf, &ext_strain[0], &ext_strain[1],
+						&ext_strain[2], &ext_strain[3], &ext_strain[4],
+						&ext_strain[5]);
 
 	//Copy to genVar (GUI):
 	for(int i = 0; i < 6; i++){rigid1.mn.genVar[i] = ext_strain[i];}

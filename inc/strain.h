@@ -41,7 +41,6 @@ extern uint16_t ext_strain[6];
 
 int strain_6ch_read(uint8_t internal_reg_addr, uint8_t *pData, uint16_t length);
 void strain_amp_6ch_test_code_blocking(void);
-void strain_6ch_bytes_to_words(uint8_t *buf);
 void get_6ch_strain(void);
 uint8_t compressAndSplit6ch(uint8_t *buf, uint16_t ch0, uint16_t ch1, uint16_t ch2, \
 							uint16_t ch3, uint16_t ch4, uint16_t ch5);
