@@ -47,12 +47,6 @@ uint8_t getSlaveCnt(uint8_t sub);
 //<FlexSEA User>
 //==============
 
-//Board type: define as a global symbol. List of options:
-//(and make sure it matches with board_id!)
-//#define BOARD_TYPE_FLEXSEA_PLAN
-//#define BOARD_TYPE_FLEXSEA_MANAGE
-//#define BOARD_TYPE_FLEXSEA_EXECUTE
-
 //How many slave busses?
 #define COMM_SLAVE_BUS				3
 
@@ -67,46 +61,47 @@ uint8_t getSlaveCnt(uint8_t sub);
 
 //Overload buffer & function names (for user convenience):
 
-#define comm_str_485_1					comm_str_1
-#define unpack_payload_485_1			unpack_payload_1
-#define rx_command_485_1				rx_command_1
-#define update_rx_buf_byte_485_1		update_rx_buf_byte_1
-#define update_rx_buf_array_485_1		update_rx_buf_array_1
+//#define comm_str_485_1					comm_str_1
+//#define unpack_payload_485_1			unpack_payload_1
+//#define rx_command_485_1				rx_command_1
+//#define update_rx_buf_byte_485_1		update_rx_buf_byte_1
+//#define update_rx_buf_array_485_1		update_rx_buf_array_1
 #define update_rx_buf_485_1(x, y)		circ_buff_write(commPeriph[PORT_RS485_1].rx.circularBuff, (x), (y))
 
-#define comm_str_uart					comm_str_2
-#define unpack_payload_uart				unpack_payload_2
-#define rx_command_uart					rx_command_2
-#define update_rx_buf_byte_uart			update_rx_buf_byte_2
-#define update_rx_buf_array_uart		update_rx_buf_array_2
+//#define comm_str_uart					comm_str_2
+//#define unpack_payload_uart				unpack_payload_2
+//#define rx_command_uart					rx_command_2
+//#define update_rx_buf_byte_uart			update_rx_buf_byte_2
+//#define update_rx_buf_array_uart		update_rx_buf_array_2
 #define update_rx_buf_uart(x, y)		circ_buff_write(commPeriph[PORT_SUB2].rx.circularBuff, (x), (y))
 
+//comm_str_spi is the only one used. Replace by something uniue to this peripheral
 #define comm_str_spi					comm_str_3
-#define unpack_payload_spi				unpack_payload_3
+//#define unpack_payload_spi				unpack_payload_3
 #define rx_command_spi					rx_command_3
-#define update_rx_buf_byte_spi			update_rx_buf_byte_3
-#define update_rx_buf_array_spi			update_rx_buf_array_3
+//#define update_rx_buf_byte_spi			update_rx_buf_byte_3
+//#define update_rx_buf_array_spi			update_rx_buf_array_3
 #define update_rx_buf_spi(x, y)			circ_buff_write(commPeriph[PORT_SPI].rx.circularBuff, (x), (y))
 
-#define comm_str_usb					comm_str_4
-#define unpack_payload_usb				unpack_payload_4
-#define rx_command_usb					rx_command_4
-#define update_rx_buf_byte_usb			update_rx_buf_byte_4
-#define update_rx_buf_array_usb			update_rx_buf_array_4
+//#define comm_str_usb					comm_str_4
+//#define unpack_payload_usb				unpack_payload_4
+//#define rx_command_usb					rx_command_4
+//#define update_rx_buf_byte_usb			update_rx_buf_byte_4
+//#define update_rx_buf_array_usb			update_rx_buf_array_4
 #define update_rx_buf_usb(x, y)			circ_buff_write(commPeriph[PORT_USB].rx.circularBuff, (x), (y))
 
-#define comm_str_wireless				comm_str_5
-#define unpack_payload_wireless			unpack_payload_5
-#define rx_command_wireless				rx_command_5
-#define update_rx_buf_byte_wireless		update_rx_buf_byte_5
-#define update_rx_buf_array_wireless	update_rx_buf_array_5
+//#define comm_str_wireless				comm_str_5
+//#define unpack_payload_wireless			unpack_payload_5
+//#define rx_command_wireless				rx_command_5
+//#define update_rx_buf_byte_wireless		update_rx_buf_byte_5
+//#define update_rx_buf_array_wireless	update_rx_buf_array_5
 #define update_rx_buf_wireless(x, y)	circ_buff_write(commPeriph[PORT_WIRELESS].rx.circularBuff, (x), (y))
 
-#define comm_str_exp					comm_str_6
-#define unpack_payload_exp				unpack_payload_6
-#define rx_command_exp					rx_command_6
-#define update_rx_buf_byte_exp			update_rx_buf_byte_6
-#define update_rx_buf_array_exp			update_rx_buf_array_6
+//#define comm_str_exp					comm_str_6
+//#define unpack_payload_exp				unpack_payload_6
+//#define rx_command_exp					rx_command_6
+//#define update_rx_buf_byte_exp			update_rx_buf_byte_6
+//#define update_rx_buf_array_exp			update_rx_buf_array_6
 #define update_rx_buf_exp(x, y)			circ_buff_write(commPeriph[PORT_EXP].rx.circularBuff, (x), (y))
 
 #define PORT_UART_EX					PORT_RS485_2

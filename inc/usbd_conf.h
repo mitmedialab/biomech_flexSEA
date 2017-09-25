@@ -90,6 +90,11 @@
 #define USBD_memset               memset
 #define USBD_memcpy               memcpy
 */
+
+//Prototypes added to prevent warnings:
+ void *USBD_static_malloc(uint32_t size);
+ void USBD_static_free(void *p);
+
 //Cube generated for F3:
 #define USBD_malloc               (uint32_t *)USBD_static_malloc
 #define USBD_free                 USBD_static_free

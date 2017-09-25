@@ -53,6 +53,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "eeprom_user.h"
+//#include "stm32f4xx_hal_flash_ex.h"
 
 /* Exported constants --------------------------------------------------------*/
 /* EEPROM emulation firmware error codes */
@@ -106,8 +107,8 @@
 
 //Hacks - copied from newer libs:
 //===============================
-#define FLASH_TYPEERASE_SECTORS         ((uint32_t)0x00U)  /*!< Sectors erase only          */
-#define FLASH_TYPEERASE_MASSERASE       ((uint32_t)0x01U)  /*!< Flash Mass erase activation */
+//#define FLASH_TYPEERASE_SECTORS         ((uint32_t)0x00U)  /*!< Sectors erase only          */
+//#define FLASH_TYPEERASE_MASSERASE       ((uint32_t)0x01U)  /*!< Flash Mass erase activation */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
