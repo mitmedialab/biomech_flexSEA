@@ -41,7 +41,7 @@
 // Variable(s)
 //****************************************************************************
 
-uint8_t newCmdLed = 0, newPacketsFlag = 0;
+uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -120,8 +120,8 @@ void mainFSM9(void)
 {
 	//UI RGB LED
 	rgbLedRefreshFade();
-	rgb_led_ui(0, 0, 0, newCmdLed);    //ToDo add error codes
-	if(newCmdLed) {newCmdLed = 0;}
+	rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
+	if(newMasterCmdLed) {newMasterCmdLed = 0;}
 
 	//Constant LED0 flashing while the code runs
 	LED0(rgbLedCenterPulse(12));
@@ -146,12 +146,14 @@ void mainFSM10kHz(void)
 
 	//New approach - WiP:
 	flexsea_receive_from_slave();	//Only for the RS-485 transceivers
-	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newCmdLed);
-	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newCmdLed);
-	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newCmdLed);
-	receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newCmdLed);
-	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newCmdLed);	//Ex
-	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newCmdLed);
+	//Master:
+	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed);
+	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed);
+	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed);
+	//Slave:
+	receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed);
+	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed);	//Ex
+	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed);
 	//Note: this new function doesn't have the SPI error handling code.
 
 	//SPI, USB or Wireless reception from a Plan board:
