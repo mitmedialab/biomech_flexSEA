@@ -32,6 +32,7 @@
 #include "rgb_led.h"
 #include "cmd-Rigid.h"
 #include "flexsea_system.h"
+#include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
 #include "svm.h"
@@ -40,7 +41,7 @@
 // Variable(s)
 //****************************************************************************
 
-uint8_t new_cmd_led = 0;
+uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -119,8 +120,8 @@ void mainFSM9(void)
 {
 	//UI RGB LED
 	rgbLedRefreshFade();
-	rgb_led_ui(0, 0, 0, new_cmd_led);    //ToDo add error codes
-	if(new_cmd_led) {new_cmd_led = 0;}
+	rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
+	if(newMasterCmdLed) {newMasterCmdLed = 0;}
 
 	//Constant LED0 flashing while the code runs
 	LED0(rgbLedCenterPulse(12));
@@ -143,15 +144,27 @@ void mainFSM10kHz(void)
 	//Communication with our Master & Slave(s):
 	//=========================================
 
+	//New approach - WiP:
+	flexsea_receive_from_slave();	//Only for the RS-485 transceivers
+	//Master:
+	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed);
+	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed);
+	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed);
+	//Slave:
+	receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed);
+	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed);	//Ex
+	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed);
+	//Note: this new function doesn't have the SPI error handling code.
+
 	//SPI, USB or Wireless reception from a Plan board:
-	flexsea_receive_from_master();
+	//flexsea_receive_from_master();
 
 	//RS-485 or UART reception from an Execute board:
-	flexsea_receive_from_slave();
+	//flexsea_receive_from_slave();
 
 	//Did we receive new commands? Can we parse them?
-	parseMasterCommands(&new_cmd_led);
-	parseSlaveCommands(&new_cmd_led);
+	//parseMasterCommands(&newCmdLed);
+	//parseSlaveCommands(&newCmdLed);
 
 	/*
 	//Test: ToDo: this trick can be integrated in the stack, with a programmable
@@ -160,7 +173,7 @@ void mainFSM10kHz(void)
 	{
 		//We still have bytes available, let's call the functions a second time
 		flexsea_receive_from_master();
-		parseMasterCommands(&new_cmd_led);
+		parseMasterCommands(&newCmdLed);
 	}
 	*/
 
