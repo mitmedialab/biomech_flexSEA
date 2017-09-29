@@ -116,14 +116,6 @@ void IMUParseData(void)
 	}
 
 	//Assign:
-	//imu.accel.x = -12178;
-	//imu.accel.y = 2320;
-	//imu.accel.z = -2022;
-	//imu.temp = (int16_t)tmp[3];
-	//imu.gyro.x = -1308;
-	//imu.gyro.y = -1511;
-	//imu.gyro.z = 5563;
-
 	imu.accel.x = (int16_t)tmp[0];
     imu.accel.y = (int16_t)tmp[1];
     imu.accel.z = (int16_t)tmp[2];
