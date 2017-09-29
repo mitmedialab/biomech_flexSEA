@@ -116,13 +116,21 @@ void IMUParseData(void)
 	}
 
 	//Assign:
-	imu.accel.x = (int16_t)tmp[0];
-	imu.accel.y = (int16_t)tmp[1];
-	imu.accel.z = (int16_t)tmp[2];
+	//imu.accel.x = -12178;
+	//imu.accel.y = 2320;
+	//imu.accel.z = -2022;
 	//imu.temp = (int16_t)tmp[3];
-	imu.gyro.x = (int16_t)tmp[4];
-	imu.gyro.y = (int16_t)tmp[5];
-	imu.gyro.z = (int16_t)tmp[6];
+	//imu.gyro.x = -1308;
+	//imu.gyro.y = -1511;
+	//imu.gyro.z = 5563;
+
+	imu.accel.x = (int16_t)tmp[0];
+    imu.accel.y = (int16_t)tmp[1];
+    imu.accel.z = (int16_t)tmp[2];
+    imu.gyro.x = (int16_t)tmp[4];
+    imu.gyro.y = (int16_t)tmp[5];
+    imu.gyro.z = (int16_t)tmp[6];
+
 	imu.magneto.x = (int16_t)tmp[7];
 	imu.magneto.y = (int16_t)tmp[8];
 	imu.magneto.z = (int16_t)tmp[9];
