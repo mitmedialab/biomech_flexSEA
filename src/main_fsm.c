@@ -38,6 +38,8 @@
 #include "svm.h"
 #include "user-mn.h"
 
+#include "cmd-Bilateral.h"
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -216,7 +218,8 @@ void sendReadRigidPacket(void)
 	uint8_t info[2] = {PORT_RS485_1, PORT_RS485_1};
 
 	//Prepare and send command:
-	tx_cmd_rigid_r(TX_N_DEFAULT, 0);
+	//tx_cmd_rigid_r(TX_N_DEFAULT, 0);
+	tx_cmd_bilateral_rw(TX_N_DEFAULT, 0);
 	packAndSend(P_AND_S_DEFAULT, FLEXSEA_MANAGE_2, info, SEND_TO_SLAVE);
 }
 
