@@ -36,9 +36,6 @@
 #include "spi.h"
 #include "misc.h"
 #include "svm.h"
-#include "user-mn.h"
-
-#include "cmd-Bilateral.h"
 
 //****************************************************************************
 // Variable(s)
@@ -49,9 +46,6 @@ uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
-
-//Test code:
-void sendReadRigidPacket(void);
 
 //****************************************************************************
 // Public Function(s)
@@ -76,16 +70,6 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	i2c2_fsm();
-
-	#ifdef BILATERAL_MASTER
-	static uint8_t cnt = 0;
-	cnt++;
-	cnt %= 10;
-	if(!cnt)
-	{
-		sendReadRigidPacket();
-	}
-	#endif	//BILATERAL_MASTER
 }
 
 //Case 3:
@@ -183,17 +167,6 @@ void mainFSM10kHz(void)
 
 	#endif	//BILATERAL_SLAVE
 
-
-	//SPI, USB or Wireless reception from a Plan board:
-	//flexsea_receive_from_master();
-
-	//RS-485 or UART reception from an Execute board:
-	//flexsea_receive_from_slave();
-
-	//Did we receive new commands? Can we parse them?
-	//parseMasterCommands(&newCmdLed);
-	//parseSlaveCommands(&newCmdLed);
-
 	/*
 	//Test: ToDo: this trick can be integrated in the stack, with a programmable
 	//number of passes.
@@ -210,17 +183,6 @@ void mainFSM10kHz(void)
 	#ifdef USE_SVM
 	svmBackgroundMath();
 	#endif	//USE_SVM
-}
-
-//Test code:
-void sendReadRigidPacket(void)
-{
-	uint8_t info[2] = {PORT_RS485_1, PORT_RS485_1};
-
-	//Prepare and send command:
-	//tx_cmd_rigid_r(TX_N_DEFAULT, 0);
-	tx_cmd_bilateral_rw(TX_N_DEFAULT, 0);
-	packAndSend(P_AND_S_DEFAULT, FLEXSEA_MANAGE_2, info, SEND_TO_SLAVE);
 }
 
 //Asynchronous time slots:
