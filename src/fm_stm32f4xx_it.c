@@ -106,6 +106,7 @@ void DMA2_Stream7_IRQHandler(void)
 	HAL_NVIC_ClearPendingIRQ(DMA2_Stream7_IRQn);
 
 	HAL_DMA_IRQHandler(husart1.hdmatx);
+	//HAL_DMA_IRQHandler(&hdma2_str7_ch4);
 }
 
 //DMA1 Stream1 - USART3 RX

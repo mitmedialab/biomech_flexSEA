@@ -30,10 +30,11 @@
 //****************************************************************************
 
 void initMasterSlaveComm(void);
-void parseMasterCommands(uint8_t *new_cmd);
-void parseSlaveCommands(uint8_t *new_cmd);
+//void parseMasterCommands(uint8_t *new_cmd);
+//void parseSlaveCommands(uint8_t *new_cmd);
 void slaveTransmit(uint8_t port);
 void autoStream(void);
+void sendMasterDelayedResponse(void);
 
 //****************************************************************************
 // Definition(s):

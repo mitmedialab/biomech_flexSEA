@@ -26,6 +26,9 @@
 #include <stdbool.h>
 #include "spi.h"
 #include "flexsea_cmd_stream.h"
+#include "user-mn.h"
+#include "uarts.h"
+#include "timer.h"
 
 //****************************************************************************
 // Variable(s)
@@ -48,9 +51,16 @@ void initMasterSlaveComm(void)
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
 
 	//RS-485 #1:
-	initCommPeriph(&commPeriph[PORT_RS485_1], PORT_RS485_1, SLAVE, rx_buf_1, \
+	#ifdef BILATERAL_MASTER
+	PortType ms = SLAVE;
+	#endif	//BILATERAL_MASTER
+	#ifdef BILATERAL_SLAVE
+	PortType ms = MASTER;
+	#endif	//BILATERAL_SLAVE
+	initCommPeriph(&commPeriph[PORT_RS485_1], PORT_RS485_1, ms, rx_buf_1, \
 			comm_str_1, rx_command_1, &rx_buf_circ_1, \
 			&packet[PORT_RS485_1][INBOUND], &packet[PORT_RS485_1][OUTBOUND]);
+
 
 	//UART:
 	initCommPeriph(&commPeriph[PORT_RS485_2], PORT_RS485_2, SLAVE, rx_buf_2, \
@@ -68,6 +78,7 @@ void initMasterSlaveComm(void)
 				&packet[PORT_WIRELESS][INBOUND], &packet[PORT_WIRELESS][OUTBOUND]);
 }
 
+/*
 //Did we receive new commands? Can we parse them?
 void parseMasterCommands(uint8_t *new_cmd)
 {
@@ -109,7 +120,9 @@ void parseMasterCommands(uint8_t *new_cmd)
 
 	if(newCmdLed > 0) {*new_cmd = 1;}
 }
+*/
 
+/*
 //Did we receive new commands? Can we parse them?
 void parseSlaveCommands(uint8_t *new_cmd)
 {
@@ -127,8 +140,10 @@ void parseSlaveCommands(uint8_t *new_cmd)
 		payload_parse_str(&packet[PORT_RS485_2][INBOUND]);
 	}
 }
+*/
 
 //Slave Communication function. Call at 1kHz.
+//ToDo: this can also be used to transmit to a master
 void slaveTransmit(Port port)
 {
 	/*Note: this is only a demonstration. In the final application, we want
@@ -152,8 +167,27 @@ void slaveTransmit(Port port)
 				commPeriph[port].transState = TS_TRANSMIT;
 			}
 
+			//ToDo: this is slave only... but does it matter?
 			flexsea_send_serial_slave(p);
 		}
+	}
+}
+
+//Call this to send any pending delayed reply on RS-485
+//ToDo: this doesn't use timestamp and doesn't guarantee a delay!
+void sendMasterDelayedResponse(void)
+{
+	Port port = PORT_RS485_1;
+	//uint8_t* str = commPeriph[port].out.packed[0];
+	//uint16_t length = COMM_STR_BUF_LEN;
+
+	if((commPeriph[port].tx.packetReady) == 1 && (commPeriph[port].tx.timeStamp == tb_100us_timeshare))
+	{
+		/*puts_rs485_1(packet[port][OUTBOUND].packed, \
+					packet[port][OUTBOUND].numb);*/
+		puts_rs485_1(commPeriph[port].out->packed, commPeriph[port].out->numb);
+		//Drop flag
+		commPeriph[port].tx.packetReady = 0;
 	}
 }
 

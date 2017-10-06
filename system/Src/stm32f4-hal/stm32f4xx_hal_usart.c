@@ -856,6 +856,20 @@ HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *p
 {
   uint32_t *tmp;
 
+  /*
+  //ToDo remove!!!
+  static int cnt = 0;
+
+  if(husart->Instance == USART1)
+  {
+	  cnt++;
+	  if(cnt > 100)
+	  {
+		  while(1);
+	  }
+  }
+  */
+
   if(husart->State == HAL_USART_STATE_READY)
   {
     if((pTxData == NULL) || (Size == 0))
@@ -1693,6 +1707,14 @@ static void USART_DMATransmitCplt(DMA_HandleTypeDef *hdma)
       HAL_USART_TxCpltCallback(husart);
     }
   }
+
+	//ToDo Hack Alert! Everything below this line is not from ST - it's a mashup of the old libs:
+	if(husart->State != HAL_USART_STATE_BUSY_TX)
+	{
+	  husart->State = HAL_USART_STATE_BUSY_RX;
+	  HAL_USART_TxCpltCallback(husart);
+	}
+
 }
 
 /**

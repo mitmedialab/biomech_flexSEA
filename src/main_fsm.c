@@ -36,6 +36,7 @@
 #include "spi.h"
 #include "misc.h"
 #include "svm.h"
+#include "user-mn.h"
 
 //****************************************************************************
 // Variable(s)
@@ -47,6 +48,9 @@ uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 // Private Function Prototype(s):
 //****************************************************************************
 
+//Test code:
+void sendReadRigidPacket(void);
+
 //****************************************************************************
 // Public Function(s)
 //****************************************************************************
@@ -57,7 +61,7 @@ uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 //Case 0: slaveComm
 void mainFSM0(void)
 {
-	slaveTransmit(PORT_RS485_1);
+	//slaveTransmit(PORT_RS485_1);
 }
 
 //Case 1: I2C1 - IMU
@@ -70,6 +74,16 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	i2c2_fsm();
+
+	#ifdef BILATERAL_MASTER
+	static uint8_t cnt = 0;
+	cnt++;
+	cnt %= 10;
+	if(!cnt)
+	{
+		sendReadRigidPacket();
+	}
+	#endif	//BILATERAL_MASTER
 }
 
 //Case 3:
@@ -151,10 +165,22 @@ void mainFSM10kHz(void)
 	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed);
 	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed);
 	//Slave:
-	receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed);
 	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed);	//Ex
 	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed);
 	//Note: this new function doesn't have the SPI error handling code.
+	//Variable:
+	#ifdef BILATERAL_MASTER
+		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed);
+	#endif	//BILATERAL_MASTER
+	#ifdef BILATERAL_SLAVE
+
+		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newMasterCmdLed);
+
+		//Time to reply - RS-485?
+		sendMasterDelayedResponse();
+
+	#endif	//BILATERAL_SLAVE
+
 
 	//SPI, USB or Wireless reception from a Plan board:
 	//flexsea_receive_from_master();
@@ -182,6 +208,16 @@ void mainFSM10kHz(void)
 	#ifdef USE_SVM
 	svmBackgroundMath();
 	#endif	//USE_SVM
+}
+
+//Test code:
+void sendReadRigidPacket(void)
+{
+	uint8_t info[2] = {PORT_RS485_1, PORT_RS485_1};
+
+	//Prepare and send command:
+	tx_cmd_rigid_r(TX_N_DEFAULT, 0);
+	packAndSend(P_AND_S_DEFAULT, FLEXSEA_MANAGE_2, info, SEND_TO_SLAVE);
 }
 
 //Asynchronous time slots:

@@ -66,10 +66,13 @@ volatile uint8_t dmaRx2ConfigFlag = 0;
 
 static void init_dma2_stream2_ch4(void);
 static void init_dma2_stream1_ch5(void);
-static void init_dma2_stream7_ch4(void);
+//static void init_dma2_stream7_ch4(void);
+static void init_dma2_stream7_ch4(USART_HandleTypeDef *usartHandle);
 static void init_dma2_stream6_ch5(void);
 static void init_dma1_stream1_ch4(void);
 static void init_dma1_stream3_ch4(void);
+
+
 
 //****************************************************************************
 // Public Function(s)
@@ -113,7 +116,7 @@ void init_usart1(uint32_t baudrate)
 
 	//Enable DMA:
 	init_dma2_stream2_ch4();	//RX
-	init_dma2_stream7_ch4();	//TX
+	init_dma2_stream7_ch4(&husart1);	//TX
 }
 
 //USART6 init function: UART, Execute
@@ -381,7 +384,6 @@ void DMA2_Str2_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 	}
 
 	//Deal with FlexSEA buffers here:
-	//update_rx_buf_array_485_1(uart1_dma_rx_buf, rs485_1_dma_xfer_len);	//Legacy
 	update_rx_buf_485_1(uart1_dma_rx_buf, rs485_1_dma_xfer_len);			//Circular Buffer
 	//Empty DMA buffer once it's copied:
 	memset(uart1_dma_rx_buf, 0, rs485_1_dma_xfer_len);
@@ -430,7 +432,6 @@ void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 	}
 
 	//Deal with FlexSEA buffers here:
-	//update_rx_buf_array_485_2(uart6_dma_rx_buf, rs485_2_dma_xfer_len);	//Legacy
 	update_rx_buf_uart(uart6_dma_rx_buf, rs485_2_dma_xfer_len);				//Circular Buffer
 	//Empty DMA buffer once it's copied:
 	memset(uart6_dma_rx_buf, 0, rs485_2_dma_xfer_len);
@@ -479,6 +480,23 @@ void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)
 	else if(husart->Instance == USART6)
 	{
 		//...
+	}
+}
+
+//We have a packet ready, but we want to wait a little while before sending it
+void rs485Transmit(PacketWrapper* p)
+{
+	if(p->destinationPort == PORT_RS485_1)
+	{
+		//packet[PORT_RS485_1][OUTBOUND] should already be filled
+
+		commPeriph[PORT_RS485_1].tx.packetReady = 1;
+		//We reply 2 slots later:
+		commPeriph[PORT_RS485_1].tx.timeStamp = (tb_100us_timeshare + 2) % 10;
+
+		//ToDo: make sure this isn't done somewhere else, or that this data isn't already in commPeriph
+		memcpy(commPeriph[PORT_RS485_1].out->packed, p->packed, COMM_STR_BUF_LEN);
+		commPeriph[PORT_RS485_1].out->numb = COMM_STR_BUF_LEN;
 	}
 }
 
@@ -729,7 +747,7 @@ static void init_dma1_stream1_ch4(void)
 }
 
 //Using DMA2 Ch 4 Stream 7 for USART1 TX
-static void init_dma2_stream7_ch4(void)
+static void init_dma2_stream7_ch4(USART_HandleTypeDef *usartHandle)
 {
 	//Pointer to our storage buffer:
 	uint32_t *uart1_dma_buf_ptr;
@@ -758,12 +776,15 @@ static void init_dma2_stream7_ch4(void)
 	//husart1 is the parent:
 	husart1.hdmatx->Parent = &husart1;
 
-	HAL_DMA_Init(husart1.hdmatx);
+	//HAL_DMA_Init(husart1.hdmatx);
+	HAL_DMA_Init(&hdma2_str7_ch4);
+
+	//__HAL_LINKDMA(usartHandle, hdmatx, hdma2_str7_ch4);
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, ISR_DMA2_STREAM7, ISR_SUB_DMA2_STREAM7);
 	HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
-	__HAL_DMA_ENABLE_IT(husart1.hdmatx, DMA_IT_TC);
+	__HAL_DMA_ENABLE_IT(husart1.hdmatx, DMA_IT_TC);	//??
 }
 
 //Using DMA2 Ch 5 Stream 6 for USART6 TX
