@@ -40,7 +40,7 @@
 //==============
 //Board architecture. Has to be changed in all the flexsea_board files!
 
-#ifdef BILATERAL_MASTER
+#if(defined BILATERAL_MASTER || !defined BILATERAL)
 uint8_t board_id = FLEXSEA_MANAGE_1;
 uint8_t board_up_id = FLEXSEA_PLAN_1;
 #endif	//BILATERAL_MASTER

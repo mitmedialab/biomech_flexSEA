@@ -51,7 +51,7 @@ void initMasterSlaveComm(void)
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
 
 	//RS-485 #1:
-	#ifdef BILATERAL_MASTER
+	#if(defined BILATERAL_MASTER || !defined BILATERAL)
 	PortType ms = SLAVE;
 	#endif	//BILATERAL_MASTER
 	#ifdef BILATERAL_SLAVE
