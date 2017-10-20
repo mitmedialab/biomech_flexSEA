@@ -29,6 +29,7 @@
 #include "flexsea_board.h"
 #include "isr.h"
 #include "timer.h"
+#include "stm32f4xx_hal_def.h"
 
 //****************************************************************************
 // Variable(s)
@@ -355,6 +356,7 @@ void puts_expUart(uint8_t *str, uint16_t length)
 {
 	unsigned int i = 0;
 	uint8_t *uart3_dma_buf_ptr;
+	static uint32_t errCnt = 0;
 	uart3_dma_buf_ptr = (uint8_t*) &uart3_dma_tx_buf;
 
 	//Copy str to tx buffer:
@@ -364,7 +366,29 @@ void puts_expUart(uint8_t *str, uint16_t length)
 	for(i = 0; i < 1000; i++);
 
 	//Send data via DMA:
-	HAL_USART_Transmit_DMA(&husart3, uart3_dma_buf_ptr, length);
+	if(HAL_USART_Transmit_DMA(&husart3, uart3_dma_buf_ptr, length) != HAL_OK)
+	{
+		errCnt++;
+	}
+
+	if(errCnt > 100)
+	{
+		//Something major is going on...
+		//ToDo
+		CLEAR_BIT(husart3.Instance->CR1, (USART_CR1_TXEIE | USART_CR1_TCIE));
+		  /* At end of Tx process, restore husart->State to Ready */
+		husart3.State = HAL_USART_STATE_READY;
+
+		//init_usart3(230400);	//Expansion port
+		//BT_RST(0);
+
+		//errCnt = 0;
+	}
+
+	if(errCnt > 110)
+	{
+		errCnt = 0;
+	}
 }
 
 //Function called after a completed DMA transfer, UART1 RX
@@ -461,8 +485,7 @@ void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)
 	if(husart->Instance == USART1)
 	{
 		//...
-		/*
-		 * Test - doesn't seem to do much:
+		//Test - doesn't seem to do much:
 		if(husart->ErrorCode != HAL_USART_ERROR_NONE)
 		{
 			husart->ErrorCode = HAL_USART_ERROR_NONE;
@@ -474,8 +497,25 @@ void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)
 		{
 			husart->hdmatx->State = HAL_DMA_STATE_RESET;
 		}
-		*/
 
+	}
+	if(husart->Instance == USART3)
+	{
+		/*
+		//...
+		//Test - doesn't seem to do much:
+		if(husart->ErrorCode != HAL_USART_ERROR_NONE)
+		{
+			husart->ErrorCode = HAL_USART_ERROR_NONE;
+			husart->State= HAL_USART_STATE_READY;
+		}
+
+		if(husart->hdmatx->State == HAL_DMA_STATE_ERROR || \
+				husart->hdmatx->State == HAL_DMA_STATE_TIMEOUT)
+		{
+			husart->hdmatx->State = HAL_DMA_STATE_RESET;
+		}
+*/
 	}
 	else if(husart->Instance == USART6)
 	{
