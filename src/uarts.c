@@ -312,6 +312,7 @@ void puts_uart_ex(uint8_t *str, uint16_t length)
 {
 	unsigned int i = 0;
 	uint8_t *uart6_dma_buf_ptr;
+	static uint32_t errCnt = 0;
 	uart6_dma_buf_ptr = (uint8_t*) &uart6_dma_tx_buf;
 
 	//Copy str to tx buffer:
@@ -321,7 +322,27 @@ void puts_uart_ex(uint8_t *str, uint16_t length)
 	for(i = 0; i < 1000; i++);
 
 	//Send data
-	HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length);
+	//HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length);
+
+	//Send data via DMA:
+	if(HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length) != HAL_OK)
+	{
+		errCnt++;
+	}
+
+	if(errCnt > 100)
+	{
+		//Something major is going on...
+		//ToDo
+		CLEAR_BIT(husart6.Instance->CR1, (USART_CR1_TXEIE | USART_CR1_TCIE));
+		  /* At end of Tx process, restore husart->State to Ready */
+		husart6.State = HAL_USART_STATE_READY;
+	}
+
+	if(errCnt > 110)
+	{
+		errCnt = 0;
+	}
 }
 
 //Prepares the board for a Reply (reception). Blocking.
