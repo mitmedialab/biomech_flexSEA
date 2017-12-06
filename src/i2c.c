@@ -441,10 +441,12 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 	}
 }
 
-//I2C2 has optional pull-ups, controlled by PC14
+//I2C2 has optional pull-ups, controlled by PC14 (0.1) or PE3 (0.2)
 void initOptionalPullUps(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
+
+	#ifndef HW_VER_0_2
 
 	__GPIOC_CLK_ENABLE();
 
@@ -456,6 +458,21 @@ void initOptionalPullUps(void)
 
 	//Always ON:
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+
+	#else
+
+	__GPIOE_CLK_ENABLE();
+
+	GPIO_InitStruct.Pin = GPIO_PIN_3;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+	//Always ON:
+	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, 1);
+
+	#endif
 }
 
 //Implement I2C MSP DeInit
