@@ -42,6 +42,7 @@
 //****************************************************************************
 
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
+uint8_t dftWatch = 0;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -147,25 +148,30 @@ void mainFSM10kHz(void)
 	//New approach - WiP:
 	flexsea_receive_from_slave();	//Only for the RS-485 transceivers
 	//Master:
-	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed);
-	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed);
-	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed);
+	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
+	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
+	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 	//Slave:
-	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed);	//Ex
-	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed);
-	//Note: this new function doesn't have the SPI error handling code.
+	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
+	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
+
 	//Variable:
 	#ifdef BILATERAL_MASTER
-		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed);
+
+		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
+
 	#endif	//BILATERAL_MASTER
 	#ifdef BILATERAL_SLAVE
 
-		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newMasterCmdLed);
+		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 
 		//Time to reply - RS-485?
 		sendMasterDelayedResponse();
 
 	#endif	//BILATERAL_SLAVE
+
+	//Error recovery:
+	spiMonitoring(4);
 
 	/*
 	//Test: ToDo: this trick can be integrated in the stack, with a programmable

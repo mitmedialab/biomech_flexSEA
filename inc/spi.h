@@ -50,10 +50,13 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi);
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi);
 void completeSpiTransmit(void);
 void restartSpi(uint8_t port);
+void spiMonitoring(uint8_t portNum);
 
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
+
+//Monitoring: how many missing packets do we tolerate before restarting SPI?
 
 //Macros from newer Cube libs:
 #define UNUSED(x) ((void)(x))

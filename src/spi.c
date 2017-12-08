@@ -168,8 +168,7 @@ void completeSpiTransmit(void)
 		}
 
 		// handle the new data however this device wants to
-		//update_rx_buf_array_spi(aRxBuffer4, 48);	//Legacy
-		update_rx_buf_spi(aRxBuffer4, 48);			//Using circular buffer
+		update_rx_buf_spi(aRxBuffer4, 48);
 		commPeriph[PORT_SPI].rx.bytesReadyFlag = 1;
 
 		//Empty DMA buffer once it's copied:
@@ -214,6 +213,19 @@ void restartSpi(uint8_t port)
 	}
 
 	badCommCnt++;
+}
+
+void spiMonitoring(uint8_t portNum)
+{
+	if(portNum == 4)
+	{
+		//Getting many SPI transactions but no packets is a sign that something is wrong
+		if(spi4Watch > 5)
+		{
+			//After N SPI transfers with 0 packets we restart the peripheral:
+			restartSpi(4);
+		}
+	}
 }
 
 //****************************************************************************
