@@ -40,8 +40,14 @@ void rgb_led_test_code_blocking(void);
 // Definition(s):
 //****************************************************************************
 
-#define LED0(x) HAL_GPIO_WritePin(GPIOD, 1<<12, x);
-#define LED1(x) HAL_GPIO_WritePin(GPIOD, 1<<11, x);
+#ifndef HW_BIOMECH
+	#define LED0(x) HAL_GPIO_WritePin(GPIOD, 1<<12, x);
+	#define LED1(x) HAL_GPIO_WritePin(GPIOD, 1<<11, x);
+#else
+	#define LED0(x) HAL_GPIO_WritePin(GPIOE, 1<<1, x);
+	#define LED1(x) HAL_GPIO_WritePin(GPIOE, 1<<0, x);
+#endif
+
 #define LEDR(x) HAL_GPIO_WritePin(GPIOF, 1<<4, x);
 #define LEDG(x) HAL_GPIO_WritePin(GPIOF, 1<<3, x);
 #define LEDB(x) HAL_GPIO_WritePin(GPIOF, 1<<5, x);

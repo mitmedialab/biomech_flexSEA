@@ -32,32 +32,16 @@
 // Private Function Prototype(s):
 //****************************************************************************
 
+static void initGreenLeds(void);
+static void initRgbLed(void);
+
 //****************************************************************************
 // Public Function(s)
 //****************************************************************************
 void init_leds(void)
 {
-	//LED0 - D12, LED1 - D11, LEDR - F4, LEDG - F3, LEDB - F5
-
-	GPIO_InitTypeDef LED_InitStructure;
-
-	// Enable GPIO Peripheral clock on port C & F
-	__GPIOD_CLK_ENABLE();
-	__GPIOF_CLK_ENABLE();
-
-	// Configure pin in output push/pull mode
-	LED_InitStructure.Pin = GPIO_PIN_11 | GPIO_PIN_12;
-	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	LED_InitStructure.Speed = GPIO_SPEED_LOW;
-	LED_InitStructure.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOD, &LED_InitStructure);
-
-	// Configure pin in output push/pull mode
-	LED_InitStructure.Pin = GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
-	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	LED_InitStructure.Speed = GPIO_SPEED_LOW;
-	LED_InitStructure.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOF, &LED_InitStructure);
+	initGreenLeds();
+	initRgbLed();
 }
 
 void set_led_rgb(uint8_t r, uint8_t g, uint8_t b)
@@ -214,4 +198,54 @@ void rgb_led_test_code_blocking(void)
 // Private Function(s)
 //****************************************************************************
 
-//...
+static void initGreenLeds(void)
+{
+	#ifndef HW_BIOMECH
+
+	//LED0 - D12, LED1 - D11
+	GPIO_InitTypeDef LED_InitStructure;
+
+	// Enable GPIO Peripheral clock
+	__GPIOD_CLK_ENABLE();
+
+	// Configure pin in output push/pull mode
+	LED_InitStructure.Pin = GPIO_PIN_11 | GPIO_PIN_12;
+	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	LED_InitStructure.Speed = GPIO_SPEED_LOW;
+	LED_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOD, &LED_InitStructure);
+
+	#else
+
+	//LED0 - PE1, LED1 - PE0
+	GPIO_InitTypeDef LED_InitStructure;
+
+	// Enable GPIO Peripheral clock
+	__GPIOE_CLK_ENABLE();
+
+	// Configure pin in output push/pull mode
+	LED_InitStructure.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	LED_InitStructure.Speed = GPIO_SPEED_LOW;
+	LED_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOE, &LED_InitStructure);
+
+	#endif
+}
+
+static void initRgbLed(void)
+{
+	//LEDR - F4, LEDG - F3, LEDB - F5
+
+	GPIO_InitTypeDef LED_InitStructure;
+
+	// Enable GPIO Peripheral clock on port C & F
+	__GPIOF_CLK_ENABLE();
+
+	// Configure pin in output push/pull mode
+	LED_InitStructure.Pin = GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
+	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	LED_InitStructure.Speed = GPIO_SPEED_LOW;
+	LED_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOF, &LED_InitStructure);
+}

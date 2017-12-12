@@ -133,17 +133,17 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
 									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_CYCLE_TESTER"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
+									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_SVM"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_CYCLE_TESTER"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.409903104" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.180102228" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -339,17 +339,17 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
 									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_CYCLE_TESTER"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
+									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_SVM"/>
-									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_DPEB31"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_CYCLE_TESTER"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1639727129" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.189024042" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -694,15 +694,18 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2057419407" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
+									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
+									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_SVM"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_DPEB31"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1021511848" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.561579217" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>

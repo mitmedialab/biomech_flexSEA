@@ -461,6 +461,11 @@ void initOptionalPullUps(void)
 
 	#else
 
+	//HW_VER_0_2 can be Rigid 0.2 or Biomech Logic
+
+	#ifndef HW_BIOMECH
+
+	//Rigid 0.2:
 	__GPIOE_CLK_ENABLE();
 
 	GPIO_InitStruct.Pin = GPIO_PIN_3;
@@ -471,6 +476,22 @@ void initOptionalPullUps(void)
 
 	//Always ON:
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, 1);
+
+	#else
+
+	//Biomech Logic:
+	__GPIOF_CLK_ENABLE();
+
+	GPIO_InitStruct.Pin = GPIO_PIN_2;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+	//Always ON:
+	HAL_GPIO_WritePin(GPIOF, GPIO_PIN_2, 1);
+
+	#endif
 
 	#endif
 }
