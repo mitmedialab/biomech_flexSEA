@@ -37,7 +37,9 @@
 #include "user-mn.h"
 #include "eeprom.h"
 #include <math.h>
+#ifdef INCLUDE_UPROJ_SVM
 #include "svm.h"
+#endif
 #include "arm_math.h"
 
 #ifdef USE_6CH_AMP

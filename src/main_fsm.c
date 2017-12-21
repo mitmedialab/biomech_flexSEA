@@ -35,7 +35,9 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
+#ifdef INCLUDE_UPROJ_SVM
 #include "svm.h"
+#endif
 
 //****************************************************************************
 // Variable(s)
