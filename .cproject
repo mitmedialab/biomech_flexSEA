@@ -76,9 +76,8 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.408245818" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
@@ -119,16 +118,13 @@
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/DpEb31/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -140,10 +136,7 @@
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.409903104" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.180102228" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -303,9 +296,8 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.179867850" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
@@ -325,31 +317,25 @@
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/DpEb31/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER_0_1"/>
-									<listOptionValue builtIn="false" value="HW_NOT_BIOMECH"/>
+									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
+									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1639727129" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.189024042" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -555,7 +541,6 @@
 						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-user/test|flexsea-user/test/*|flexsea-system/test|flexsea-comm/test|test/*|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-comm/test"/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-system/test"/>
-						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-user/test"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -637,9 +622,8 @@
 									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.354369288" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
@@ -681,16 +665,13 @@
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/DpEb31/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2057419407" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -702,10 +683,7 @@
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1021511848" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.561579217" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
