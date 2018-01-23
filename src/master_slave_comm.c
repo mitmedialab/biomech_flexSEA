@@ -206,6 +206,7 @@ void autoStream(void)
 		for(i = 0; i < isStreaming; i++)
 		{
 			if(sinceLastStreamSend[i] >= streamPeriods[i])
+
 			{
 				uint8_t cp_str[256] = {0};
 
