@@ -446,7 +446,7 @@ void initOptionalPullUps(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 
-	#ifndef HW_VER_0_2
+	#if (HW_VER == 1)
 
 	__GPIOC_CLK_ENABLE();
 
@@ -461,7 +461,7 @@ void initOptionalPullUps(void)
 
 	#else
 
-	//HW_VER_0_2 can be Rigid 0.2 or Biomech Logic
+	//HW_VER > 1 can be Rigid 0.2 or Biomech Logic
 
 	#ifndef HW_BIOMECH
 
