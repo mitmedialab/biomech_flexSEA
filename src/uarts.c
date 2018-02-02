@@ -357,7 +357,7 @@ uint8_t reception_uart_ex_blocking(void)
 	uint32_t tmp = 0;
 
 	//Do not enable if still transmitting:
-	while(husart1.State == HAL_USART_STATE_BUSY_TX);
+	while(husart1.State == HAL_USART_STATE_BUSY_TX);	//ToDo why is that relating to UART1???
 	for(delay = 0; delay < 600; delay++);		//Short delay
 
 	//Receive enable
