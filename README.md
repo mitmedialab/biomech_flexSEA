@@ -7,12 +7,14 @@
 //	**[Lead developer]** Jean-Francois (JF) Duval, jfduval at dephy.com.  
 //	**[Origin]** Based on Jean-Francois Duval's work at the MIT Media Lab  
 //	Biomechatronics research group <http://biomech.media.mit.edu/> 
-//**************************************************************************** 
+//****************************************************************************
 
-**Note 1:** This repository is part of the FlexSEA project. All the directories that were under JFDuval/FlexSEA now have separate repositories.
+**Maintainer**: Tony Shu tonyshu@mit.edu
 
-**Note 2:** Most (or all) projects will require /flexsea-comm and /flexsea-system to compile.
+This repository is a direct fork from [Dephy's flexSEA rigid repository](https://github.com/DephyInc/fx-rigid-mn).
+Branches **master**, **dev**, and **public** track the original.
 
-Documentation available at <http://flexsea.media.mit.edu>. It is recommended to start learning about the system by reading the two IEEE BioRob papers.
-  
-**Please reach out to jfduval at dephy.com if you have questions, or if you'd like to get involved!**  
+
+# Cloning
+New personal branches should clone from **public**. Once cloned, `cd` into scripts and then
+```$ ./attachHeadsHybrid_v1.sh``` to attach submodule heads for pulling. 
