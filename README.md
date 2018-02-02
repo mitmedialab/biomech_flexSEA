@@ -16,5 +16,12 @@ Branches **master**, **dev**, and **public** track the original.
 
 
 # Cloning
-New personal branches should clone from **public**. Once cloned, `cd` into scripts and then
-```$ ./attachHeadsHybrid_v1.sh``` to attach submodule heads for pulling.
+New personal branches should clone from **public**!!! The following creates a copy of **public**, updates the submodules, and sets the remote to track your new branch.
+```
+$ git clone https://github.com/mitmedialab/biomech_flexSEA
+$ cd biomech_flexSEA
+$ git checkout public
+$ git checkout -b yourInitials_yourBranchName
+$ git submodule update --init
+$ git push -u origin yourInitials_yourBranchName
+```
