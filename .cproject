@@ -133,7 +133,7 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=2"/>
+									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
 									<listOptionValue builtIn="false" value="HW_NOT_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
@@ -340,7 +340,7 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=2"/>
+									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
 									<listOptionValue builtIn="false" value="HW_NOT_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
@@ -697,7 +697,7 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2057419407" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=2"/>
+									<listOptionValue builtIn="false" value="HW_VER_0_2"/>
 									<listOptionValue builtIn="false" value="HW_NOT_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
