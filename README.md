@@ -25,3 +25,5 @@ $ git checkout -b yourInitials_yourBranchName
 $ git submodule update --init
 $ git push -u origin yourInitials_yourBranchName
 ```
+# Schematics
+Board schematics are located in the **master** branch. Feel free to incorporate the folder into your own branch for ease of access.
