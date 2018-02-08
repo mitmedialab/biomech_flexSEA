@@ -41,6 +41,7 @@ unsigned int get_adc1(uint16_t idx);	// get value at analog input channel idx
 void startAdcConversion(void);
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc);
 int8_t readInternalTempSensor(void);
+void updateADCbuffers(void);
 
 //****************************************************************************
 // Definition(s):

@@ -22,6 +22,7 @@
 #include <adc.h>
 #include "main.h"
 #include "isr.h"
+#include "flexsea_user_structs.h"
 
 //****************************************************************************
 // Variable(s)
@@ -132,6 +133,15 @@ int8_t readInternalTempSensor(void)
 	temperature = ((VSENSE_SLOPE * (adc_results[ADC_CHANNELS-1] - V25_TICKS) \
 					/ TICK_TO_V) + 25);
 	return temperature;
+}
+
+//Copies the latest ADC results in the Rigid structure
+void updateADCbuffers(void)
+{
+	rigid1.mn.analog[0] = adc_results[0];
+	rigid1.mn.analog[1] = adc_results[1];
+	rigid1.mn.analog[2] = adc_results[2];
+	rigid1.mn.analog[3] = adc_results[3];
 }
 
 //Code branches here after conversion is done:

@@ -102,6 +102,7 @@ void mainFSM6(void)
 {
 	//ADC:
 	startAdcConversion();
+	updateADCbuffers();
 }
 
 //Case 7:
