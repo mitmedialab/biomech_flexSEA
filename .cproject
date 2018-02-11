@@ -326,6 +326,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/TedAnkle/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>

@@ -39,6 +39,7 @@
 #include "user-mn-Rigid.h"
 #include "cmd-ActPack.h"
 #include "cmd-Rigid.h"
+#include "user-mn-TedAnkle.h"
 
 //****************************************************************************
 // Variable(s)

@@ -56,7 +56,7 @@
 #if(ACTIVE_PROJECT == PROJECT_TED_ANKLE)
 #include "user-mn-ActPack.h"
 #include "user-mn-TedAnkle.h"
-#endif	//PROJECT_ACTPACK
+#endif	//PROJECT_TED_ANKLE
 
 #ifdef DEPHY
 #include "dephy-mn.h"
@@ -122,7 +122,7 @@ void init_user(void)
 
 	#if(ACTIVE_PROJECT == PROJECT_TED_ANKLE)
 	init_TedAnkle();
-	#endif	//PROJECT_ACTPACK
+	#endif	//PROJECT_TED_ANKLE
 
 	#ifdef DEPHY
 	init_dephy();
