@@ -35,6 +35,10 @@ void init_TedAnkle(void);
 void TedAnkle_fsm_1(void);
 void TedAnkle_fsm_2(void);
 void init_current_controller(void);
+//added functions (Matt C)
+void findPoles(void);
+void setAngleLimits(void);
+//end added (MC)
 
 void setMotorVoltage(int32_t v);
 void setMotorCurrent(int32_t i);
@@ -55,6 +59,8 @@ void setMotorPosition(int32_t i);
 #define CTRL_I_KP					100
 #define CTRL_I_KI					1
 #define CTRL_P_KP					200
+#define CTRL_P_KD					10
+#define CTRL_P_KI					8
 
 //****************************************************************************
 // Structure(s)

@@ -40,6 +40,7 @@
 #include "cmd-ActPack.h"
 #include "cmd-Rigid.h"
 #include "user-mn-TedAnkle.h"
+#include "flexsea_cmd_calibration.h"
 
 //****************************************************************************
 // Variable(s)
@@ -71,6 +72,57 @@ void init_TedAnkle(void)
 {
 	//Rigid's pointers:
 	init_rigid();
+
+	rigid1.mn.genVar[1] = 1;
+
+	//Find Poles
+	findPoles();
+
+}
+
+//Find motor poles
+void findPoles(void)
+{
+	//Disable FSM2 to allow findPoles
+	ActPackSys = SYS_DISABLE_FSM2;
+
+	tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
+												writeEx.setGains, writeEx.g[0], writeEx.g[1], \
+												writeEx.g[2], writeEx.g[3], ActPackSys);
+	packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
+
+
+	//Now Find Poles
+	rigid1.mn.genVar[0] = ActPackSys; // set genVar[0] to true when we find poles
+
+	//we should check first that active slave is an execute
+	tx_cmd_calibration_mode_rw(TX_N_DEFAULT, CALIBRATION_FIND_POLES);
+	pack(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, 0, COMM_STR_BUF_LEN);
+
+	//At the end, re-enable comms with FSM2
+	ActPackSys = SYS_NORMAL;
+	rigid1.mn.genVar[0] = ActPackSys; // set genVar[0] to true when we find poles
+
+	tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
+												writeEx.setGains, writeEx.g[0], writeEx.g[1], \
+												writeEx.g[2], writeEx.g[3], ActPackSys);
+	packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
+
+
+
+}
+
+//Establish joint angle limits
+void setAngleLimits(void)
+{
+	//One way to do this is just evaluate joint angle limits at the GUI,
+	//joint angle enc is absolute, so we can hard code those limits
+	int jointAngle_maxExtension = 9307;
+	int jointAngle_maxFlexion = 5000;
+
+	//Alternatively, move joint to max extension, then count back from there
+	// to establish zero point, max flexion.
+
 }
 
 //Logic Finite State Machine.
