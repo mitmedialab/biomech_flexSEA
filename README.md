@@ -25,5 +25,5 @@ $ git checkout -b yourInitials_yourBranchName
 $ git submodule update --init
 $ git push -u origin yourInitials_yourBranchName
 ```
-# Schematics
-Board schematics are located in the **master** branch. Feel free to incorporate the folder into your own branch for ease of access.
+# Documentation
+A quick start guide can be found in the repo wiki. Other documentation including hardware assembly can be found in [this folder](https://drive.google.com/drive/folders/1RoqC3RkAOdJu6YjaurvWFhkhDjZI5GUn) (permission required to access).
