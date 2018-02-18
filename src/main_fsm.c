@@ -81,6 +81,7 @@ void mainFSM3(void)
 	independentWatchdog();
 
 	readInternalTempSensor();
+	readMotorTempSensor();
 }
 
 //Case 4: User Functions

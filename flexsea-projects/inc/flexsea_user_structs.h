@@ -98,6 +98,7 @@ struct fx_rigid_mn_s
 	uint16_t status;
 
 	int16_t genVar[10];
+	int16_t mot_temp;		//added by mc
 
 	//Decoded:
 	struct decoded_fx_rigid_mn_s decoded;

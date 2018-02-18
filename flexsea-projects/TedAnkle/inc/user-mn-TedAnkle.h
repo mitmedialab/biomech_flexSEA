@@ -38,6 +38,7 @@ void init_current_controller(void);
 //added functions (Matt C)
 uint8_t findPoles(void);
 void setAngleLimits(void);
+//int32_t getMotorTemp(void);
 //end added (MC)
 
 void setMotorVoltage(int32_t v);

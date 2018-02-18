@@ -350,6 +350,17 @@ void setControlGains(int16_t g0, int16_t g1, int16_t g2, int16_t g3)
 	writeEx.setGains = CHANGE;
 }
 
+//int32_t getMotorTemp(void)
+//{
+//	int32_t motorTemp = 0;
+//	int32_t rawVal = rigid1.mn.analog[0];	//read analog pin 0
+//	int32_t Tc = 10;	// mV/degC
+//
+//	motorTemp = (rawVal - 500) / Tc;
+//
+//	return motorTemp;
+//}
+
 //****************************************************************************
 // Private Function(s)
 //****************************************************************************
