@@ -36,7 +36,7 @@ void TedAnkle_fsm_1(void);
 void TedAnkle_fsm_2(void);
 void init_current_controller(void);
 //added functions (Matt C)
-void findPoles(void);
+uint8_t findPoles(void);
 void setAngleLimits(void);
 //end added (MC)
 

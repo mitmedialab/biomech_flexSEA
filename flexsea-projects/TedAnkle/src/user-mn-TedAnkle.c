@@ -73,43 +73,88 @@ void init_TedAnkle(void)
 	//Rigid's pointers:
 	init_rigid();
 
-	rigid1.mn.genVar[1] = 1;
-
-	//Find Poles
-	findPoles();
+	rigid1.mn.genVar[0] = 0;
+	rigid1.mn.genVar[1] = 0;
 
 }
 
-//Find motor poles
-void findPoles(void)
+//Find motor poles NOT WORKING YET
+uint8_t findPoles(void)
 {
-	//Disable FSM2 to allow findPoles
-	ActPackSys = SYS_DISABLE_FSM2;
+	static uint8_t fpState = 0;
+	static uint32_t polesTimer = 0;
+	static uint32_t motorEncPos = 0, motorEncPosLast = 0;
+	rigid1.mn.genVar[0] = polesTimer; //This doesn't seem to be working yet.
+	rigid1.mn.genVar[1] = fpState;
 
-	tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
-												writeEx.setGains, writeEx.g[0], writeEx.g[1], \
-												writeEx.g[2], writeEx.g[3], ActPackSys);
-	packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
+	switch(fpState)
+	{
+	case 0:
+		//Wait X seconds before communicating
+			if( polesTimer < 2000 )
+			{
+				polesTimer++;
+				return 0;
+			}
 
+		//Disable FSM2 to allow findPoles
+			enableAPfsm2 = 0;				//redundant?
+			ActPackSys = SYS_DISABLE_FSM2;	//redundant?
+		//	uint8_t comm_str_buf = comm_str_1;
+			tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
+														writeEx.setGains, writeEx.g[0], writeEx.g[1], \
+														writeEx.g[2], writeEx.g[3], ActPackSys);
 
-	//Now Find Poles
-	rigid1.mn.genVar[0] = ActPackSys; // set genVar[0] to true when we find poles
+			packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
+			slaveTransmit(PORT_UART_EX);	//suggested by JF, though it looks like packAndSend also calls the latter of what this calls, flexsea_send_serial_slave()
 
-	//we should check first that active slave is an execute
-	tx_cmd_calibration_mode_rw(TX_N_DEFAULT, CALIBRATION_FIND_POLES);
-	pack(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, 0, COMM_STR_BUF_LEN);
+			fpState = 1; //move on to next state
+			polesTimer = 0;
+			break;
+	case 1:
+		if( polesTimer < 2000 )
+		{
+			polesTimer++;
+			return 0;
+		}
+		//Now Find Poles
+		tx_cmd_calibration_mode_rw(TX_N_DEFAULT, CALIBRATION_FIND_POLES);
+		pack(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, 0, comm_str_1);
 
-	//At the end, re-enable comms with FSM2
-	ActPackSys = SYS_NORMAL;
-	rigid1.mn.genVar[0] = ActPackSys; // set genVar[0] to true when we find poles
+		slaveTransmit(PORT_UART_EX); //force communication packet
 
-	tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
-												writeEx.setGains, writeEx.g[0], writeEx.g[1], \
-												writeEx.g[2], writeEx.g[3], ActPackSys);
-	packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
+		//Wait for motor to stop moving X seconds before communicating
+		if (motorEncPos == motorEncPosLast && polesTimer >= 20000 )
+		{
+			fpState = 2;	//move on to next state
+			polesTimer = 0;
+		}
+		polesTimer++;
+		break;
+	case 2:
+		//Wait X seconds before communicating
+		if( polesTimer < 2000 )
+		{
+			polesTimer++;
+			return 0;
+		}
+		//At the end, re-enable comms with FSM2
+		enableAPfsm2 = 1;			//redundant?
+		ActPackSys = SYS_NORMAL;	//redundant?
 
+		tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
+													writeEx.setGains, writeEx.g[0], writeEx.g[1], \
+													writeEx.g[2], writeEx.g[3], ActPackSys);
+		packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
+			slaveTransmit(PORT_UART_EX); //force communication packet
 
+		polesTimer = 0;
+		fpState = 3;
+		rigid1.mn.genVar[1] = fpState;
 
+		break;
+	}
+	return fpState; //completed
 }
 
 //Establish joint angle limits
@@ -117,8 +162,8 @@ void setAngleLimits(void)
 {
 	//One way to do this is just evaluate joint angle limits at the GUI,
 	//joint angle enc is absolute, so we can hard code those limits
-	int jointAngle_maxExtension = 9307;
-	int jointAngle_maxFlexion = 5000;
+	int32_t jointAngle_maxExtension = 9307;
+	int32_t jointAngle_maxFlexion = 5000;
 
 	//Alternatively, move joint to max extension, then count back from there
 	// to establish zero point, max flexion.
@@ -129,7 +174,12 @@ void setAngleLimits(void)
 void TedAnkle_fsm_1(void)
 {
 	static uint32_t timer = 0, deltaT = 0;
-	static uint8_t fsm1State = 0;
+	static int8_t fsm1State = 0;
+	uint8_t fp = 0;
+	rigid1.mn.genVar[2] = fsm1State;
+	rigid1.mn.genVar[3] = timer;
+	rigid1.mn.genVar[4] = deltaT;
+
 
 	//Wait X seconds before communicating
 	if(timer < 2500)
@@ -140,6 +190,21 @@ void TedAnkle_fsm_1(void)
 
 	switch(fsm1State)
 	{
+//		case -2: //NOT WORKING YET
+//			deltaT++;
+//			fp = findPoles();
+//			if (fp > 2)
+//			{
+//				deltaT = 0;
+//				fsm1State = 1;
+//			}
+//
+//			if(deltaT > 30000)	// go on to next thing if find poles timeouts
+//			{
+//				deltaT = 0;
+//				fsm1State = 0;
+//			}
+//			break;
 		case 0:
 			setControlMode(CTRL_OPEN);
 			setMotorVoltage(0);
