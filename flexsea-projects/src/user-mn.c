@@ -54,7 +54,6 @@
 #endif	//PROJECT_ACTPACK
 
 #if(ACTIVE_PROJECT == PROJECT_TED_ANKLE)
-#include "user-mn-ActPack.h"
 #include "user-mn-TedAnkle.h"
 #endif	//PROJECT_ACTPACK
 

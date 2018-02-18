@@ -346,6 +346,12 @@ void user_fsm_2(void);
 // Structure(s)
 //****************************************************************************
 
+//PROJECT_TED_ANKLE
+#if(ACTIVE_PROJECT == PROJECT_TED_ANKLE)
+	extern uint8_t findingRangeLimits;
+	extern uint8_t findingPoles;
+#endif	//PROJECT_TED_ANKLE
+
 //MIT 2-DoF Ankle
 #if(ACTIVE_PROJECT == PROJECT_ANKLE_2DOF)
 

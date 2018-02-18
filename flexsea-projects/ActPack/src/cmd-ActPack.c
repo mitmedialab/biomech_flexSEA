@@ -45,7 +45,12 @@ extern "C" {
 
 //Manage boards only:
 #ifdef BOARD_TYPE_FLEXSEA_MANAGE
-#include "user-mn-ActPack.h"
+//#if (ACTIVE_PROJECT == PROJECT_ACTPACK)
+//#include "user-mn-ActPack.h"
+//#endif
+#if (ACTIVE_PROJECT == PROJECT_TED_ANKLE)
+#include "user-mn-TedAnkle.h"
+#endif
 #endif	//BOARD_TYPE_FLEXSEA_MANAGE
 
 

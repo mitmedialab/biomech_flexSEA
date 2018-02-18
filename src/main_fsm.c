@@ -122,13 +122,31 @@ void mainFSM8(void)
 //Case 9: User Interface
 void mainFSM9(void)
 {
-	//UI RGB LED
-	rgbLedRefreshFade();
-	rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
-	if(newMasterCmdLed) {newMasterCmdLed = 0;}
+	if (ACTIVE_PROJECT == PROJECT_TED_ANKLE) {
+		if (findingRangeLimits) {
+			//blink white while finding joint range limits
 
-	//Constant LED0 flashing while the code runs
-	LED0(rgbLedCenterPulse(12));
+		} else if (findingPoles) {
+			//blink red while finding poles
+
+		} else {
+			//UI RGB LED
+			rgbLedRefreshFade();
+			rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
+			if(newMasterCmdLed) {newMasterCmdLed = 0;}
+
+			//Constant LED0 flashing while the code runs
+			LED0(rgbLedCenterPulse(12));
+		}
+	} else {
+		//UI RGB LED
+		rgbLedRefreshFade();
+		rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
+		if(newMasterCmdLed) {newMasterCmdLed = 0;}
+
+		//Constant LED0 flashing while the code runs
+		LED0(rgbLedCenterPulse(12));
+	}
 }
 
 //10kHz time slot:

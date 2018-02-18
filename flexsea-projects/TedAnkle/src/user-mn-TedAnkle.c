@@ -29,7 +29,7 @@
 // Include(s)
 //****************************************************************************
 
-#include "user-mn-ActPack.h"
+#include "user-mn-TedAnkle.h"
 #include "flexsea_sys_def.h"
 #include "flexsea_user_structs.h"
 #include "flexsea_global_structs.h"
@@ -58,6 +58,11 @@ struct ctrl_s ctrl;
 writeEx_s writeEx = {.ctrl = CTRL_NONE, .setpoint = 0, .setGains = KEEP, \
 						.offset = 0, .g[0] = 0, .g[1] = 0, .g[2] = 0, .g[3] = 0};
 
+uint8_t findingRangeLimits = 0;
+uint8_t findingPoles = 0;
+
+int32_t rangeLow = 0;
+int32_t rangeHigh = 0;
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
@@ -75,43 +80,71 @@ void init_TedAnkle(void)
 //Logic Finite State Machine.
 void TedAnkle_fsm_1(void)
 {
-	static uint32_t timer = 0, deltaT = 0;
+	static uint32_t timer = 0;
 	static uint8_t fsm1State = 0;
 
-	//Wait X seconds before communicating
-	if(timer < 2500)
-	{
-		timer++;
-		return;
-	}
+	switch(fsm1State) {
 
-	switch(fsm1State)
-	{
 		case 0:
-			setControlMode(CTRL_OPEN);
-			setMotorVoltage(0);
-			fsm1State = 1;
-			deltaT = 0;
-			break;
-		case 1:
-			deltaT++;
-			if(deltaT > 3000)
-			{
-				deltaT = 0;
-				fsm1State = 2;
-			}
-			setMotorVoltage(0);
-			break;
-		case 2:
-			deltaT++;
-			if(deltaT > 3000)
-			{
-				deltaT = 0;
+			if (timer < START_DELAY) {
+				timer++;
+			} else {
+				findingRangeLimits = 1;
+				timer = 0;
 				fsm1State = 1;
 			}
-			setMotorVoltage(1000);
 			break;
+
+		case 1:
+			//find JOINT limits
+			if (timer < RANGE_FINDING_TIME) {
+				timer++;
+
+			}
+			break;
+
+
 	}
+
+
+
+//	static uint32_t timer = 0, deltaT = 0;
+//	static uint8_t fsm1State = 0;
+//
+//	//Wait X seconds before communicating
+//	if(timer < 2500)
+//	{
+//		timer++;
+//		return;
+//	}
+//
+//	switch(fsm1State)
+//	{
+//		case 0:
+//			setControlMode(CTRL_OPEN);
+//			setMotorVoltage(0);
+//			fsm1State = 1;
+//			deltaT = 0;
+//			break;
+//		case 1:
+//			deltaT++;
+//			if(deltaT > 3000)
+//			{
+//				deltaT = 0;
+//				fsm1State = 2;
+//			}
+//			setMotorVoltage(0);
+//			break;
+//		case 2:
+//			deltaT++;
+//			if(deltaT > 3000)
+//			{
+//				deltaT = 0;
+//				fsm1State = 1;
+//			}
+//			setMotorVoltage(1000);
+//			break;
+//	}
 }
 
 //Second state machine for the Actuator package project

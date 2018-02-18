@@ -56,10 +56,20 @@ void setMotorPosition(int32_t i);
 #define CTRL_I_KI					1
 #define CTRL_P_KP					200
 
+#define START_DELAY					2500
+#define RANGE_FINDING_TIME			10000
+
 //****************************************************************************
 // Structure(s)
 //****************************************************************************
-
+//
+typedef struct {
+	uint8_t ctrl;
+	int32_t setpoint;
+	uint8_t setGains;
+	uint8_t offset;
+	int16_t g[4];
+} writeEx_s;
 //****************************************************************************
 // Shared variable(s)
 //****************************************************************************
