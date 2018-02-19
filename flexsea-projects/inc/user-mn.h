@@ -80,7 +80,7 @@ void user_fsm_2(void);
 //==========================================
 
 #define ACTIVE_PROJECT			PROJECT_TED_ANKLE
-#define ACTIVE_SUBPROJECT		RIGHT
+#define ACTIVE_SUBPROJECT		SUBPROJECT_A // RIGHT
 
 //Step 2) Customize the enabled/disabled sub-modules:
 //===================================================
@@ -339,6 +339,11 @@ void user_fsm_2(void);
 	//Runtime finite state machine (FSM):
 //	#define RUNTIME_FSM1		ENABLED	//Enable only if you DO NOT use Plan
 	#define RUNTIME_FSM2		ENABLED	//Enable at all time, Mn <> Ex comm.
+
+//	//This might allow 2dof message passing.
+//	#if(ACTIVE_SUBPROJECT == SUBPROJECT_A)
+//		#define BILATERAL_SLAVE		//Then FLEXSEA_MANAGE_2 can be a target.
+//	#endif
 
 #endif  //PROJECT_TED_ANKLE
 
