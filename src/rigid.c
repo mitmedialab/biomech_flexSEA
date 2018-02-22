@@ -44,6 +44,8 @@ void initRigidIO(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
+	#ifndef BOARD_SUBTYPE_POCKET
+
 	//Enable GPIO Peripheral clocks
 	__GPIOG_CLK_ENABLE();
 
@@ -56,14 +58,21 @@ void initRigidIO(void)
 	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 7, 0);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
-	//***ToDo remove, temporary debugging:***
-	//U2TX used as an output:
-	__GPIOD_CLK_ENABLE();
-	GPIO_InitStructure.Pin = GPIO_PIN_5;
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
-	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+	#else
+
+	//Enable GPIO Peripheral clocks
+	__GPIOC_CLK_ENABLE();
+
+	//SYNC as input with interrupt:
+	GPIO_InitStructure.Pin = GPIO_PIN_8;
+	GPIO_InitStructure.Mode = GPIO_MODE_IT_RISING_FALLING;
+	GPIO_InitStructure.Pull = GPIO_PULLDOWN;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 7, 0);
+	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+	#endif	//BOARD_SUBTYPE_POCKET
 }
 
 //Decodes the bytes received over I2C

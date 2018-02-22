@@ -378,6 +378,8 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 
 		GPIO_InitTypeDef GPIO_InitStruct;
 
+		#ifndef BOARD_SUBTYPE_POCKET
+
 		//Enable peripheral and GPIO clockS
 		__GPIOF_CLK_ENABLE();
 		initOptionalPullUps();
@@ -399,6 +401,32 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 		GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
 		HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+		#else
+
+		//Enable peripheral and GPIO clockS
+		__GPIOB_CLK_ENABLE();
+		initOptionalPullUps();
+
+		//SCL2 -> PB10
+		GPIO_InitStruct.Pin = GPIO_PIN_10;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		HAL_Delay(1);
+
+		//SDA2 -> PB11
+		GPIO_InitStruct.Pin = GPIO_PIN_11;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		#endif	//BOARD_SUBTYPE_POCKET
 
 		HAL_Delay(1);
 
@@ -446,54 +474,72 @@ void initOptionalPullUps(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
 
-	#if (HW_VER == 1)
+	#ifndef BOARD_SUBTYPE_POCKET
 
-	__GPIOC_CLK_ENABLE();
+		#if (HW_VER == 1)
 
-	GPIO_InitStruct.Pin = GPIO_PIN_14;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+		__GPIOC_CLK_ENABLE();
 
-	//Always ON:
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+		GPIO_InitStruct.Pin = GPIO_PIN_14;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+		//Always ON:
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+
+		#else
+
+		//HW_VER > 1 can be Rigid 0.2 or Biomech Logic
+
+		#ifndef HW_BIOMECH
+
+		//Rigid 0.2:
+		__GPIOE_CLK_ENABLE();
+
+		GPIO_InitStruct.Pin = GPIO_PIN_3;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+		HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+		//Always ON:
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, 1);
+
+		#else
+
+		//Biomech Logic:
+		__GPIOF_CLK_ENABLE();
+
+		GPIO_InitStruct.Pin = GPIO_PIN_2;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+		HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+		//Always ON:
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_2, 1);
+
+		#endif
+
+		#endif
 
 	#else
 
-	//HW_VER > 1 can be Rigid 0.2 or Biomech Logic
+		//Pocket:
+		__GPIOB_CLK_ENABLE();
 
-	#ifndef HW_BIOMECH
+		GPIO_InitStruct.Pin = GPIO_PIN_12;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	//Rigid 0.2:
-	__GPIOE_CLK_ENABLE();
+		//Always ON:
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, 1);
 
-	GPIO_InitStruct.Pin = GPIO_PIN_3;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-	//Always ON:
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, 1);
-
-	#else
-
-	//Biomech Logic:
-	__GPIOF_CLK_ENABLE();
-
-	GPIO_InitStruct.Pin = GPIO_PIN_2;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-	//Always ON:
-	HAL_GPIO_WritePin(GPIOF, GPIO_PIN_2, 1);
-
-	#endif
-
-	#endif
+	#endif	//BOARD_SUBTYPE_POCKET
 }
 
 //Implement I2C MSP DeInit
