@@ -73,8 +73,6 @@ static void init_dma2_stream6_ch5(void);
 static void init_dma1_stream1_ch4(void);
 static void init_dma1_stream3_ch4(void);
 
-
-
 //****************************************************************************
 // Public Function(s)
 //****************************************************************************
@@ -116,7 +114,7 @@ void init_usart1(uint32_t baudrate)
 	USART1->BRR = USART1_6_2MBAUD;
 
 	//Enable DMA:
-	init_dma2_stream2_ch4();	//RX
+	init_dma2_stream2_ch4();			//RX
 	init_dma2_stream7_ch4(&husart1);	//TX
 }
 

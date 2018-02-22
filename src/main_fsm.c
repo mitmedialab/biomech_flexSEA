@@ -57,7 +57,9 @@ uint8_t dftWatch = 0;
 //Case 0: slaveComm
 void mainFSM0(void)
 {
+	#if (MULTI_DOF_N == 0)
 	slaveTransmit(PORT_RS485_1);
+	#endif
 }
 
 //Case 1: I2C1 - IMU
