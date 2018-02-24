@@ -144,7 +144,9 @@ void i2c2_fsm(void)
 
 			if(i2c2FsmState == I2C_FSM_RX_DATA_DONE)
 			{
+				#ifdef USE_6CH_AMP
 				decode6chAmp();
+				#endif
 				i2c2FsmState = I2C_FSM_DEFAULT;
 				errorCounter = 0;
 			}
