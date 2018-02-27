@@ -35,9 +35,6 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
-#ifdef INCLUDE_UPROJ_SVM
-#include "svm.h"
-#endif
 
 //****************************************************************************
 // Variable(s)
@@ -60,7 +57,9 @@ uint8_t dftWatch = 0;
 //Case 0: slaveComm
 void mainFSM0(void)
 {
-	//slaveTransmit(PORT_RS485_1);
+	#if (MULTI_DOF_N == 0)
+	slaveTransmit(PORT_RS485_1);
+	#endif
 }
 
 //Case 1: I2C1 - IMU
@@ -159,39 +158,25 @@ void mainFSM10kHz(void)
 	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
 
 	//Variable:
-	#ifdef BILATERAL_MASTER
+	#if (MULTI_DOF_N == 0)
 
 		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
 
-	#endif	//BILATERAL_MASTER
-	#ifdef BILATERAL_SLAVE
+	#endif	//(MULTI_DOF_N == 0)
+
+	#if (MULTI_DOF_N == 1)
 
 		receiveFlexSEAPacket(PORT_RS485_1, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 
 		//Time to reply - RS-485?
 		sendMasterDelayedResponse();
 
-	#endif	//BILATERAL_SLAVE
+	#endif	//(MULTI_DOF_N == 1)
 
 	//Error recovery:
 	spiMonitoring(4);
 
-	/*
-	//Test: ToDo: this trick can be integrated in the stack, with a programmable
-	//number of passes.
-	if(commPeriph[PORT_USB].rx.bytesReadyFlag > 0)
-	{
-		//We still have bytes available, let's call the functions a second time
-		flexsea_receive_from_master();
-		parseMasterCommands(&newCmdLed);
-	}
-	*/
-
 	completeSpiTransmit();
-
-	#ifdef USE_SVM
-	svmBackgroundMath();
-	#endif	//USE_SVM
 }
 
 //Asynchronous time slots:

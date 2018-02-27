@@ -46,6 +46,8 @@ void initHooks(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
+	#ifndef BOARD_SUBTYPE_POCKET
+
 	// Enable GPIO Peripheral clocks
 	__GPIOD_CLK_ENABLE();
 
@@ -55,6 +57,20 @@ void initHooks(void)
 	GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
 	GPIO_InitStructure.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+	#else
+
+	// Enable GPIO Peripheral clocks
+	__GPIOB_CLK_ENABLE();
+
+	//Configure pins as outputs
+	GPIO_InitStructure.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2;
+	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	#endif	//BOARD_SUBTYPE_POCKET
 }
 
 //Pin interrupt on change callback:
@@ -65,7 +81,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		//SPI NSS pin:
 		SPI_NSS_Callback();
 	}
+	#ifndef BOARD_SUBTYPE_POCKET
 	else if(GPIO_Pin == GPIO_PIN_15)
+	#else
+	else if(GPIO_Pin == GPIO_PIN_8)
+	#endif	//BOARD_SUBTYPE_POCKET
 	{
 		//SYNC:
 		timebases();

@@ -74,7 +74,11 @@ void rs485Transmit(PacketWrapper* p);
 
 #define UART_TIMEOUT		5000	//ms?
 
+#ifndef BOARD_SUBTYPE_POCKET
 #define BT_RST(x) HAL_GPIO_WritePin(GPIOA, 1<<4, x);
+#else
+#define BT_RST(x) HAL_GPIO_WritePin(GPIOD, 1<<10, x);
+#endif 	//BOARD_SUBTYPE_POCKET
 
 //Baud = fck/(8*(2-OVER8)*USARTDIV) and OVER8 = 1 so Baud = fck/(8*USARTDIV)
 //USARTDIV = fck / (8*Baud)
@@ -99,6 +103,14 @@ void rs485Transmit(PacketWrapper* p);
 #define RS485_RX					0x01
 #define RS485_TX					0x02
 #define RS485_RX_TX					0x03
+
+#ifndef BOARD_SUBTYPE_POCKET
+#define RS485_RE(x) HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, x);
+#define RS485_DE(x) HAL_GPIO_WritePin(GPIOF, GPIO_PIN_11, x);
+#else
+#define RS485_RE(x) HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, x);
+#define RS485_DE(x) HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, x);
+#endif	//BOARD_SUBTYPE_POCKET
 
 #endif // INC_UARTS_H
 

@@ -51,12 +51,14 @@ void initMasterSlaveComm(void)
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
 
 	//RS-485 #1:
-	#if(defined BILATERAL_MASTER || !defined BILATERAL)
+	#if(MULTI_DOF_N == 0)
 	PortType ms = SLAVE;
-	#endif	//BILATERAL_MASTER
-	#ifdef BILATERAL_SLAVE
+	#endif	//(MULTI_DOF_N == 0)
+
+	#if (MULTI_DOF_N == 1)
 	PortType ms = MASTER;
-	#endif	//BILATERAL_SLAVE
+	#endif	//(MULTI_DOF_N == 1)
+
 	initCommPeriph(&commPeriph[PORT_RS485_1], PORT_RS485_1, ms, rx_buf_1, \
 			comm_str_1, rx_command_1, &rx_buf_circ_1, \
 			&packet[PORT_RS485_1][INBOUND], &packet[PORT_RS485_1][OUTBOUND]);

@@ -40,22 +40,23 @@
 //==============
 //Board architecture. Has to be changed in all the flexsea_board files!
 
-#if(defined BILATERAL_MASTER || !defined BILATERAL)
+#if (MULTI_DOF_N == 0)
 uint8_t board_id = FLEXSEA_MANAGE_1;
 uint8_t board_up_id = FLEXSEA_PLAN_1;
-#endif	//BILATERAL_MASTER
-#ifdef BILATERAL_SLAVE
+#endif	//(MULTI_DOF_N == 0)
+
+#if (MULTI_DOF_N == 1)
 uint8_t board_id = FLEXSEA_MANAGE_2;
 uint8_t board_up_id = FLEXSEA_MANAGE_1;
-#endif	//BILATERAL_SLAVE
+#endif	//(MULTI_DOF_N == 1)
 
 //Slave bus #1 (RS-485 #1):
 //=========================
-#ifdef BILATERAL_MASTER
+#if (MULTI_DOF_N == 0)
 uint8_t board_sub1_id[SLAVE_BUS_1_CNT] = {FLEXSEA_MANAGE_2, FLEXSEA_EXECUTE_2};
 #else
 uint8_t board_sub1_id[SLAVE_BUS_1_CNT] = {FLEXSEA_EXECUTE_2, FLEXSEA_EXECUTE_4};
-#endif //BILATERAL_MASTER
+#endif //(MULTI_DOF_N == 0)
 
 //Slave bus #2 (RS-485 #2):
 //=========================
@@ -158,10 +159,10 @@ void flexsea_receive_from_master(void)
 	//Wireless
 	commPeriph[PORT_WIRELESS].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_WIRELESS], &packet[PORT_WIRELESS][INBOUND]);
 
-	#ifdef BILATERAL_SLAVE
+	#if (MULTI_DOF_N == 1)
 	//RS-485:
 	commPeriph[PORT_RS485_1].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);
-	#endif	//BILATERAL_SLAVE
+	#endif	//(MULTI_DOF_N == 1)
 }
 
 void flexsea_start_receiving_from_master(void)
