@@ -63,6 +63,10 @@ uint8_t findingPoles = 0;
 
 int32_t rangeLow = 0;
 int32_t rangeHigh = 0;
+int16_t jointRange = JOINT_HIGH_LIMIT - JOINT_LOW_LIMIT;
+
+static uint8_t statusOkay = 0;
+static uint8_t resetPosition = 0;
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
@@ -80,6 +84,7 @@ void init_TedAnkle(void)
 //Logic Finite State Machine.
 void TedAnkle_fsm_1(void)
 {
+	statusOkay = 0;
 	static uint32_t timer = 0;
 	static uint8_t fsm1State = 0;
 
@@ -89,20 +94,17 @@ void TedAnkle_fsm_1(void)
 			if (timer < START_DELAY) {
 				timer++;
 			} else {
-				findingRangeLimits = 1;
-				timer = 0;
 				fsm1State = 1;
 			}
 			break;
 
 		case 1:
-			//find JOINT limits
-			if (timer < RANGE_FINDING_TIME) {
-				timer++;
-
+			//set statusOkay flag
+			if (*rigid1.ex.joint_ang <  (JOINT_HIGH_LIMIT - (int16_t) 0.05*jointRange) \
+					&& *rigid1.ex.joint_ang > (JOINT_LOW_LIMIT + (int16_t) 0.05*jointRange)) {
+				statusOkay = 1;
 			}
 			break;
-
 
 	}
 
@@ -180,9 +182,35 @@ void TedAnkle_fsm_2(void)
 				writeEx.setpoint = 0;
 			#endif
 
+			//BEGIN injected limiting code
+			if (ctrl.active_ctrl == CTRL_IMPEDANCE && abs(*rigid1.ex.enc_ang) < 10000) {
+				resetPosition = 0;
+			}
+
+			if (!resetPosition) {
+				if (!statusOkay) {
+					writeEx.ctrl = CTRL_NONE;
+					writeEx.setpoint = 0;
+					resetPosition = 1;
+				}
+			} else {
+				setControlMode(CTRL_IMPEDANCE);
+				ctrl.impedance.setpoint_val = 0;
+				ctrl.impedance.gain.g0 = 10;
+				ctrl.impedance.gain.g1 = 80;
+				ctrl.current.gain.g0 = 60;
+				ctrl.current.gain.g1 = 0;
+				//Copy to writeEx:
+				setControlGains(10,80,60,0);
+				//Copy to writeEx:
+				writeEx.setpoint = 0;
+			}
+
+			//END injected limiting code
+
 			tx_cmd_actpack_rw(TX_N_DEFAULT, writeEx.offset, writeEx.ctrl, writeEx.setpoint, \
-											writeEx.setGains, writeEx.g[0], writeEx.g[1], \
-											writeEx.g[2], writeEx.g[3], 0);
+												writeEx.setGains, writeEx.g[0], writeEx.g[1], \
+												writeEx.g[2], writeEx.g[3], 0);
 			packAndSend(P_AND_S_DEFAULT, FLEXSEA_EXECUTE_1, apInfo, SEND_TO_SLAVE);
 
 			//Reset KEEP/CHANGE once set:

@@ -59,6 +59,10 @@ void setMotorPosition(int32_t i);
 #define START_DELAY					2500
 #define RANGE_FINDING_TIME			10000
 
+#define JOINT_LOW_LIMIT				11000
+#define JOINT_MIDDLE				14800
+#define JOINT_HIGH_LIMIT			16000
+
 //****************************************************************************
 // Structure(s)
 //****************************************************************************
@@ -83,5 +87,5 @@ extern int32_t ank_ang_offset;
 
 #endif	//INC_TEDANKLE_MN_H
 
-#endif //BOARD_TYPE_FLEXSEA_EXECUTE
+#endif //BOARD_TYPE_FLEXSEA_MANAGE
 #endif //INCLUDE_UPROJ_ACTPACK
