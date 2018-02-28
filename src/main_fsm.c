@@ -75,6 +75,7 @@ void mainFSM2(void)
 }
 
 //Case 3:
+//quick to run
 void mainFSM3(void)
 {
 	independentWatchdog();
@@ -97,14 +98,18 @@ void mainFSM5(void)
 }
 
 //Case 6:
+//quick to run
 void mainFSM6(void)
 {
-	//ADC:
+	//ADC:ase 0: slaveComm
+	void mainFSM0(void)
+	{
 	startAdcConversion();
 	updateADCbuffers();
 }
 
 //Case 7:
+//quick to run
 void mainFSM7(void)
 {
 	autoStream();
