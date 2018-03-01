@@ -32,6 +32,7 @@ ADC_HandleTypeDef hadc1;
 ADC_ChannelConfTypeDef sConfig;
 ADC_MultiModeTypeDef multimode;
 int8_t temperature = 0;
+int8_t mot_temperature = 0;
 
 DMA_HandleTypeDef hdma_adc1;
 __IO volatile uint16_t adc_results[ADC_CHANNELS];
@@ -133,6 +134,14 @@ int8_t readInternalTempSensor(void)
 	temperature = ((VSENSE_SLOPE * (adc_results[ADC_CHANNELS-1] - V25_TICKS) \
 					/ TICK_TO_V) + 25);
 	return temperature;
+}
+
+//The ADC reads the motor Temp sensor - MCP9700 T0-92. This function converts the result to degrees.
+void readMotorTempSensor(void)
+{
+	mot_temperature = ((VSENSE_SLOPE * (adc_results[0] - V25_TICKS) \
+					/ TICK_TO_V) + 25);
+	rigid1.mn.mot_temp = mot_temperature;
 }
 
 //Copies the latest ADC results in the Rigid structure

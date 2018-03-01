@@ -79,8 +79,8 @@ void mainFSM2(void)
 void mainFSM3(void)
 {
 	independentWatchdog();
-
 	readInternalTempSensor();
+	readMotorTempSensor();
 }
 
 //Case 4: User Functions
@@ -101,9 +101,7 @@ void mainFSM5(void)
 //quick to run
 void mainFSM6(void)
 {
-	//ADC:ase 0: slaveComm
-	void mainFSM0(void)
-	{
+	//ADC:
 	startAdcConversion();
 	updateADCbuffers();
 }
@@ -182,12 +180,5 @@ void mainFSM10kHz(void)
 	spiMonitoring(4);
 
 	completeSpiTransmit();
-}
-
-//Asynchronous time slots:
-//========================
-
-void mainFSMasynchronous(void)
-{
 
 }
