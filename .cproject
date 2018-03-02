@@ -126,6 +126,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_PocketClimbing/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -139,6 +140,7 @@
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_RICNU_KNEE_V1"/>
 									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_POCKET_CLIMB"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_POCKET"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.409903104" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
@@ -328,6 +330,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_PocketClimbing/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -341,6 +344,7 @@
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_RICNU_KNEE_V1"/>
 									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_POCKET_CLIMB"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_POCKET"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1639727129" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
@@ -679,6 +683,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_PocketClimbing/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.2057419407" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -692,6 +697,7 @@
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_RICNU_KNEE_V1"/>
 									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_POCKET_CLIMB"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_POCKET"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1021511848" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
