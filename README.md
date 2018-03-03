@@ -1,29 +1,22 @@
-//****************************************************************************  
-//	**[Project]** FlexSEA: Flexible & Scalable Electronics Architecture  
-//	**[Sub-project]** 'flexsea-manage' Mid-level computing, and networking  
-//	*Copyright (C) 2016 Dephy, Inc. <http://dephy.com/>*  
-//	Licensed under the GNU General Public License v3.0 (GPL-3.0)  
-//****************************************************************************  
-//	**[Lead developer]** Jean-Francois (JF) Duval, jfduval at dephy.com.  
-//	**[Origin]** Based on Jean-Francois Duval's work at the MIT Media Lab  
-//	Biomechatronics research group <http://biomech.media.mit.edu/> 
+//****************************************************************************
+//	[Project] FlexSEA: Flexible & Scalable Electronics Architecture
+//	[Sub-project] 'flexsea-user' project-specific user code.
+//	Copyright (C) 2016 Dephy, Inc. http://dephy.com/
+//	Licensed under the GNU General Public License v3.0 (GPL-3.0)
+//****************************************************************************
+//	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy.com.
+//	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab
+//	Biomechatronics research group http://biomech.media.mit.edu/
 //****************************************************************************
 
-**Maintainer**: Tony Shu tonyshu@mit.edu
+Note 1: This repository is part of the FlexSEA project. All the directories
+that were under JFDuval/FlexSEA now have separate repositories.
 
-This repository is a direct fork from [Dephy's flexSEA rigid repository](https://github.com/DephyInc/fx-rigid-mn).
-Branches **master**, **dev**, and **public** track the original.
+Note 2: Most (or all) projects will require /flexsea-comm, /flexsea-system,
+/flexsea-shared, and /flexsea-user to compile.
 
+Documentation available at http://flexsea.media.mit.edu. It is recommended to
+start learning about the system by reading the two IEEE BioRob papers.
 
-# Cloning
-New personal branches should clone from **public**!!! The following creates a copy of **public**, updates the submodules, and sets the remote to track your new branch.
-```
-$ git clone https://github.com/mitmedialab/biomech_flexSEA
-$ cd biomech_flexSEA
-$ git checkout public
-$ git checkout -b yourInitials_yourBranchName
-$ git submodule update --init
-$ git push -u origin yourInitials_yourBranchName
-```
-# Documentation
-A quick start guide can be found in the repo wiki. Other documentation including hardware assembly can be found in [this folder](https://drive.google.com/drive/folders/1RoqC3RkAOdJu6YjaurvWFhkhDjZI5GUn) (permission required to access).
+Please reach out to jfduval at dephy.com if you have questions, or if you'd
+like to get involved!
