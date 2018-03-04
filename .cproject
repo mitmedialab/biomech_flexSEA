@@ -73,12 +73,12 @@
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.408245818" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
@@ -120,13 +120,13 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_PocketClimbing/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_PocketClimbing/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
