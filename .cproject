@@ -139,7 +139,7 @@
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_RICNU_KNEE_V1"/>
-									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_POCKET_CLIMB"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_POCKET"/>
 								</option>
@@ -343,7 +343,7 @@
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_RICNU_KNEE_V1"/>
-									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_POCKET_CLIMB"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_POCKET"/>
 								</option>
@@ -696,7 +696,7 @@
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_RICNU_KNEE_V1"/>
-									<listOptionValue builtIn="false" value="DONOT_INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_POCKET_CLIMB"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_POCKET"/>
 								</option>
