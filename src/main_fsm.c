@@ -36,6 +36,10 @@
 #include "spi.h"
 #include "misc.h"
 
+#if ACTIVE_PROJECT == PROJECT_MIT_DLEG
+#include "user-mn-MIT-DLeg-2dof.h"
+#endif
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -72,15 +76,19 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	i2c2_fsm();
+
 }
 
 //Case 3:
 //quick to run
+//MIT_DLeg update sensors here
 void mainFSM3(void)
 {
 	independentWatchdog();
 	readInternalTempSensor();
-	readMotorTempSensor();
+    if (isEnabledUpdateSensors) {
+    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
+    }
 }
 
 //Case 4: User Functions
