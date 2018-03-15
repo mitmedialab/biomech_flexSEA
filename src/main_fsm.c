@@ -35,6 +35,7 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
+#include "mit_filters.h"
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg-2dof.h"
