@@ -79,7 +79,7 @@ void EXTI9_5_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 }
-#endif	BOARD_SUBTYPE_POCKET
+#endif	//BOARD_SUBTYPE_POCKET
 
 //Should not be used, everything is done via DMA
 void USART1_IRQHandler(void)
@@ -199,6 +199,18 @@ void I2C1_EV_IRQHandler(void)
 void I2C1_ER_IRQHandler(void)
 {
   HAL_I2C_ER_IRQHandler(&hi2c1);
+}
+
+//I2C2 Event Handler
+void I2C2_EV_IRQHandler(void)
+{
+  HAL_I2C_EV_IRQHandler(&hi2c2);
+}
+
+//I2C2 Error Handler
+void I2C2_ER_IRQHandler(void)
+{
+  HAL_I2C_ER_IRQHandler(&hi2c2);
 }
 
 void I2C3_EV_IRQHandler(void)

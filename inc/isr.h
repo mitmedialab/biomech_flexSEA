@@ -66,11 +66,16 @@
 #define ISR_DMA1_STREAM6		2	//I2C1 TX DMA
 #define ISR_SUB_DMA1_STREAM6	3
 
-//I2C21 DMA:
+//I2C2 DMA:
 #define ISR_DMA1_STREAM2		0	//I2C2 RX
 #define ISR_SUB_DMA1_STREAM2	1
 #define ISR_DMA1_STREAM7		2	//I2C2 TX
 #define ISR_SUB_DMA1_STREAM7	4
+//I2C2:
+#define ISR_I2C2_EV				2
+#define ISR_SUB_I2C2_EV			0
+#define ISR_I2C2_ER				2
+#define ISR_SUB_I2C2_ER			1
 
 //I2C3:
 #define ISR_I2C3				0
@@ -101,4 +106,3 @@
 #define ISR_SUB_USB				0
 
 #endif // INC_ISR_H
-
