@@ -78,7 +78,7 @@ void mainFSM2(void)
 void mainFSM3(void)
 {
 	independentWatchdog();
-
+	combineStatusFlags();
 	readInternalTempSensor();
 }
 
