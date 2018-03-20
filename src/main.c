@@ -25,11 +25,11 @@
 #include <misc.h>
 #include <timer.h>
 #include "main.h"
-#include "main_fsm.h" //various FSMs required for communication, LEDs, and 10kHz loop
-#include "user-mn.h" //define active project and hardware components needed for project
-#include "flexsea_board.h" //designate slaves and masters for multiboard systems
-#include "flexsea_system.h" //tx and rx commands for interboard comms
-#include "flexsea_global_structs.h" //data structs for motors, sensors, etc.
+#include "main_fsm.h"
+#include "user-mn.h"
+#include "flexsea_board.h"
+#include "flexsea_system.h"
+#include "flexsea_global_structs.h"
 
 //****************************************************************************
 // Variable(s)
@@ -46,32 +46,20 @@ void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 int main(void)
 {
 	//Prepare FlexSEA stack:
-	//This is a large 2D array with all system tx and rx function pointers
-	//JF indexes into the array to reference serial functions
-	//Adding a project requires editing init_flexsea_payload_ptr_user() within
 	init_flexsea_payload_ptr();
 
 	//Initialize all the peripherals
-	//Start clocks and peripherals specified in "user-mn.h"
-	//Note: seems like USE_RS485 always active regardless of user settings
-	//may be result of always pairing manage to exec
 	init_peripherals();
 
-	//encoder angles are global bw manage and execute
 	initializeGlobalStructs();
 
 	//Start receiving from master via interrupts
-	//SPI4 is link to plan board via expansion connector
-	//Will use SPI4 for odroid?
 	flexsea_start_receiving_from_master();
 
 	//Test code, use with care. Normal code might NOT run when enabled!
 	//test_code_blocking();
 	//test_code_non_blocking();
 
-	//initializes active project vars
-	//Note: ignore all BILATERAL_MASTER and BILATERAL_SLAVE defs
-	//new projects must be included in this function
 	init_user();
 
 	//Infinite loop
@@ -85,10 +73,6 @@ int main(void)
 			tb_100us_flag = 0;
 
 			//Timing FSM:
-			//fsm 4 and 8 are user-defined
-			//during user-defined fsms, we can tx_rw to slave
-			//tx_w from slave unpacked during mainFSM10kHz() by calling appropriate function
-			//each of these fsms will run once per millisecond
 			fsmCases[tb_100us_timeshare]();
 
 			//Increment value, limits to 0-9
@@ -96,8 +80,6 @@ int main(void)
 			tb_100us_timeshare %= 10;
 
 			//The code below is executed every 100us, after the previous slot.
-			//receive packets on both master and slave ports
-			//packets contain data used to index into payload ptr array to call serial functions
 			//Keep it short!
 			mainFSM10kHz();
 		}

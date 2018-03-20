@@ -30,6 +30,9 @@
 #include "strain.h"
 #endif	//USE_6CH_AMP
 
+#ifdef USE_MIT_EMG_I2C
+#include "user-mn-MIT-EMG.h"
+#endif
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -43,6 +46,7 @@ int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
 __attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
+__attribute__ ((aligned (4))) uint8_t i2c2_dma_tx_buf[24];
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -125,6 +129,10 @@ void i2c2_fsm(void)
 	i2c2_time_share++;
 	i2c2_time_share %= 4;
 
+	#ifdef USE_MIT_EMG_I2C
+	MIT_EMG_i2c2_fsm();
+
+	#else
 	//Subdivided in 4 slots (250Hz)
 	switch(i2c2_time_share)
 	{
@@ -156,6 +164,8 @@ void i2c2_fsm(void)
 		default:
 			break;
 	}
+	#endif //	 USE_MIT_EMG_I2C
+
 
 	//Error management:
 	if(i2c2FsmState == I2C_FSM_PROBLEM)
@@ -221,6 +231,12 @@ void init_i2c2(void)
 	//DMA:
 	init_dma1_stream2_ch7(&hi2c2);	//RX
 	init_dma1_stream7_ch7(&hi2c2);	//TX
+
+	//I2C Event & Error interrupts:
+	HAL_NVIC_SetPriority(I2C2_ER_IRQn, ISR_I2C2_ER, ISR_SUB_I2C2_ER);
+	HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
+	HAL_NVIC_SetPriority(I2C2_EV_IRQn, ISR_I2C2_EV, ISR_SUB_I2C2_EV);
+	HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
 }
 
 // Disable I2C and free the I2C handle.
@@ -259,6 +275,9 @@ void disable_i2c3(void)
 //Detects the end of a Master Receive (when DMA Mem isn't used):
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+	#ifdef USE_MIT_EMG_I2C
+		MIT_EMG_I2C_RxCpltCallback(hi2c);
+	#endif
 }
 
 //Detects the end of a Master Receive in DMA Mem mode:
@@ -656,7 +675,7 @@ static void init_dma1_stream7_ch7(I2C_HandleTypeDef *i2cHandle)
 	hdma_i2c2_tx.Init.Priority = DMA_PRIORITY_LOW;
 	hdma_i2c2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
 
-	//Link DMA handle and I2C1 TX:
+	//Link DMA handle and I2C2 TX:
 	HAL_DMA_Init(&hdma_i2c2_tx);
 	__HAL_LINKDMA(i2cHandle,hdmatx,hdma_i2c2_tx);
 
