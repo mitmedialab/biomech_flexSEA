@@ -38,6 +38,8 @@
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg-2dof.h"
+#include "MIT_Ankle_EMG.h"
+#include "state_machine.h"
 #endif
 
 //****************************************************************************
