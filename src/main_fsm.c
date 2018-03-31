@@ -39,6 +39,8 @@
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg-2dof.h"
+#include "free_ankle_EMG.h"
+#include "state_machine.h"
 #endif
 
 //****************************************************************************
@@ -73,7 +75,7 @@ void mainFSM1(void)
 	i2c1_fsm();
 }
 
-//Case 2: I2C2 - Unused
+//Case 2: I2C2 - used for Seong Ho's EMG interface
 void mainFSM2(void)
 {
 	i2c2_fsm();
