@@ -35,12 +35,11 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
-#include "mit_filters.h"
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg-2dof.h"
 #include "free_ankle_EMG.h"
-#include "state_machine.h"
+#include "biom_state_machine.h"
 #endif
 
 //****************************************************************************
