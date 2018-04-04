@@ -35,6 +35,7 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
+//#include "user-mn-RunningExo.h"
 
 //****************************************************************************
 // Variable(s)
@@ -42,6 +43,7 @@
 
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 uint8_t dftWatch = 0;
+
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -80,7 +82,10 @@ void mainFSM3(void)
 {
 	independentWatchdog();
 	readInternalTempSensor();
-	readMotorTempSensor();
+    if (isEnabledUpdateSensors)
+    {
+   	updateSensorValues(&act_para);	// updates all actuator sensors, will throw safety flags.
+    }
 }
 
 //Case 4: User Functions

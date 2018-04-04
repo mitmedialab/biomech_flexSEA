@@ -123,9 +123,11 @@
 									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
 									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RunningExo/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_RUNNINGEXO"/>
 									<listOptionValue builtIn="false" value="HW_VER=2"/>
 									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
@@ -314,12 +316,15 @@
 									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
 									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RunningExo/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_RUNNINGEXO"/>
 									<listOptionValue builtIn="false" value="NULL=0"/>
 									<listOptionValue builtIn="false" value="HW_VER=2"/>
 									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_RUNNINGEXO"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>

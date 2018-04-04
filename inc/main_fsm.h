@@ -29,11 +29,12 @@
 //****************************************************************************
 
 extern uint8_t newCmdLed;
-
+extern struct actuation_parameters act_para;
+extern int8_t isEnabledUpdateSensors;
 //****************************************************************************
 // Public Function Prototype(s):
 //****************************************************************************
-
+void updateSensorValues(struct actuation_parameters *actx);
 void mainFSM0(void);
 void mainFSM1(void);
 void mainFSM2(void);
