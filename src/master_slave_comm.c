@@ -29,6 +29,7 @@
 #include "user-mn.h"
 #include "uarts.h"
 #include "timer.h"
+#include "flexsea_comm_multi.h"
 
 //****************************************************************************
 // Variable(s)
@@ -49,6 +50,8 @@ void initMasterSlaveComm(void)
 	initCommPeriph(&commPeriph[PORT_USB], PORT_USB, MASTER, rx_buf_4, \
 			comm_str_4, rx_command_4, &rx_buf_circ_4, \
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
+
+	initMultiPeriph(&usbMultiPeriph, PORT_USB, MASTER, &rx_buf_circ_7);
 
 	//RS-485 #1:
 	#if(defined BILATERAL_MASTER || !defined BILATERAL)
@@ -77,70 +80,6 @@ void initMasterSlaveComm(void)
 				comm_str_5, rx_command_5, &rx_buf_circ_5, \
 				&packet[PORT_WIRELESS][INBOUND], &packet[PORT_WIRELESS][OUTBOUND]);
 }
-
-/*
-//Did we receive new commands? Can we parse them?
-void parseMasterCommands(uint8_t *new_cmd)
-{
-	uint8_t parseResult = 0, newCmdLed = 0;
-
-	//USB
-	if(commPeriph[PORT_USB].rx.unpackedPacketsAvailable > 0)
-	{
-		commPeriph[PORT_USB].rx.unpackedPacketsAvailable = 0;
-		parseResult = payload_parse_str(&packet[PORT_USB][INBOUND]);
-		newCmdLed += (parseResult == PARSE_SUCCESSFUL) ? 1 : 0;
-	}
-
-	//SPI
-	if(commPeriph[PORT_SPI].rx.unpackedPacketsAvailable > 0)
-	{
-		commPeriph[PORT_SPI].rx.unpackedPacketsAvailable = 0;
-		parseResult = payload_parse_str(&packet[PORT_SPI][INBOUND]);
-		newCmdLed += (parseResult == PARSE_SUCCESSFUL) ? 1 : 0;
-		spi4Watch = 0;	//Valid packets restart the count
-	}
-	else
-	{
-		//Getting many SPI transactions but no packets is a sign that something is wrong
-		if(spi4Watch > 5)
-		{
-			//After 5 SPI transfers with 0 packets we restart the peripheral:
-			restartSpi(4);
-		}
-	}
-
-	//Wireless
-	if(commPeriph[PORT_WIRELESS].rx.unpackedPacketsAvailable > 0)
-	{
-		commPeriph[PORT_WIRELESS].rx.unpackedPacketsAvailable = 0;
-		parseResult = payload_parse_str(&packet[PORT_WIRELESS][INBOUND]);
-		newCmdLed += (parseResult == PARSE_SUCCESSFUL) ? 1 : 0;
-	}
-
-	if(newCmdLed > 0) {*new_cmd = 1;}
-}
-*/
-
-/*
-//Did we receive new commands? Can we parse them?
-void parseSlaveCommands(uint8_t *new_cmd)
-{
-	//Valid communication from RS-485 #1?
-	if(commPeriph[PORT_RS485_1].rx.unpackedPacketsAvailable > 0)
-	{
-		commPeriph[PORT_RS485_1].rx.unpackedPacketsAvailable = 0;
-		payload_parse_str(&packet[PORT_RS485_1][INBOUND]);
-	}
-
-	//Valid communication from RS-485 #2?
-	if(commPeriph[PORT_RS485_2].rx.unpackedPacketsAvailable > 0)
-	{
-		commPeriph[PORT_RS485_2].rx.unpackedPacketsAvailable = 0;
-		payload_parse_str(&packet[PORT_RS485_2][INBOUND]);
-	}
-}
-*/
 
 //Slave Communication function. Call at 1kHz.
 //ToDo: this can also be used to transmit to a master

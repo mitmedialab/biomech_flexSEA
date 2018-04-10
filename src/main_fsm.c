@@ -33,6 +33,8 @@
 #include "cmd-Rigid.h"
 #include "flexsea_system.h"
 #include "flexsea_interface.h"
+#include "flexsea_comm_multi.h"
+
 #include "spi.h"
 #include "misc.h"
 #ifdef INCLUDE_UPROJ_SVM
@@ -108,6 +110,7 @@ void mainFSM6(void)
 void mainFSM7(void)
 {
 	autoStream();
+	transmitFxPacket(PORT_USB);
 }
 
 //Case 8: User functions
@@ -147,12 +150,15 @@ void mainFSM10kHz(void)
 	//Communication with our Master & Slave(s):
 	//=========================================
 
+//maybe this should be not a "#ifdef FLEXSEA_MANAGE", but instead "am I connected to plan stack"
+#ifdef FLEXSEA_MANAGE
+	receiveFxPacket(PORT_USB);
+#endif //FLEXSEA_MANAGE
+
 	//New approach - WiP:
 	flexsea_receive_from_slave();	//Only for the RS-485 transceivers
 	//Master:
-	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
-	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 	//Slave:
 	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
 	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
