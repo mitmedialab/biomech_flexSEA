@@ -347,6 +347,17 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
   return result;
 }
 
+// User exported functions
+uint8_t CDC_CheckBusy_FS()
+{
+	if(hUsbDevice_0 != NULL && hUsbDevice_0->pClassData != NULL)
+	{
+		USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*) hUsbDevice_0->pClassData;
+		return hcdc->TxState;
+	}
+	//if errored then I should return that it is busy
+	return 1;
+}
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
 /* USER CODE END  PRIVATE_FUNCTIONS_IMPLEMENTATION */

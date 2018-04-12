@@ -97,6 +97,7 @@ void mainFSM4(void)
 void mainFSM5(void)
 {
 	slaveTransmit(PORT_UART_EX);
+
 }
 
 //Case 6:
@@ -110,7 +111,6 @@ void mainFSM6(void)
 void mainFSM7(void)
 {
 	autoStream();
-	transmitFxPacket(PORT_USB);
 }
 
 //Case 8: User functions
@@ -153,6 +153,11 @@ void mainFSM10kHz(void)
 //maybe this should be not a "#ifdef FLEXSEA_MANAGE", but instead "am I connected to plan stack"
 #ifdef FLEXSEA_MANAGE
 	receiveFxPacket(PORT_USB);
+
+	static uint8_t flip = 0;
+	flip ^= 1;
+	if(flip)
+		transmitFxPacket(PORT_USB);
 #endif //FLEXSEA_MANAGE
 
 	//New approach - WiP:
