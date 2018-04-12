@@ -91,6 +91,8 @@ void mainFSM3(void)
     if (isEnabledUpdateSensors) {
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
     }
+	updateVirtualJoint(&emgFreeGains);
+
 }
 
 //Case 4: User Functions
