@@ -151,7 +151,7 @@ void mainFSM10kHz(void)
 	//=========================================
 
 //maybe this should be not a "#ifdef FLEXSEA_MANAGE", but instead "am I connected to plan stack"
-#ifdef FLEXSEA_MANAGE
+#ifdef BOARD_TYPE_FLEXSEA_MANAGE
 	receiveFxPacket(PORT_USB);
 
 	static uint8_t flip = 0;
