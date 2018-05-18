@@ -5230,6 +5230,7 @@ static void I2C_DMAAbort(DMA_HandleTypeDef *hdma)
   * @param  Tickstart Tick start value
   * @retval HAL status
   */
+
 static HAL_StatusTypeDef I2C_WaitOnFlagUntilTimeout(I2C_HandleTypeDef *hi2c, uint32_t Flag, FlagStatus Status, uint32_t Timeout, uint32_t Tickstart)
 {
   /* Wait until flag is set */

@@ -286,7 +286,7 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 	update_rx_buf_usb(UserRxBufferFS, tLen);
 
 	//for David's multi-packet stuff, we are doubling up
-	circ_buff_write(usbMultiPeriph.circularBuff, UserRxBufferFS, tLen);
+	circ_buff_write(& (comm_multi_periph[PORT_USB].circularBuff), UserRxBufferFS, tLen);
 
 	//Raise flag(s):
 	if(tLen > COMM_STR_BUF_LEN)
@@ -297,7 +297,7 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 
 	//Why are we adding extra in the event that there's an error..?
 	commPeriph[PORT_USB].rx.bytesReadyFlag += (1 + mod);
-	usbMultiPeriph.bytesReadyFlag += (1 + mod);
+	comm_multi_periph[PORT_USB].bytesReadyFlag += (1 + mod);
 
 	//Buffers for next packet:
 	USBD_CDC_SetRxBuffer(hUsbDevice_0, UserRxBufferFS);
