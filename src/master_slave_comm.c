@@ -135,9 +135,25 @@ void sendMasterDelayedResponse(void)
 	}
 }
 
+inline uint8_t isMultiAutoStream(uint8_t cmdCode) {
+	return cmdCode == CMD_SYSDATA;
+}
+
 void autoStream(void)
 {
-	static int sinceLastStreamSend[MAX_STREAMS] = {0};
+	static int sinceLastStreamSend[MAX_STREAMS];
+
+	static MultiCommPeriph autoPeriph;
+	static MultiPacketInfo pInfo;
+	static uint8_t notInitialized = 1;
+
+	if(notInitialized)
+	{
+		notInitialized = 0;
+		pInfo.rid = STM32_BOARD_ID;
+		initMultiPeriph(&autoPeriph, PORT_NONE, MASTER);
+		memset(sinceLastStreamSend, 0, MAX_STREAMS * sizeof(int));
+	}
 
 	if(isStreaming)
 	{
@@ -151,8 +167,6 @@ void autoStream(void)
 		{
 			if(sinceLastStreamSend[i] >= streamPeriods[i])
 			{
-				uint8_t cp_str[256] = {0};
-
 				//Determine what offset to use:
 				streamCurrentOffset[i]++;
 				if(streamCurrentOffset[i] > streamIndex[i][1])
@@ -160,9 +174,29 @@ void autoStream(void)
 					streamCurrentOffset[i] = streamIndex[i][0];
 				}
 
-				cp_str[P_XID] = streamReceivers[i];
-				cp_str[P_DATA1] = streamCurrentOffset[i];
-				(*flexsea_payload_ptr[streamCmds[i]][RX_PTYPE_READ]) (cp_str, &streamPortInfos[i]);
+				if(isMultiAutoStream(streamCmds[i]))
+				{
+					autoPeriph.in.currentMultiPacket++;
+					pInfo.xid = streamReceivers[i];
+					pInfo.portIn = streamPortInfos[i];
+					uint8_t error = receiveAndPackResponse(streamCmds[i], RX_PTYPE_READ, &pInfo, &autoPeriph);
+
+					if(!error)
+					{
+						MultiCommPeriph *cp = comm_multi_periph + streamPortInfos[i];
+						memcpy(&(cp->out), &(autoPeriph.out), sizeof(MultiWrapper));
+					}
+
+				}
+				else
+				{
+					uint8_t cp_str[256] = {0};
+					cp_str[P_XID] = streamReceivers[i];
+					cp_str[P_DATA1] = streamCurrentOffset[i];
+					(*flexsea_payload_ptr[streamCmds[i]][RX_PTYPE_READ]) (cp_str, &streamPortInfos[i]);
+				}
+
+
 
 				sinceLastStreamSend[i] -= streamPeriods[i];
 
