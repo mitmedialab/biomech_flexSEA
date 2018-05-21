@@ -111,6 +111,7 @@ void mainFSM6(void)
 void mainFSM7(void)
 {
 	autoStream();
+	rigid1.ctrl.timestamp++;
 }
 
 //Case 8: User functions
