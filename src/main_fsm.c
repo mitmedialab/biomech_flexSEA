@@ -68,7 +68,7 @@ void mainFSM1(void)
 	i2c1_fsm();
 }
 
-//Case 2: I2C2 - Unused
+//Case 2: I2C2 - Expansion
 void mainFSM2(void)
 {
 	i2c2_fsm();
@@ -85,9 +85,7 @@ void mainFSM3(void)
 //Case 4: User Functions
 void mainFSM4(void)
 {
-	#if(RUNTIME_FSM1 == ENABLED)
 	user_fsm_1();
-	#endif //RUNTIME_FSM1 == ENABLED
 }
 
 //Case 5:
@@ -113,9 +111,7 @@ void mainFSM7(void)
 //Case 8: User functions
 void mainFSM8(void)
 {
-	#if(RUNTIME_FSM2 == ENABLED)
 	user_fsm_2();
-	#endif //RUNTIME_FSM2 == ENABLED
 }
 
 //Case 9: User Interface
