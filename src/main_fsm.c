@@ -35,6 +35,7 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
+#include "calibration_tools.h"
 
 //****************************************************************************
 // Variable(s)
@@ -111,7 +112,16 @@ void mainFSM7(void)
 //Case 8: User functions
 void mainFSM8(void)
 {
-	user_fsm_2();
+	//Calibration Tools or User FSM?:
+	int8_t s = runtimeCalibration();
+	if(s == CALIB_NOT)
+	{
+		user_fsm_2();
+	}
+	else if(s == CALIB_DONE)
+	{
+		reset_user_code();
+	}
 }
 
 //Case 9: User Interface
