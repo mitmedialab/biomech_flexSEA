@@ -88,9 +88,11 @@ void mainFSM3(void)
 {
 	independentWatchdog();
 	readInternalTempSensor();
+#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
     if (isEnabledUpdateSensors) {
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
     }
+#endif
 }
 
 //Case 4: User Functions
