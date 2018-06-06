@@ -173,6 +173,10 @@ void mainFSM10kHz(void)
 	flexsea_receive_from_slave();	//Only for the RS-485 transceivers
 	//Master:
 	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
+
+	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
+	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
+
 	//Slave:
 	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
 	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
