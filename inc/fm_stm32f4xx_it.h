@@ -38,7 +38,13 @@ void USART1_IRQHandler(void);
 void OTG_FS_IRQHandler(void);
 
 void EXTI4_IRQHandler(void);
+
+#ifndef BOARD_SUBTYPE_POCKET
 void EXTI15_10_IRQHandler(void);
+#else
+void EXTI9_5_IRQHandler(void);
+#endif 	//BOARD_SUBTYPE_POCKET
+
 void USART1_IRQHandler(void);
 void USART3_IRQHandler(void);
 void USART6_IRQHandler(void);

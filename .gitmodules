@@ -1,7 +1,3 @@
-[submodule "flexsea-user"]
-	path = flexsea-user
-	url = https://github.com/DephyInc/flexsea-user.git
-	branch = dev
 [submodule "flexsea-comm"]
 	path = flexsea-comm
 	url = https://github.com/JFDuval/flexsea-comm.git
@@ -14,3 +10,6 @@
 	path = flexsea-shared
 	url = https://github.com/JFDuval/flexsea-shared.git
 	branch = dev
+[submodule "flexsea-projects"]
+	path = flexsea-projects
+	url = https://github.com/DephyInc/flexsea-projects.git

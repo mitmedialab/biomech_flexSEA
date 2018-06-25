@@ -42,6 +42,7 @@ void saveCauseOFLastReset(void);
 void test_iwdg_blocking(void);
 void test_code_blocking(void);
 void test_code_non_blocking(void);
+void combineStatusFlags(void);
 
 //****************************************************************************
 // Definition(s):
@@ -52,6 +53,10 @@ void test_code_non_blocking(void);
 
 //Watchdog:
 #define IWDG_RELOAD		50	//50 = 25ms when prescaler = 4
+
+//Partial flags - ToDo replace with stack version:
+#define STATUS_MOT_CURRENT_WARN		32
+#define STATUS_MOT_CURRENT_LIM		64
 
 #endif // INC_MISC_H
 

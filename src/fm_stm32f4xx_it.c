@@ -69,10 +69,17 @@ void EXTI4_IRQHandler(void)
 }
 
 //SYNC line:
+#ifndef BOARD_SUBTYPE_POCKET
 void EXTI15_10_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
 }
+#else
+void EXTI9_5_IRQHandler(void)
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+}
+#endif	//BOARD_SUBTYPE_POCKET
 
 //Should not be used, everything is done via DMA
 void USART1_IRQHandler(void)

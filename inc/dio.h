@@ -42,9 +42,15 @@ void initHooks(void);
 //****************************************************************************
 
 //Quick macros for debug outputs:
+#ifndef BOARD_SUBTYPE_POCKET
 #define DEBUG_H0(x) HAL_GPIO_WritePin(GPIOD, 1<<0, x);
 #define DEBUG_H1(x) HAL_GPIO_WritePin(GPIOD, 1<<1, x);
 #define DEBUG_H2(x) HAL_GPIO_WritePin(GPIOD, 1<<2, x);
+#else
+#define DEBUG_H0(x) HAL_GPIO_WritePin(GPIOB, 1<<0, x);
+#define DEBUG_H1(x) HAL_GPIO_WritePin(GPIOB, 1<<1, x);
+#define DEBUG_H2(x) HAL_GPIO_WritePin(GPIOB, 1<<2, x);
+#endif	//BOARD_SUBTYPE_POCKET
 
 #endif // INC_DIO_H
 
