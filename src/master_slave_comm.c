@@ -152,7 +152,7 @@ void autoStream(void)
 	if(notInitialized)
 	{
 		notInitialized = 0;
-		pInfo.rid = STM32_BOARD_ID;
+		pInfo.rid = getDeviceId();
 		initMultiPeriph(&autoPeriph, PORT_NONE, MASTER);
 		memset(sinceLastStreamSend, 0, MAX_STREAMS * sizeof(int));
 	}

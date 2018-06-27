@@ -8,3 +8,6 @@
 .settings/language.settings.xml
 /Tests/
 /doc/html/
+*.orig
+*.launch
+.settings/

@@ -31,7 +31,8 @@
 #include "usbd_cdc_if.h"
 #include "stm32f4xx_hal_spi.h"
 #include "user-mn.h"
-
+#include "flexsea_sys_def.h"
+#include "stm32f427xx.h"
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -200,6 +201,20 @@ void flexsea_receive_from_slave(void)
 uint8_t getBoardID(void)
 {
 	return board_id;
+}
+uint8_t getDeviceId()
+{
+	// casting to uint32_t lets us not worry about LSB vs MSB (this system should be LSB though)
+	uint8_t *uidAddress = (uint8_t*)(UID_BASE);
+
+	// apparently this byte is gonna be different for us ..?
+	return uidAddress[2];
+
+}
+
+uint8_t getDeviceType()
+{
+	return FX_RIGID;
 }
 
 uint8_t getBoardUpID(void)
