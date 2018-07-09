@@ -35,12 +35,7 @@
 #include "flexsea_interface.h"
 #include "spi.h"
 #include "misc.h"
-
-#if ACTIVE_PROJECT == PROJECT_MIT_DLEG
-#include "user-mn-MIT-DLeg-2dof.h"
-#include "free_ankle_EMG.h"
-#include "biom_state_machine.h"
-#endif
+#include "calibration_tools.h"
 
 //****************************************************************************
 // Variable(s)
@@ -87,10 +82,13 @@ void mainFSM2(void)
 void mainFSM3(void)
 {
 	independentWatchdog();
+	combineStatusFlags();
 	readInternalTempSensor();
+#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
     if (isEnabledUpdateSensors) {
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
     }
+#endif
 }
 
 //Case 4: User Functions
@@ -126,9 +124,20 @@ void mainFSM7(void)
 //Case 8: User functions
 void mainFSM8(void)
 {
+	//Calibration Tools or User FSM?:
+	int8_t s = runtimeCalibration();
+	if(s == CALIB_NOT)
+	{
+	
 	#if(RUNTIME_FSM2 == ENABLED)
-	user_fsm_2();
+		user_fsm_2();
 	#endif //RUNTIME_FSM2 == ENABLED
+	
+	}
+	else if(s == CALIB_DONE)
+	{
+		reset_user_code();
+	}
 }
 
 //Case 9: User Interface
@@ -190,5 +199,12 @@ void mainFSM10kHz(void)
 	spiMonitoring(4);
 
 	completeSpiTransmit();
+}
+
+//Asynchronous time slots:
+//========================
+
+void mainFSMasynchronous(void)
+{
 
 }
