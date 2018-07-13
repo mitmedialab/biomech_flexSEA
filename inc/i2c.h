@@ -41,7 +41,6 @@ void disable_i2c2(void);
 void init_i2c3(void);
 void disable_i2c3(void);
 void initOptionalPullUps(void);
-
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c);

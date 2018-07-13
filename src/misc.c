@@ -37,6 +37,7 @@
 #include "user-mn.h"
 #include "eeprom.h"
 #include <math.h>
+#include "flexsea_user_structs.h"
 #ifdef INCLUDE_UPROJ_SVM
 #include "svm.h"
 #endif
@@ -158,7 +159,6 @@ void init_peripherals(void)
 
 void init_iwdg(void)
 {
-	hiwdg.Instance = IWDG;
 	hiwdg.Init.Prescaler = IWDG_PRESCALER_4;
 	hiwdg.Init.Reload = IWDG_RELOAD;
 
@@ -185,6 +185,16 @@ void independentWatchdog(void)
 	}
 
 	#endif	//USE_INDEPEDENT_WATCHDOG
+}
+
+//We receive flags from Re and Ex. This combines them.
+void combineStatusFlags(void)
+{
+	//Start by clearing them:
+	rigid1.re.status &= ~ STATUS_MOT_CURRENT_WARN;
+	rigid1.re.status &= ~ STATUS_MOT_CURRENT_LIM;
+	rigid1.re.status |= ((rigid1.ex.status & 0x01) << 5);
+	rigid1.re.status |= ((rigid1.ex.status & 0x02) << 5);
 }
 
 void saveCauseOFLastReset(void)
