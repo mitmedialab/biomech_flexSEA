@@ -95,9 +95,7 @@ void mainFSM3(void)
 //Case 4: User Functions
 void mainFSM4(void)
 {
-	#if(RUNTIME_FSM1 == ENABLED)
 	user_fsm_1();
-	#endif //RUNTIME_FSM1 == ENABLED
 }
 
 //Case 5:
@@ -130,10 +128,7 @@ void mainFSM8(void)
 	if(s == CALIB_NOT)
 	{
 
-		#if(RUNTIME_FSM2 == ENABLED)
 		user_fsm_2();
-		#endif //RUNTIME_FSM2 == ENABLED
-
 	}
 	else if(s == CALIB_DONE)
 	{
