@@ -51,7 +51,7 @@ void initMasterSlaveComm(void)
 			comm_str_4, rx_command_4, &rx_buf_circ_4, \
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
 
-	initMultiPeriph(&usbMultiPeriph, PORT_USB, MASTER);
+	initMultiPeriph(&comm_multi_periph, PORT_USB, MASTER);
 	uint8_t i;
 	for(i=0;i<NUMBER_OF_PORTS;i++)
 		initMultiPeriph(comm_multi_periph+i, i, i < 2 ? SLAVE : MASTER);
@@ -181,7 +181,7 @@ void autoStream(void)
 					autoPeriph.in.currentMultiPacket++;
 					pInfo.xid = streamReceivers[i];
 					pInfo.portIn = streamPortInfos[i];
-					uint8_t error = receiveAndPackResponse(streamCmds[i], RX_PTYPE_READ, &pInfo, &autoPeriph);
+					uint8_t error = receiveAndFillResponse(streamCmds[i], RX_PTYPE_READ, &pInfo, &autoPeriph);
 
 					if(!error)
 					{

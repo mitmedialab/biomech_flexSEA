@@ -1,0 +1,9 @@
+*.user
+build/
+*.autosave
+*~
+*.bak
+*.o
+*.a
+Doxyfile
+*.orig

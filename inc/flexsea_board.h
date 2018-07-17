@@ -24,7 +24,7 @@
 //****************************************************************************
 
 #include <stdint.h>
-#include "../flexsea-comm/inc/flexsea_comm.h"
+#include "../biomech_flexsea-comm/inc/flexsea_comm.h"
 
 //****************************************************************************
 // Prototype(s):

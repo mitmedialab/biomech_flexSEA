@@ -22,7 +22,7 @@
 
 #include "main.h"
 #include "flexsea_board.h"
-#include "../../flexsea-system/inc/flexsea_system.h"
+#include "../../biomech_flexsea-system/inc/flexsea_system.h"
 #include <flexsea_comm.h>
 #include <flexsea_payload.h>
 #include <spi.h>
