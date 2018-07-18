@@ -164,8 +164,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1626890021.925065062" name="user-mn-MIT-DLeg-2dof.c" rcbsApplicability="disable" resourcePath="biomech_flexsea-projects/MIT_DLEG/src/user-mn-MIT-DLeg-2dof.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1651864683.331598971">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1651864683.331598971" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1651864683"/>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1626890021.1377438525" name="user-mn-MIT-DLeg-2dof.c" rcbsApplicability="disable" resourcePath="biomech_flexsea-projects/MIT_DLEG/src/user-mn-MIT-DLeg-2dof.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1651864683.1124009000">
+						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1651864683.1124009000" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1651864683"/>
 					</fileInfo>
 					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1626890021.416976386" name="/" resourcePath="flexsea-comm">
 						<toolChain id="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug.1041881001" name="Cross ARM GCC" superClass="ilg.gnuarmeclipse.managedbuild.cross.toolchain.elf.debug" unusedChildren="">
@@ -224,7 +224,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="biomech_flexsea-projects/MIT_DLEG/src/user-mn-MIT-DLeg-2dof.c|src/fm_stm32f4xx_hal_spi.c|flexsea-manage/main.c|test/*|common|common/src|flexsea-system/test/*|flexsea-comm/test/*" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-manage/main.c|test/*|common|common/src|flexsea-system/test/*|flexsea-comm/test/*" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

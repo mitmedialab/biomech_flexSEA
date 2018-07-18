@@ -36,6 +36,7 @@
 #include "spi.h"
 #include "misc.h"
 #include "calibration_tools.h"
+#include "user-mn-MIT-DLeg.h"
 
 //****************************************************************************
 // Variable(s)
