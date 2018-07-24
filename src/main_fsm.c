@@ -39,6 +39,11 @@
 #include "misc.h"
 #include "calibration_tools.h"
 
+#if ACTIVE_PROJECT == PROJECT_MIT_DLEG
+#include "user-mn-MIT-DLeg.h"
+#include "state_variables.h"
+#endif
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -75,6 +80,13 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	i2c2_fsm();
+
+#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
+    if (isEnabledUpdateSensors) {
+    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
+    }
+#endif
+
 }
 
 //Case 3:

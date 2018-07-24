@@ -30,6 +30,10 @@
 #include "strain.h"
 #endif	//USE_6CH_AMP
 
+#ifdef USE_MIT_EMG_I2C
+#include "user-mn-MIT-EMG.h"
+#endif
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -43,6 +47,8 @@ int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
 __attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
+__attribute__ ((aligned (4))) uint8_t i2c2_dma_tx_buf[24];
+
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -259,6 +265,9 @@ void disable_i2c3(void)
 //Detects the end of a Master Receive (when DMA Mem isn't used):
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+#ifdef USE_MIT_EMG_I2C
+	MIT_EMG_I2C_RxCpltCallback(hi2c);
+#endif
 }
 
 //Detects the end of a Master Receive in DMA Mem mode:
