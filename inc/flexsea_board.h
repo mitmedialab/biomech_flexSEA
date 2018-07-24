@@ -37,6 +37,7 @@ void flexsea_start_receiving_from_master(void);
 void flexsea_receive_from_slave(void);
 uint8_t getBoardID(void);
 uint8_t getDeviceId();
+uint8_t getJointDof(void);
 uint8_t getDeviceType();
 
 uint8_t getBoardUpID(void);

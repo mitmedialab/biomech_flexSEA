@@ -257,8 +257,9 @@ void rx_cmd_sysdata_rr(uint8_t *msgBuf, MultiPacketInfo *info, uint8_t *response
 		return;
 
 	// in the event we found no connected device we need to add a new connected device
-	if(i == fx_spec_numConnectedDevices)
+	if(i == fx_spec_numConnectedDevices) {
 		addConnectedDevice(devType, devId);
+	}
 
 	// read into the appropriate device
 	FlexseaDeviceSpec ds = connectedDeviceSpecs[i];

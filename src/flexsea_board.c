@@ -44,6 +44,7 @@
 #if (MULTI_DOF_N == 0)
 uint8_t board_id = FLEXSEA_MANAGE_1;
 uint8_t board_up_id = FLEXSEA_PLAN_1;
+uint8_t jointdof = KNEE;
 #endif	//(MULTI_DOF_N == 0)
 
 #if (MULTI_DOF_N == 1)
@@ -220,6 +221,10 @@ uint8_t getDeviceType()
 uint8_t getBoardUpID(void)
 {
 	return board_up_id;
+}
+
+uint8_t getJointDof(void) {
+	return jointdof;
 }
 
 uint8_t getBoardSubID(uint8_t sub, uint8_t idx)
