@@ -68,6 +68,7 @@ extern "C" {
 #include "flexsea.h"
 #include "flexsea_device_spec.h"
 #include "flexsea_user_structs.h"
+#include <ui.h>
 
 //****************************************************************************
 // Variable(s)
@@ -330,6 +331,7 @@ uint16_t unpack_multi_payload_cb(circularBuffer_t *cb, MultiWrapper* p)
 			//set the multi's map to record we received this frame
 			p->frameMap |= (1 << frameId);
 
+
 			if(frameId == lastFrameInPacket)
 				p->isMultiComplete = 1;
 		}
@@ -457,6 +459,7 @@ uint8_t receiveAndFillResponse(uint8_t cmd_7bits, uint8_t pType, MultiPacketInfo
 
 		// set multipacket id's to match
 		cp->out.currentMultiPacket = cp->in.currentMultiPacket;
+		error = packMultiPacket(&cp->out);
 	}
 	cp->in.frameMap = 0;
 	return error;

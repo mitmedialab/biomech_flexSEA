@@ -164,7 +164,7 @@ void mainFSM10kHz(void)
 	#endif	//USE_COMM_TEST
 
 	//RGB:
-	rgbLedRefresh();
+//	rgbLedRefresh();
 
 	//Communication with our Master & Slave(s):
 	//=========================================

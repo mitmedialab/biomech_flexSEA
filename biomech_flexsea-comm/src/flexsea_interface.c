@@ -41,6 +41,7 @@ extern "C" {
 #include "flexsea_payload.h"
 #include "flexsea_circular_buffer.h"
 #include "user-mn.h"
+#include <ui.h>
 
 #ifndef BOARD_TYPE_FLEXSEA_PLAN
 
@@ -109,7 +110,7 @@ uint8_t receiveFxPacketByPeriph(MultiCommPeriph *cp)
 {
 
 	if(!(cp->bytesReadyFlag > 0))
-		return 0;
+		return 1;
 
 	cp->bytesReadyFlag--;	// = 0;
 
@@ -150,9 +151,14 @@ uint8_t transmitFxPacket(Port p) {
 
 	MultiCommPeriph *cp = comm_multi_periph + p;
 
+	if (cp->out.frameMap != 0) {
+		LEDB(1);
+	}
+
 	//check if the periph has anything to send
 	if(cp->out.frameMap > 0 && !cp->out.isMultiComplete)
 	{
+		LEDR(1);
 		uint8_t frameId = 0;
 		//figure out the next frame to send
 		while((cp->out.frameMap & (1 << frameId)) == 0)

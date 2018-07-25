@@ -44,7 +44,7 @@
 #if (MULTI_DOF_N == 0)
 uint8_t board_id = FLEXSEA_MANAGE_1;
 uint8_t board_up_id = FLEXSEA_PLAN_1;
-uint8_t jointdof = KNEE;
+uint8_t jointdof = 0; //placeholder fix later
 #endif	//(MULTI_DOF_N == 0)
 
 #if (MULTI_DOF_N == 1)

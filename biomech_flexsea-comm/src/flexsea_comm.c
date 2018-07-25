@@ -144,6 +144,7 @@ uint8_t comm_gen_str(uint8_t payload[], uint8_t *cstr, uint8_t bytes)
 	{
 		//Too long, abort:
 		memset(cstr, 0, COMM_STR_BUF_LEN);	//Clear string
+		rigid1.mn.genVar[9] = 0x00AA;
 		return 0;
 	}
 

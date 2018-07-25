@@ -150,7 +150,7 @@ void rx_multi_cmd_calibration_mode_w(uint8_t *msgBuf, MultiPacketInfo *mInfo, ui
 
 uint8_t handleCalibrationMessage(uint8_t *buf)
 {
-	uint16_t index = P_DATA1;
+	uint16_t index = 0;
 	uint8_t procedure = buf[index];
 
 	uint8_t calibrationFlagToRunOrIsRunning = 0;
@@ -162,7 +162,7 @@ uint8_t handleCalibrationMessage(uint8_t *buf)
 			calibrationFlags |= procedure;
 			calibrationNew = 1;
 			#if(defined BOARD_TYPE_FLEXSEA_EXECUTE)
-			control_strategy(buf[P_DATA1], 0);
+			control_strategy(buf[0], 0);
 			#endif
 		}
 		calibrationFlagToRunOrIsRunning = calibrationFlags;

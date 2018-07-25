@@ -57,7 +57,7 @@ void rx_cmd_stream_rr(uint8_t *buf, uint8_t *info);
 
 extern uint8_t isStreaming;
 
-#define MAX_STREAMS 2
+#define MAX_STREAMS 1
 
 extern int streamCmds[MAX_STREAMS];
 extern uint16_t streamPeriods[MAX_STREAMS];
