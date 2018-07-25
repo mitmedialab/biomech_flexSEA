@@ -197,6 +197,10 @@ typedef enum {
     FX_MANAGE = 3
 } FlexseaDeviceType;
 
+#define KNEE		0
+#define ANKLE_DP	1
+#define ANKLE_IE	2
+
 //In Control combined fields:
 #define IN_CONTROL_CONTROLLER(x)		((x & 0xE000) >> 13)
 #define IN_CONTROL_MOT_DIR(x)			((x & 0x1000) >> 12)
