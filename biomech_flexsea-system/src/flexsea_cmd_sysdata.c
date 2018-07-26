@@ -40,7 +40,7 @@ extern "C" {
 #include "flexsea_board.h"
 #include <string.h>
 #include "flexsea_comm_def.h"
-#include <ui.h>
+#include "user-mn-MIT-DLeg.h"
 
 #define IS_FIELD_HIGH(i, map) ( (map)[(i)/32] & (1U << ((i)%32)) )
 #define SET_MAP_HIGH(i, map) ( (map)[(i)/32] |= (1U << ((i)%32)) )
@@ -128,10 +128,17 @@ void tx_cmd_sysdata_rr(uint8_t *responseBuf, uint16_t* responseLen, uint8_t send
 			SPLIT_32(fx_active_bitmap[i], responseBuf, &l);
 
 		responseBuf[l++] = getBoardID();
+		responseBuf[l++] = getJointDof();
 		*responseLen = l;
 	}
 	else
 	{
+		//change to check actual against incoming data
+		if (1) {
+			act1.motorOnFlag = 1; //turn motor flag on or off. This is flipped to 0 in safetyLimit() if comms drop.
+			act1.commandTimer = 0;
+		}
+
 		// send the actual data
 	    int i, j;
 		uint8_t* dest = responseBuf + l;

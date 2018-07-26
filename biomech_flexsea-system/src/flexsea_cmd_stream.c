@@ -93,7 +93,6 @@ void rx_multi_cmd_stream_w (uint8_t *msgBuf, MultiPacketInfo *info, uint8_t *res
 	volatile uint8_t cmdToStream = msgBuf[index++];
 	uint8_t periodInMS = msgBuf[index++];
 	uint8_t startStop = msgBuf[index++];
-
 	uint8_t firstIndex = msgBuf[index++];
 	uint8_t lastIndex = msgBuf[index++];
 
@@ -104,13 +103,12 @@ void rx_multi_cmd_stream_w (uint8_t *msgBuf, MultiPacketInfo *info, uint8_t *res
 		streamPeriods[isStreaming] = periodInMS;
 		streamReceivers[isStreaming] = info->xid;
 		streamPortInfos[isStreaming] = info->portIn;
-
 		streamIndex[isStreaming][0] = firstIndex;
 		streamIndex[isStreaming][1] = lastIndex;
 		isStreaming++;
 	}
 	//case: turn streaming off
-	else if(!startStop)
+	else
 	{
 		int i;
 		//get rid of the appropriate stream (find the index of the appropriate stream)

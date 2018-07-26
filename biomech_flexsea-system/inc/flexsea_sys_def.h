@@ -141,6 +141,11 @@ extern "C" {
 //Dummy addresses for virtual project.
 #define FLEXSEA_VIRTUAL_PROJECT	255
 
+//degree of freedom defines for Biomech projects
+#define KNEE        0
+#define ANKLE_DP    1
+#define ANKLE_IE    2
+
 //Software error (SE) codes. Values will be ORed
 #define SE_DEFAULT						0
 #define SE_INVALID_SPI					2
