@@ -106,6 +106,7 @@ extern "C" {
 #define CMD_USER3				102
 #define CMD_USER4				103
 #define CMD_USER5				104
+#define CMD_BIOMECH				105
 //(feel free to expand and/or redefine in flexsea-user, as long as it stays in
 // the 100-127 range)
 
@@ -205,6 +206,7 @@ typedef enum {
 #define KNEE		0
 #define ANKLE_DP	1
 #define ANKLE_IE	2
+#define NUM_DOFS	3
 
 //In Control combined fields:
 #define IN_CONTROL_CONTROLLER(x)		((x & 0xE000) >> 13)

@@ -135,7 +135,7 @@ void tx_cmd_sysdata_rr(uint8_t *responseBuf, uint16_t* responseLen, uint8_t send
 	{
 		//change to check actual against incoming data
 		if (1) {
-			act1.motorOnFlag = 1; //turn motor flag on or off. This is flipped to 0 in safetyLimit() if comms drop.
+			act1.motorOnFlag = 0; //turn motor flag on or off. This is flipped to 0 in safetyLimit() if comms drop.
 			act1.commandTimer = 0;
 		}
 

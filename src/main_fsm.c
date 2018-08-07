@@ -164,7 +164,12 @@ void mainFSM10kHz(void)
 	#endif	//USE_COMM_TEST
 
 	//RGB:
-	rgbLedRefresh();
+	if (isFindingPoles()) {
+		LEDB(1);
+		LEDR(1);
+	} else {
+		rgbLedRefresh();
+	}
 
 	//Communication with our Master & Slave(s):
 	//=========================================

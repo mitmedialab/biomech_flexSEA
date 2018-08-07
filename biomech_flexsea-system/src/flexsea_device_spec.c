@@ -9,6 +9,7 @@ extern "C" {
 #include "string.h"
 #include "flexsea_user_structs.h"
 #include "flexsea_board.h"
+#include "user-mn-MIT-DLeg.h"
 
 #define IS_FIELD_HIGH(i, map) ( (map)[(i)/32] & (1 << ((i)%32)) )
 #define SET_MAP_HIGH(i, map) ( (map)[(i)/32] |= (1 << ((i)%32)) )
@@ -32,6 +33,8 @@ FlexseaDeviceSpec fx_none_spec = {
 
 #ifdef DEPHY
 #define _rigid_numFields 36
+#elif (defined DLEG_MULTIPACKET)
+#define _rigid_numFields 32
 #else
 #define _rigid_numFields 28
 #endif // DEPHY
@@ -50,8 +53,12 @@ const char* _rigid_fieldlabels[_rigid_numFields] = 		{"rigid", 			"id",									
 #ifdef DEPHY
 														"ank_ang", "ank_vel", "ank_from_mot", "ank_torque",							// ANKLE			4 32
 														"cur_stpt",	"step_energy", "walking_state", "gait_state" 					// CONTROLLER		4 36
-#endif
 
+#elif (defined DLEG_MULTIPACKET)
+														"intJointAngleDegrees", "intJointVelDegrees", "intJointTorque",				// INT ACTUATOR		3 31
+														"safetyFlag"																// ACTUATOR			1 32
+
+#endif
 };
 
 const uint8_t _rigid_field_formats[_rigid_numFields] =	{FORMAT_8U, 	FORMAT_16U,													// METADATA			2 2
@@ -68,6 +75,10 @@ const uint8_t _rigid_field_formats[_rigid_numFields] =	{FORMAT_8U, 	FORMAT_16U,	
 #ifdef DEPHY
 														FORMAT_16S, FORMAT_16S, FORMAT_16S,	FORMAT_16S,								// ANKLE			4 32
 														FORMAT_32S, FORMAT_16S, FORMAT_8S, FORMAT_8S								// CONTROLLER		4 36
+#elif (defined DLEG_MULTIPACKET)
+
+														FORMAT_16S, FORMAT_16S, FORMAT_16S,											// INT ACTUATOR		3 31
+														FORMAT_8U																	// ACTUATOR			1 32
 #endif
 };
 
@@ -98,6 +109,10 @@ uint8_t* _rigid_field_pointers[_rigid_numFields] =	{	0,	0,																						
 														PTR2(rigid1.ctrl._ank_ang_from_mot_),  0,													// ANKLE			2 32
 														PTR2(rigid1.ex.ctrl.current.setpoint_val), PTR2(rigid1.ctrl.step_energy),					// CONTROLLER		2 34
 														PTR2(rigid1.ctrl.walkingState), PTR2(rigid1.ctrl.gaitState),								// CONTROLLER		2 36
+#elif (defined DLEG_MULTIPACKET)
+														PTR2(act1.intJointAngleDegrees), PTR2(act.intJointVelDegrees), PTR2(intJointTorque),		// INT ACTUATOR		3 31
+														PTR2(act.safetyFlag)																		// ACTUATOR			1 32
+
 #endif
 };
 

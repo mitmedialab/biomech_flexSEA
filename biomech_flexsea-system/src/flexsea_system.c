@@ -57,6 +57,7 @@ For rx_* functions, the suffix options are:
 #include "../inc/flexsea_cmd_calibration.h"
 #include "../inc/flexsea_cmd_in_control.h"
 #include "flexsea_cmd_sysdata.h"
+#include "flexsea_cmd_biomech.h"
 #include "flexsea_user_structs.h"
 #include "flexsea_cmd_user.h"
 #include "flexsea_dataformats.h"
@@ -138,6 +139,7 @@ void init_flexsea_payload_ptr(void)
 
 	//User functions:
 	init_flexsea_payload_ptr_user();
+	init_flexsea_payload_ptr_biomech(); //custom commands for multidof dleg
 }
 
 //Catch all function - does nothing. Note: error catching code can be added here
