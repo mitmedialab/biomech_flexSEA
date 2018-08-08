@@ -50,6 +50,12 @@ uint8_t dftWatch = 0;
 // Private Function Prototype(s):
 //****************************************************************************
 
+void transmitMultiFrame()
+{
+	transmitFxPacket(PORT_USB);
+	transmitFxPacket(PORT_WIRELESS);
+}
+
 //****************************************************************************
 // Public Function(s)
 //****************************************************************************
@@ -95,7 +101,6 @@ void mainFSM4(void)
 void mainFSM5(void)
 {
 	slaveTransmit(PORT_UART_EX);
-
 }
 
 //Case 6:
@@ -104,12 +109,29 @@ void mainFSM6(void)
 	//ADC:
 	startAdcConversion();
 	updateADCbuffers();
+
+	uint8_t parsed = 0;
+	parsed += receiveFxPacketByPeriph(comm_multi_periph + PORT_USB);
+	parsed += receiveFxPacketByPeriph(comm_multi_periph + PORT_WIRELESS);
+
+	if(!parsed)
+		autoStream();
 }
 
 //Case 7:
 void mainFSM7(void)
 {
-	autoStream();
+
+	int i;
+	for(i = 0; i < NUMBER_OF_PORTS; ++i) {
+		if(comm_multi_periph[i].out.unpackedIdx) {
+
+			packMultiPacket(&(comm_multi_periph[i].out));
+			comm_multi_periph[i].out.unpackedIdx = 0;
+
+		}
+	}
+
 	rigid1.ctrl.timestamp++;
 }
 
@@ -164,13 +186,7 @@ void mainFSM10kHz(void)
 	flip ^= 1;
 	if(flip)
 	{
-		transmitFxPacket(PORT_USB);
-		receiveFxPacket(PORT_USB);
-	}
-	else
-	{
-		transmitFxPacket(PORT_WIRELESS);
-		receiveFxPacket(PORT_WIRELESS);
+		transmitMultiFrame();
 	}
 
 #endif //FLEXSEA_MANAGE

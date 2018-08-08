@@ -999,3 +999,14 @@ static void init_dma1_stream3_ch4(void)
 	HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 	__HAL_DMA_ENABLE_IT(husart3.hdmatx, DMA_IT_TC);
 }
+
+uint8_t readyToTransfer(uint8_t port)
+{
+	USART_HandleTypeDef* husart = NULL;
+	if(port == PORT_WIRELESS)
+	{
+		husart = &husart3;
+	}
+
+	return (husart != NULL) && (husart->State == HAL_USART_STATE_READY);
+}
