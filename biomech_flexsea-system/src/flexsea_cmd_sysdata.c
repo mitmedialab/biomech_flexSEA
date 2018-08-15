@@ -103,7 +103,10 @@ void rx_cmd_sysdata_r(uint8_t *msgBuf, MultiPacketInfo *info, uint8_t *responseB
 	if(isWhoAmI)
 	{
 		// set flags low and respond with metadata
-		memset(fx_active_bitmap, 0, sizeof(uint32_t)*FX_BITMAP_WIDTH_C);
+		int i = 0;
+
+		while(i < FX_BITMAP_WIDTH_C)
+				fx_active_bitmap[i++] = 0;
 	}
 
 	tx_cmd_sysdata_rr(responseBuf, responseLen, isWhoAmI);

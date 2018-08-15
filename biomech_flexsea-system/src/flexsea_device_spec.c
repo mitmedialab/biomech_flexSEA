@@ -39,7 +39,7 @@ FlexseaDeviceSpec fx_none_spec = {
 #define _rigid_numFields 28
 #endif // DEPHY
 
-const char* _rigid_fieldlabels[_rigid_numFields] = 		{"rigid", 			"id",													// METADATA			2 2
+const char* _rigid_fieldlabels[_rigid_numFields] = 		{"board id", 			"devId",													// METADATA			2 2
 														"state_time",																// STATE TIME		1 3
 														"accelx", 	"accely", 	"accelz", 	"gyrox", 	"gyroy", 	"gyroz",		// IMU				6 9
 
@@ -61,7 +61,7 @@ const char* _rigid_fieldlabels[_rigid_numFields] = 		{"rigid", 			"id",									
 #endif
 };
 
-const uint8_t _rigid_field_formats[_rigid_numFields] =	{FORMAT_8U, 	FORMAT_16U,													// METADATA			2 2
+const uint8_t _rigid_field_formats[_rigid_numFields] =	{FORMAT_8U, 	FORMAT_8U,													// METADATA			2 2
 														FORMAT_32U,																	// STATE TIME		1 3
 														FORMAT_16S, FORMAT_16S, FORMAT_16S, FORMAT_16S, FORMAT_16S, FORMAT_16S ,	// IMU				6 9
 
@@ -90,7 +90,8 @@ const uint8_t _rigid_field_formats[_rigid_numFields] =	{FORMAT_8U, 	FORMAT_16U,	
 #define PTR2(x) (uint8_t*)&(x)
 #define UIDPTR(o) (uint8_t*)(0x1FFF7A10U + o)
 // only defined on boards not on plan
-uint8_t* _rigid_field_pointers[_rigid_numFields] =	{	0,	0,																						// METADATA			2 2
+
+uint8_t* _rigid_field_pointers[_rigid_numFields] =	{	(uint8_t*) &board_id,	(uint8_t*) &((uint8_t*)(UID_BASE))[2],													// METADATA			2 2
 														PTR2(rigid1.ctrl.timestamp),																// STATE TIME		1 3
 														(uint8_t*)&rigid1.mn.accel.x, (uint8_t*)&rigid1.mn.accel.y, (uint8_t*)&rigid1.mn.accel.z,	// IMU				3 6
 														(uint8_t*)&rigid1.mn.gyro.x, (uint8_t*)&rigid1.mn.gyro.y, (uint8_t*)&rigid1.mn.gyro.z,		// IMU 				3 9
@@ -110,8 +111,8 @@ uint8_t* _rigid_field_pointers[_rigid_numFields] =	{	0,	0,																						
 														PTR2(rigid1.ex.ctrl.current.setpoint_val), PTR2(rigid1.ctrl.step_energy),					// CONTROLLER		2 34
 														PTR2(rigid1.ctrl.walkingState), PTR2(rigid1.ctrl.gaitState),								// CONTROLLER		2 36
 #elif (defined DLEG_MULTIPACKET)
-														PTR2(act1.intJointAngleDegrees), PTR2(act.intJointVelDegrees), PTR2(intJointTorque),		// INT ACTUATOR		3 31
-														PTR2(act.safetyFlag)																		// ACTUATOR			1 32
+														PTR2(act1.intJointAngleDegrees), PTR2(act1.intJointVelDegrees), PTR2(act1.intJointTorque),	// INT ACTUATOR		3 31
+														PTR2(act1.safetyFlag)																		// ACTUATOR			1 32
 
 #endif
 };

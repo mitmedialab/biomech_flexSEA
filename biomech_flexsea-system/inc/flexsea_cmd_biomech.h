@@ -37,6 +37,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "user-mn-MIT-DLeg.h"
+#include "state_variables.h"
 
 /* Functions for message passing declared below.
  * CMD_BIOMECH == 105

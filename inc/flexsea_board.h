@@ -45,6 +45,11 @@ uint8_t getBoardSubID(uint8_t sub, uint8_t idx);
 uint8_t getSlaveCnt(uint8_t sub);
 
 
+#if (MULTI_DOF_N == 0 || MULTI_DOF_N == 1)
+extern uint8_t board_id;
+extern uint8_t jointdof;
+#endif
+
 
 //****************************************************************************
 // Definition(s):

@@ -32,6 +32,8 @@
 #include <flexsea.h>
 #include "flexsea_system.h"
 #include <flexsea_board.h>
+#include "user-mn-MIT-DLeg.h"
+#include "state_variables.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +41,9 @@ extern "C" {
 
 #if((defined BOARD_TYPE_FLEXSEA_EXECUTE) || (defined BOARD_TYPE_FLEXSEA_MANAGE))
 	#include "calibration_tools.h"
+#else
+	uint8_t calibrationProgress;
+	#define CALIB_DONE 3
 #endif
 
 #ifdef BOARD_TYPE_FLEXSEA_EXECUTE
@@ -73,7 +78,6 @@ void tx_cmd_calibration_mode_r(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
 	shBuf[index++] = calibrationMode;
 
 	(*len) = index;
-	(void)shBuf;
 }
 
 void tx_cmd_calibration_mode_rw(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
@@ -86,6 +90,7 @@ void tx_cmd_calibration_mode_rw(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, 
 
 	//Data:
 	shBuf[index++] = calibrationMode;
+	shBuf[index++] = getDeviceId();
 
 	//Payload length:
 	(*len) = index;
@@ -124,8 +129,14 @@ void rx_cmd_calibration_mode_rw(uint8_t *buf, uint8_t *info)
 
 void rx_multi_cmd_calibration_mode_rw(uint8_t *msgBuf, MultiPacketInfo *mInfo, uint8_t *responseBuf, uint16_t* responseLen)
 {
-	uint8_t response = handleCalibrationMessage(msgBuf);
-	tx_cmd_calibration_mode_rw(responseBuf, &cmdCode, &cmdType, responseLen, response);
+
+	if (!(calibrationProgress == CALIB_DONE)) {
+		handleCalibrationMessage(msgBuf);
+		tx_cmd_calibration_mode_rw(responseBuf, &cmdCode, &cmdType, responseLen, calibrationProgress);
+	} else {
+		tx_cmd_calibration_mode_rw(responseBuf, &cmdCode, &cmdType, responseLen, calibrationProgress);
+	}
+
 }
 
 void rx_cmd_calibration_mode_w(uint8_t *buf, uint8_t *info)
@@ -150,7 +161,8 @@ void rx_multi_cmd_calibration_mode_w(uint8_t *msgBuf, MultiPacketInfo *mInfo, ui
 
 uint8_t handleCalibrationMessage(uint8_t *buf)
 {
-	uint16_t index = P_DATA1;
+	//Be really careful with multipacket. buf points to first index of user data with no overhead!
+	uint16_t index = 0; //THIS USED TO BE P_DATA1 BUT THAT IS WRONG FOR MN -Tony
 	uint8_t procedure = buf[index];
 
 	uint8_t calibrationFlagToRunOrIsRunning = 0;

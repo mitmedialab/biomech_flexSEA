@@ -503,6 +503,7 @@ uint8_t parseReadyMultiString(MultiCommPeriph* cp)
 #endif
 		//It's addressed to me. Function pointer array will call
 		//the appropriate handler (as defined in flexsea_system):
+
 		if((cmd_7bits <= MAX_CMD_CODE) && (pType <= RX_PTYPE_MAX_INDEX))
 		{
 			uint8_t error = receiveAndFillResponse(cmd_7bits, pType, &info, cp);
@@ -512,6 +513,7 @@ uint8_t parseReadyMultiString(MultiCommPeriph* cp)
 	}
 	else if(cp->in.unpacked[MP_RID] == 0 && cmd_7bits == CMD_SYSDATA)
 	{
+
 		cp->in.unpacked[MP_DATA1] = SYSDATA_WHO_AM_I_FLAG; // results in whoami msg
 		uint8_t error = receiveAndFillResponse(cmd_7bits, RX_PTYPE_READ, &info, cp);
 		if(error)
