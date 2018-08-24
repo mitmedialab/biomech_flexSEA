@@ -220,15 +220,15 @@
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/MotorTestBench/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/CycleTester/inc"/>
-									<listOptionValue builtIn="false" value="../flexsea-user/DpEb31/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MotorTestBench/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/CycleTester/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/DpEb31/inc"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.330475997" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -244,7 +244,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-manage/main.c|test/*|common|common/src|flexsea-system/test/*|flexsea-comm/test/*|flexsea-user/test/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-manage/main.c|test/*|common|common/src|flexsea-system/test/*|flexsea-comm/test/*|flexsea-projects/test/*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -342,7 +342,7 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=1"/>
+									<listOptionValue builtIn="false" value="HW_VER=2"/>
 									<listOptionValue builtIn="false" value="HW_NOT_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
@@ -493,7 +493,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-user/test|flexsea-user/test/*|flexsea-system/test|flexsea-comm/test|test/*|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-projects/test|flexsea-projects/test/*|flexsea-system/test|flexsea-comm/test|test/*|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-comm/test"/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-system/test"/>
 					</sourceEntries>
@@ -745,7 +745,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-user/test|flexsea-user/test/*|flexsea-system/test|flexsea-comm/test|test/*|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="src/fm_stm32f4xx_hal_spi.c|flexsea-projects/test|flexsea-projects/test/*|flexsea-system/test|flexsea-comm/test|test/*|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-comm/test"/>
 						<entry excluding="*" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="flexsea-system/test"/>
 					</sourceEntries>
