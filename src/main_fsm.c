@@ -75,6 +75,7 @@ void mainFSM0(void)
 void mainFSM1(void)
 {
 	i2c1_fsm();
+	manageI2C3direction();
 }
 
 //Case 2: I2C2 - Expansion

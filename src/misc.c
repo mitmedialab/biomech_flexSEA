@@ -146,8 +146,9 @@ void init_peripherals(void)
 	//Software:
 	initMasterSlaveComm();
 
-	//Enable reception on I2C3 (Regulate):
-	i2c3Receive();
+	//We start I2C3 in Transmit mode to send limits to Re:
+	i2c3SlaveTransmitToMaster();
+	//i2c3SlaveReceiveFromMaster();
 
 	//All RGB LEDs OFF
 	LEDR(0);
