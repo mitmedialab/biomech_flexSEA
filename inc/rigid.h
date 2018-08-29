@@ -29,7 +29,7 @@
 // Shared variable(s)
 //****************************************************************************
 
-//...
+extern struct i2t_s i2tBatt;
 
 //****************************************************************************
 // Public Function Prototype(s):
@@ -37,7 +37,7 @@
 
 void initRigidIO(void);
 void decodeRegulate(void);
-void setRegulateLimits(uint16_t vMin);
+void setRegulateLimits(uint16_t vMin, struct i2t_s i2t);
 
 //****************************************************************************
 // Definition(s):

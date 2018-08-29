@@ -31,6 +31,7 @@
 //****************************************************************************
 
 uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
+struct i2t_s i2tBatt = {7, 6104, 76294, 125};
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -89,7 +90,7 @@ void decodeRegulate(void)
 }
 
 //Prepares the I2C3 buffer for Re to read at boot:
-void setRegulateLimits(uint16_t vMin)
+void setRegulateLimits(uint16_t vMin, struct i2t_s i2t)
 {
 	uint16_t index = 0;
 	uint8_t i = 0, checksum = 0;
@@ -97,11 +98,11 @@ void setRegulateLimits(uint16_t vMin)
 	i2c_3_t_buf[index++] = I2C_READ_KEY;
 
 	//Data:
-	SPLIT_16((uint16_t)vMin, i2c_3_t_buf, &index);	//Min. voltage
-	SPLIT_16((uint16_t)0, i2c_3_t_buf, &index);		//I2T_LEAK
-	SPLIT_32((uint16_t)0, i2c_3_t_buf, &index);		//I2T_LIMIT
-	i2c_3_t_buf[index++] = 0;						//I2T_NON_LIN_THRESHOLD
-	i2c_3_t_buf[index++] = 0;						//General config
+	SPLIT_16((uint16_t)vMin, i2c_3_t_buf, &index);		//Min. voltage
+	SPLIT_16((uint16_t)i2t.leak, i2c_3_t_buf, &index);	//I2T_LEAK
+	SPLIT_32((uint32_t)i2t.limit, i2c_3_t_buf, &index);	//I2T_LIMIT
+	i2c_3_t_buf[index++] = i2t.nonLinThreshold;			//I2T_NON_LIN_THRESHOLD
+	i2c_3_t_buf[index++] = 0;							//General config
 
 	//Checksum:
 	for(i = 0; i < index; i++)
