@@ -27,8 +27,6 @@
 #include "isr.h"
 #include "ui.h"
 
-#include "dio.h"
-
 #ifdef USE_6CH_AMP
 #include "strain.h"
 #endif	//USE_6CH_AMP
@@ -41,7 +39,7 @@ I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
 DMA_HandleTypeDef hdma_i2c1_tx, hdma_i2c1_rx;
 DMA_HandleTypeDef hdma_i2c2_tx, hdma_i2c2_rx;
 
-uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1], i2c_3_t_buf[MN_WBUF_SIZE+1] = {1,2,3,4,5};
+uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1], i2c_3_t_buf[MN_WBUF_SIZE+1];
 int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
@@ -263,35 +261,6 @@ void disable_i2c3(void)
 	HAL_I2C_DeInit(&hi2c3);
 }
 
-void manageI2C3direction(void)
-{
-	static uint8_t s = 0;
-	static uint16_t timeout = 0;
-
-	/*
-	if(firstTransfers > 0 && s == 0)
-	{
-		//disable_i2c3();
-		//init_i2c3();
-		i2c3SlaveReceiveFromMaster();
-		s = 1;
-	}
-
-	if(timeout < 4000)
-	{
-		timeout++;
-	}
-	else if(timeout == 4000)
-	{
-		i2c3SlaveReceiveFromMaster();
-	}
-	*/
-	//if(hi2c3.Mode == HAL_I2C_MODE_NONE || hi2c3.ErrorCode != 0)
-	{
-//		i2c3SlaveReceiveFromMaster();
-	}
-}
-
 //Detects the end of a Master Receive (when DMA Mem isn't used):
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
@@ -356,10 +325,8 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C3)
 	{
-		DEBUG_H0(1);
 		decodeRegulate();
 		i2c3SlaveReceiveFromMaster();
-		DEBUG_H0(0);
 	}
 }
 
@@ -368,7 +335,6 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C3)
 	{
-		DEBUG_H1(1);
 		firstTransfers++;
 		if(firstTransfers >= 2)
 		{
@@ -378,8 +344,6 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c)
 		{
 			i2c3SlaveTransmitToMaster();
 		}
-
-		DEBUG_H1(0);
 	}
 }
 
@@ -388,19 +352,13 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C3)
 	{
-		//while(1)
-		{
-			DEBUG_H2(1);
-			LEDR(1);
-			i2c3SlaveReceiveFromMaster();
-			DEBUG_H2(0);
-		}
+		LEDR(1);
+		i2c3SlaveReceiveFromMaster();
 	}
 }
 
 void i2c3SlaveTransmitToMaster(void)
 {
-	//HAL_I2C_Slave_Transmit_IT(&hi2c3, i2c_3_t_buf, MN_RBUF_SIZE);
 	HAL_I2C_Slave_Transmit_IT(&hi2c3, i2c_3_t_buf, MN_WBUF_SIZE);
 }
 

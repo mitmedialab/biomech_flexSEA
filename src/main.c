@@ -31,9 +31,6 @@
 #include "flexsea_system.h"
 #include "flexsea_global_structs.h"
 
-//Testing only:
-#include "i2c.h"
-
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -64,9 +61,6 @@ int main(void)
 	//test_code_non_blocking();
 
 	init_user();
-
-	//Test:
-	//i2c3SlaveTransmitToMaster();
 
 	//Infinite loop
 	while(1)

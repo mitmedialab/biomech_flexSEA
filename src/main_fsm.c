@@ -75,7 +75,6 @@ void mainFSM0(void)
 void mainFSM1(void)
 {
 	i2c1_fsm();
-	manageI2C3direction();
 }
 
 //Case 2: I2C2 - Expansion
@@ -115,21 +114,20 @@ void mainFSM6(void)
 	parsed += receiveFxPacketByPeriph(comm_multi_periph + PORT_USB);
 	parsed += receiveFxPacketByPeriph(comm_multi_periph + PORT_WIRELESS);
 
-	if(!parsed)
-		autoStream();
+	if(!parsed){autoStream();}
 }
 
 //Case 7:
 void mainFSM7(void)
 {
-
 	int i;
-	for(i = 0; i < NUMBER_OF_PORTS; ++i) {
-		if(comm_multi_periph[i].out.unpackedIdx) {
 
+	for(i = 0; i < NUMBER_OF_PORTS; ++i)
+	{
+		if(comm_multi_periph[i].out.unpackedIdx)
+		{
 			packMultiPacket(&(comm_multi_periph[i].out));
 			comm_multi_periph[i].out.unpackedIdx = 0;
-
 		}
 	}
 
