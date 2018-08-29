@@ -88,6 +88,29 @@ void decodeRegulate(void)
 	rigid1.re.status = i2c_3_r_buf[index++];
 }
 
+//Prepares the I2C3 buffer for Re to read at boot:
+void setRegulateLimits(uint16_t vMin)
+{
+	uint16_t index = 0;
+	uint8_t i = 0, checksum = 0;
+
+	i2c_3_t_buf[index++] = I2C_READ_KEY;
+
+	//Data:
+	SPLIT_16((uint16_t)vMin, i2c_3_t_buf, &index);	//Min. voltage
+	SPLIT_16((uint16_t)0, i2c_3_t_buf, &index);		//I2T_LEAK
+	SPLIT_32((uint16_t)0, i2c_3_t_buf, &index);		//I2T_LIMIT
+	i2c_3_t_buf[index++] = 0;						//I2T_NON_LIN_THRESHOLD
+	i2c_3_t_buf[index++] = 0;						//General config
+
+	//Checksum:
+	for(i = 0; i < index; i++)
+	{
+		checksum += i2c_3_t_buf[i];
+	}
+	i2c_3_t_buf[index++] = checksum;
+}
+
 //****************************************************************************
 // Private Function(s)
 //****************************************************************************

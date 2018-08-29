@@ -37,6 +37,7 @@
 
 void initRigidIO(void);
 void decodeRegulate(void);
+void setRegulateLimits(uint16_t vMin);
 
 //****************************************************************************
 // Definition(s):
@@ -104,6 +105,8 @@ void decodeRegulate(void);
 #define MN_R_B1						1
 #define MN_R_B2						2
 #define MN_R_B3						3
+
+#define I2C_READ_KEY				0x55
 
 #endif // INC_RIGID_H
 

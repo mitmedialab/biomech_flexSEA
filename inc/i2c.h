@@ -78,7 +78,8 @@ void i2c3SlaveTransmitToMaster(void);
 //****************************************************************************
 
 extern I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
-extern uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE];
+extern uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1];
+extern uint8_t i2c_3_t_buf[MN_WBUF_SIZE+1];
 
 extern int8_t i2c1FsmState, i2c2FsmState;
 extern uint8_t i2c1_dma_rx_buf[24], i2c2_dma_rx_buf[24];
