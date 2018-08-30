@@ -31,7 +31,8 @@
 //****************************************************************************
 
 uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
-struct i2t_s i2tBatt = {7, 6104, 76294, 125};
+struct i2t_s i2tBatt = {.shift = 7, .leak = 6105, .limit = 76295, \
+						.nonLinThreshold = 125, .useNL = I2T_ENABLE_NON_LIN};
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -95,6 +96,10 @@ void setRegulateLimits(uint16_t vMin, struct i2t_s i2t)
 	uint16_t index = 0;
 	uint8_t i = 0, checksum = 0;
 
+	//Config byte contains shift + non-lin enable bit
+	LIMIT(i2t.shift, 0, 15);	//Limit to 4 bits
+	i2t.config = i2t.shift | i2t.useNL;
+
 	i2c_3_t_buf[index++] = I2C_READ_KEY;
 
 	//Data:
@@ -102,7 +107,7 @@ void setRegulateLimits(uint16_t vMin, struct i2t_s i2t)
 	SPLIT_16((uint16_t)i2t.leak, i2c_3_t_buf, &index);	//I2T_LEAK
 	SPLIT_32((uint32_t)i2t.limit, i2c_3_t_buf, &index);	//I2T_LIMIT
 	i2c_3_t_buf[index++] = i2t.nonLinThreshold;			//I2T_NON_LIN_THRESHOLD
-	i2c_3_t_buf[index++] = 0;							//General config
+	i2c_3_t_buf[index++] = i2t.config;					//I2T Config
 
 	//Checksum:
 	for(i = 0; i < index; i++)

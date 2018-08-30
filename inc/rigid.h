@@ -107,6 +107,8 @@ void setRegulateLimits(uint16_t vMin, struct i2t_s i2t);
 #define MN_R_B3						3
 
 #define I2C_READ_KEY				0x55
+#define I2T_ENABLE_NON_LIN			0x80
+#define I2T_DISABLE_NON_LIN			0x00
 
 #endif // INC_RIGID_H
 
