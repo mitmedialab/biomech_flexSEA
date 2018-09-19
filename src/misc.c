@@ -147,7 +147,7 @@ void init_peripherals(void)
 	initMasterSlaveComm();
 
 	//We start I2C3 in Transmit mode to send limits to Re:
-	setRegulateLimits(19000, i2tBatt);
+	setRegulateLimits(7000, i2tBatt);
 	i2c3SlaveTransmitToMaster();
 
 	//All RGB LEDs OFF
