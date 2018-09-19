@@ -46,19 +46,27 @@ uint8_t writeAngleMapEEPROM(void);
 uint8_t readAngleMapEEPROM(void);
 void testAngleMapEEPROMblocking(void);
 
+//UVLO:
+uint8_t writeUvloEEPROM(uint16_t newValue);
+uint8_t readUvloEEPROM(void);
+uint16_t getNvUVLO(void);
+
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
 
 #define EE_ANGLE_CNT					128
 #define EE_CYCLE_TESTER_CNT				3
+#define EE_NV_UVLO						2
 //Total memory size (keep < 256):
-#define EE_CNT							(EE_ANGLE_CNT + EE_CYCLE_TESTER_CNT)
+#define EE_CNT							(EE_ANGLE_CNT + EE_CYCLE_TESTER_CNT + EE_NV_UVLO)
 
 //Memory areas:
 #define ANGLE_MAP_ADDR					0
 #define CYCLE_COUNT_ADDR				(EE_ANGLE_CNT + 1)
+#define NV_UVLO_ADDR					(CYCLE_COUNT_ADDR + EE_CYCLE_TESTER_CNT + 2)
 
+#define NV_UVLO_LOCK					12345
 
 #endif // INC_CYCLE_H
 

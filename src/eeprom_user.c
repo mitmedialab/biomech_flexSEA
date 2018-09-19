@@ -37,6 +37,9 @@ uint16_t cycles = 0;
 //Angle map:
 uint16_t angleMap[EE_ANGLE_CNT];
 
+//UVLO:
+uint16_t nvUVLO = 0;
+
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
@@ -161,6 +164,73 @@ uint8_t readAngleMapEEPROM(void)
 
 	//Success
 	return 1;
+}
+
+uint8_t writeUvloEEPROM(uint16_t newValue)
+{
+	//Write value:
+	if(EE_WriteVariable(NV_UVLO_ADDR, newValue) != HAL_OK)
+	{
+		//Error
+		return 0;
+	}
+	//Write lock key:
+	if(EE_WriteVariable(NV_UVLO_ADDR + 1, NV_UVLO_LOCK) != HAL_OK)
+	{
+		//Error
+		return 0;
+	}
+
+
+	#ifdef USE_WATCHDOG
+	//EE_WriteVariable is slow: prevent a Watchdog reset:
+	independentWatchdog();
+	#endif
+
+	//Success
+	return 1;
+}
+
+uint8_t readUvloEEPROM(void)
+{
+	uint16_t tmpKey = 0, tmpVal = 0;
+
+	//Read value:
+	if(EE_ReadVariable(NV_UVLO_ADDR, &tmpVal) != HAL_OK)
+	{
+		//Error
+		return 0;
+	}
+	//Read lock key:
+	if(EE_ReadVariable(NV_UVLO_ADDR + 1, &tmpKey) != HAL_OK)
+	{
+		//Error
+		return 0;
+	}
+
+	if(tmpKey == NV_UVLO_LOCK)
+	{
+		//Valid number was read
+		nvUVLO = tmpVal;
+	}
+	else
+	{
+		nvUVLO = 0;
+		return 2;
+	}
+
+	#ifdef USE_WATCHDOG
+	//EE_ReadVariable is slow: prevent a Watchdog reset:
+	independentWatchdog();
+	#endif
+
+	//Success
+	return 1;
+}
+
+uint16_t getNvUVLO(void)
+{
+	return nvUVLO;
 }
 
 void testAngleMapEEPROMblocking(void)

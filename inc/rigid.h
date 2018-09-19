@@ -38,6 +38,9 @@ extern struct i2t_s i2tBatt;
 void initRigidIO(void);
 void decodeRegulate(void);
 void setRegulateLimits(uint16_t vMin, struct i2t_s i2t);
+void saveUVLO(uint16_t v);
+uint16_t getUVLO(void);
+void loadNvUVLO(void);
 
 //****************************************************************************
 // Definition(s):
@@ -109,6 +112,11 @@ void setRegulateLimits(uint16_t vMin, struct i2t_s i2t);
 #define I2C_READ_KEY				0x55
 #define I2T_ENABLE_NON_LIN			0x80
 #define I2T_DISABLE_NON_LIN			0x00
+
+//UVLO:
+#define MIN_UVLO					15000
+#define MAX_UVLO					50000
+#define DEFAULT_UVLO				36000
 
 #endif // INC_RIGID_H
 

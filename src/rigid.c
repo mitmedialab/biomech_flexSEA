@@ -34,6 +34,8 @@ uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
 struct i2t_s i2tBatt = {.shift = 7, .leak = 6105, .limit = 76295, \
 						.nonLinThreshold = 125, .useNL = I2T_ENABLE_NON_LIN};
 
+uint16_t uvlo = 0;
+
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
@@ -115,6 +117,43 @@ void setRegulateLimits(uint16_t vMin, struct i2t_s i2t)
 		checksum += i2c_3_t_buf[i];
 	}
 	i2c_3_t_buf[index++] = checksum;
+}
+
+void saveUVLO(uint16_t v)
+{
+	LIMIT(v, MIN_UVLO, MAX_UVLO);
+	uvlo = v;
+}
+
+uint16_t getUVLO(void)
+{
+	return uvlo;
+}
+
+void loadNvUVLO(void)
+{
+	#ifdef USE_EEPROM
+
+	uint16_t v = 0;
+
+	//Get UVLO from EEPROM (if it was ever written)
+	readUvloEEPROM();
+	v = getNvUVLO();
+	if(v != 0)
+	{
+		//We read a valid value
+		saveUVLO(v);
+	}
+	else
+	{
+		saveUVLO(DEFAULT_UVLO);
+	}
+
+	#else
+
+	saveUVLO(DEFAULT_UVLO);
+
+	#endif	//USE_EEPROM
 }
 
 //****************************************************************************
