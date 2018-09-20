@@ -513,7 +513,6 @@ uint8_t parseReadyMultiString(MultiCommPeriph* cp)
 	}
 	else if(cp->in.unpacked[MP_RID] == 0 && cmd_7bits == CMD_SYSDATA)
 	{
-
 		cp->in.unpacked[MP_DATA1] = SYSDATA_WHO_AM_I_FLAG; // results in whoami msg
 		uint8_t error = receiveAndFillResponse(cmd_7bits, RX_PTYPE_READ, &info, cp);
 		if(error)

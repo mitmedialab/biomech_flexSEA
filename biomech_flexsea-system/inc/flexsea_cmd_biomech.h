@@ -58,7 +58,7 @@ void init_flexsea_payload_ptr_biomech(void);
 */
 
 void tx_cmd_biomech_r(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
-						uint16_t *len, uint8_t subcmd, Act_s* act);
+						uint16_t *len, uint8_t subcmd,  float desiredJointAngleDeg_f, float desiredJointK_f);
 
 /* Called by master to send a message to the slave, attempting to initiate a write, using a bitmap to specify which fields to read.
  * Current implementation allows for 3 * 32 = 96 readable fields, using 96 / 8 = 12 bytes.
@@ -66,7 +66,7 @@ void tx_cmd_biomech_r(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
 */
 
 void tx_cmd_biomech_w(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
-						uint16_t *len, uint32_t *flags, uint8_t lenFlags, uint8_t subcmd, Act_s* act);
+						uint16_t *len, uint32_t *flags, uint8_t lenFlags, uint8_t subcmd,  float desiredJointAngleDeg_f, float desiredJointK_f);
 
 struct _MultiPacketInfo_s;
 typedef struct _MultiPacketInfo_s MultiPacketInfo;

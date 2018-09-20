@@ -67,15 +67,15 @@ void init_flexsea_payload_ptr_biomech(void) {
 */
 
 void tx_cmd_biomech_r(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
-						uint16_t *len, uint8_t subcmd, Act_s* act) {
+						uint16_t *len, uint8_t subcmd, float desiredJointAngleDeg_f, float desiredJointK_f) {
 
 	uint16_t index = 0;
 	(*cmd) = CMD_BIOMECH;
 	(*cmdType) = CMD_READ;
 
 	shBuf[index++] = subcmd; //replace this with biomech subflags
-	SPLIT_16((int16_t) (act->tauDes*INT_SCALING), shBuf, &index);
-
+	SPLIT_16((int16_t) (desiredJointAngleDeg_f*INT_SCALING), shBuf, &index);
+	SPLIT_16((uint16_t) (desiredJointK_f*INT_SCALING), shBuf, &index);
 	(*len) = index;
 }
 
@@ -83,7 +83,7 @@ void tx_cmd_biomech_r(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
 */
 
 void tx_cmd_biomech_w(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
-						uint16_t *len, uint32_t *flags, uint8_t lenFlags, uint8_t subcmd, Act_s* act)
+						uint16_t *len, uint32_t *flags, uint8_t lenFlags, uint8_t subcmd,  float desiredJointAngleDeg_f, float desiredJointK_f)
 {
 
 	uint16_t index = 0;
@@ -100,7 +100,8 @@ void tx_cmd_biomech_w(uint8_t *shBuf, uint8_t *cmd, uint8_t *cmdType, \
 		SPLIT_32(flags[i++], shBuf, &index);
 
 	shBuf[index++] = subcmd;
-	SPLIT_16((int16_t) (act->tauDes*INT_SCALING), shBuf, &index);
+	SPLIT_16((int16_t) (desiredJointAngleDeg_f*INT_SCALING), shBuf, &index);
+	SPLIT_16((uint16_t) (desiredJointK_f*INT_SCALING), shBuf, &index);
 
 	(*len) = index;
 }
@@ -115,9 +116,17 @@ void rx_cmd_biomech_r(uint8_t *msgBuf, MultiPacketInfo *info, uint8_t *responseB
 
 	uint16_t index = 0;
 	uint8_t subcmd = msgBuf[index++];
-	uint16_t rawTau = REBUILD_UINT16(msgBuf, &index);
+//	uint16_t rawTau = REBUILD_UINT16(msgBuf, &index);
+	int16_t raw_desiredJointAngleDeg = (int16_t) REBUILD_UINT16(msgBuf, &index);
+	uint16_t raw_desiredJointK = REBUILD_UINT16(msgBuf, &index);
 
-	act1.tauDes = (*(int16_t*) &rawTau)/INT_SCALING;
+//	act1.tauDes = (*(float*) &rawTau)/INT_SCALING;
+	act1.desiredJointAngleDeg_f = (*(float*) &raw_desiredJointAngleDeg)/INT_SCALING;
+	act1.desiredJointK_f = (*(float*) &raw_desiredJointK)/INT_SCALING;
+
+	//populate return datafields (ints)
+	act1.desiredJointAngleDeg = raw_desiredJointAngleDeg;
+	act1.desiredJointK = raw_desiredJointK;
 
 	//set motors off by default
 	act1.motorOnFlag = 0;
@@ -175,9 +184,18 @@ void rx_cmd_biomech_w(uint8_t *msgBuf, MultiPacketInfo *info, uint8_t *responseB
 
  	index = FX_BITMAP_WIDTH_C > lenFlags ? index + lenFlags : index + FX_BITMAP_WIDTH_C; //move index past bitmap flags
 
- 	uint8_t subcmd = msgBuf[index++];
- 	uint16_t rawTau = REBUILD_UINT16(msgBuf, &index);
- 	act1.tauDes = (*(int16_t*) &rawTau)/INT_SCALING;
+	uint8_t subcmd = msgBuf[index++];
+//	uint16_t rawTau = REBUILD_UINT16(msgBuf, &index);
+	int16_t raw_desiredJointAngleDeg = (int16_t) REBUILD_UINT16(msgBuf, &index);
+	uint16_t raw_desiredJointK = REBUILD_UINT16(msgBuf, &index);
+
+//	act1.tauDes = (*(float*) &rawTau)/INT_SCALING;
+	act1.desiredJointAngleDeg_f = (*(float*) &raw_desiredJointAngleDeg)/INT_SCALING;
+	act1.desiredJointK_f = (*(float*) &raw_desiredJointK)/INT_SCALING;
+
+	//populate return datafields (ints)
+	act1.desiredJointAngleDeg = raw_desiredJointAngleDeg;
+	act1.desiredJointK = raw_desiredJointK;
 
 	act1.motorOnFlag = 1; //turn motor flag on or off. This is flipped to 0 in safetyLimit() if comms drop.
 	act1.commandTimer = 0;
