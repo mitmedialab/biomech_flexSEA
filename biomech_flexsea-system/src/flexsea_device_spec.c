@@ -34,7 +34,7 @@ FlexseaDeviceSpec fx_none_spec = {
 #ifdef DEPHY
 #define _rigid_numFields 36
 #elif (defined DLEG_MULTIPACKET)
-#define _rigid_numFields 34
+#define _rigid_numFields 35
 #else
 #define _rigid_numFields 28
 #endif // DEPHY
@@ -56,7 +56,7 @@ const char* _rigid_fieldlabels[_rigid_numFields] = 		{"board id", 			"devId",			
 
 #elif (defined DLEG_MULTIPACKET)
 														"intJointAngleDegrees", "intJointVelDegrees", "intJointTorque",				// INT ACTUATOR		3 31
-														"safetyFlag", "desiredJointAngleDeg", "desiredJointK"						// ACTUATOR			3 34
+														"safetyFlag", "desiredJointAngleDeg", "desiredJointK", "desiredJointB"		// ACTUATOR			4 35
 
 #endif
 };
@@ -78,7 +78,7 @@ const uint8_t _rigid_field_formats[_rigid_numFields] =	{FORMAT_8U, 	FORMAT_8U,		
 #elif (defined DLEG_MULTIPACKET)
 
 														FORMAT_16S, FORMAT_16S, FORMAT_16S,											// INT ACTUATOR		3 31
-														FORMAT_8S, FORMAT_16S, FORMAT_16U											// ACTUATOR			3 34
+														FORMAT_8S, FORMAT_16S, FORMAT_16U, FORMAT_16U								// ACTUATOR			4 35
 #endif
 };
 
@@ -112,7 +112,7 @@ uint8_t* _rigid_field_pointers[_rigid_numFields] =	{	(uint8_t*) &board_id,	(uint
 														PTR2(rigid1.ctrl.walkingState), PTR2(rigid1.ctrl.gaitState),								// CONTROLLER		2 36
 #elif (defined DLEG_MULTIPACKET)
 														PTR2(act1.intJointAngleDegrees), PTR2(act1.intJointVelDegrees), PTR2(act1.intJointTorque),	// INT ACTUATOR		3 31
-														PTR2(act1.safetyFlag), PTR2(act1.desiredJointAngleDeg), PTR2(act1.desiredJointK)			// ACTUATOR			3 34												// ACTUATOR			1 32
+														PTR2(act1.safetyFlag), PTR2(act1.desiredJointAngleDeg), PTR2(act1.desiredJointK) , PTR2(act1.desiredJointB)	// ACTUATOR			4 35												// ACTUATOR			1 32
 
 #endif
 };
