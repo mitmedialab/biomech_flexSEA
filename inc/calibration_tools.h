@@ -48,7 +48,7 @@ uint8_t isLegalCalibrationProcedure(uint8_t procedure);
 int8_t runtimeCalibration(void);
 int8_t mnFindPolesFSM(void);
 
-#define CALIB_FINDPOLES_DELAY	(126*410+4000)		//ms
+#define CALIB_FINDPOLES_DELAY	(126*360)		//ms
 
 #define CALIB_NOT		0
 #define CALIB_ONGOING	1
