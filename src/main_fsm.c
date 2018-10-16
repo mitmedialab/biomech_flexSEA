@@ -41,6 +41,7 @@
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg.h"
+#include "user-mn-MIT-EMG.h"
 #include "state_variables.h"
 #endif
 
@@ -80,9 +81,11 @@ void mainFSM1(void)
 void mainFSM2(void)
 {
 	i2c2_fsm();
-
 #if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
+
+
     if (isEnabledUpdateSensors) {
+
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
     }
 #endif
@@ -128,16 +131,20 @@ void mainFSM7(void)
 //Case 8: User functions
 void mainFSM8(void)
 {
+
 	//Calibration Tools or User FSM?:
 	int8_t s = runtimeCalibration();
 	if(s == CALIB_NOT)
 	{
+
+
 		user_fsm_2();
 	}
 	else if(s == CALIB_DONE)
 	{
 		reset_user_code();
 	}
+
 }
 
 //Case 9: User Interface
