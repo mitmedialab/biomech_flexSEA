@@ -25,20 +25,24 @@
 #include "flexsea.h"
 #include "flexsea_user_structs.h"
 #include "stm32f4xx_hal_i2c.h"
+#include "user-mn.h"
+#include "eeprom_user.h"
 
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
 
+uint16_t buttonClicked = 0;
 uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
 struct i2t_s i2tBatt = {.shift = 7, .leak = 6105, .limit = 76295, \
 						.nonLinThreshold = 125, .useNL = I2T_ENABLE_NON_LIN};
-
 uint16_t uvlo = 0;
 
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
+
+static void updateButtonClicked(uint16_t i);
 
 //****************************************************************************
 // Function(s)
@@ -82,14 +86,20 @@ void initRigidIO(void)
 //Decodes the bytes received over I2C
 void decodeRegulate(void)
 {
-	uint16_t index = MN_W_VB_MSB;
+	uint16_t index = 0;
+	uint8_t ctrl1 = 0, ctrl2 = 0;
 
+	ctrl1 = i2c_3_r_buf[index++];
+	ctrl2 = i2c_3_r_buf[index++];
 	rigid1.re.vb = REBUILD_UINT16(i2c_3_r_buf, &index);
 	rigid1.re.vg = REBUILD_UINT16(i2c_3_r_buf, &index);
 	rigid1.re.v5 = REBUILD_UINT16(i2c_3_r_buf, &index);
 	rigid1.re.current = (int16_t)REBUILD_UINT16(i2c_3_r_buf, &index);
 	rigid1.re.temp = i2c_3_r_buf[index++];
-	rigid1.re.status = i2c_3_r_buf[index++];
+	rigid1.re.status = i2c_3_r_buf[index++];	//This fills the lower byte.
+
+	(void)ctrl1;
+	updateButtonClicked(ctrl2);
 }
 
 //Prepares the I2C3 buffer for Re to read at boot:
@@ -160,3 +170,10 @@ void loadNvUVLO(void)
 // Private Function(s)
 //****************************************************************************
 
+static void updateButtonClicked(uint16_t i)
+{
+	if(i == 1)
+	{
+		buttonClicked++;
+	}
+}

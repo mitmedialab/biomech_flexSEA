@@ -38,6 +38,7 @@ extern struct i2t_s i2tBatt;
 void initRigidIO(void);
 void decodeRegulate(void);
 void setRegulateLimits(uint16_t vMin, struct i2t_s i2t);
+uint16_t getButtonClicked(void);
 void saveUVLO(uint16_t v);
 uint16_t getUVLO(void);
 void loadNvUVLO(void);

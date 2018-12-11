@@ -82,7 +82,6 @@ void reset_imu(void)
 
 	config = 0x01;
 	imu_write(IMU_PWR_MGMT_1, &config, 1);
-	//imu_write(IMU_SIGNAL_PATH_RESET, &config, 1);
 	HAL_Delay(200);
 
 	config = 0x00;
@@ -117,15 +116,15 @@ void IMUParseData(void)
 
 	//Assign:
 	imu.accel.x = (int16_t)tmp[0];
-    imu.accel.y = (int16_t)tmp[1];
-    imu.accel.z = (int16_t)tmp[2];
-    imu.gyro.x = (int16_t)tmp[4];
-    imu.gyro.y = (int16_t)tmp[5];
-    imu.gyro.z = (int16_t)tmp[6];
+	imu.accel.y = (int16_t)tmp[1];
+	imu.accel.z = (int16_t)tmp[2];
+	imu.gyro.x = (int16_t)tmp[4];
+	imu.gyro.y = (int16_t)tmp[5];
+	imu.gyro.z = (int16_t)tmp[6];
 
-	imu.magneto.x = (int16_t)tmp[7];
-	imu.magneto.y = (int16_t)tmp[8];
-	imu.magneto.z = (int16_t)tmp[9];
+//	imu.magneto.x = (int16_t)tmp[7];
+//	imu.magneto.y = (int16_t)tmp[8];
+//	imu.magneto.z = (int16_t)tmp[9];
 
 	//Copy to new structure: **ToDo unify
 	rigid1.mn.accel.x = imu.accel.x;
@@ -196,4 +195,5 @@ void imu_test_code_blocking(void)
 							I2C_MEMADD_SIZE_8BIT, i2c1_dma_rx_buf, 21);
 		HAL_Delay(1);
 	}
+	(void) retVal;
 }

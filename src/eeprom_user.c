@@ -25,6 +25,7 @@
 #include "flexsea_sys_def.h"
 #include "flexsea.h"
 #include "eeprom.h"
+#include "eeprom_user.h"
 #include "misc.h"
 
 //****************************************************************************
@@ -43,6 +44,8 @@ uint16_t nvUVLO = 0;
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
+
+static void testFillAngleMapRAM(void);
 
 //****************************************************************************
 // Public Function(s)
@@ -132,8 +135,10 @@ uint8_t writeAngleMapEEPROM(void)
 			return 0;
 		}
 
+		#ifdef USE_WATCHDOG
 		//EE_WriteVariable is slow: prevent a Watchdog reset:
 		independentWatchdog();
+		#endif
 	}
 
 	//Success
@@ -158,8 +163,10 @@ uint8_t readAngleMapEEPROM(void)
 			angleMap[i] = tmp;
 		}
 
+		#ifdef USE_WATCHDOG
 		//EE_ReadVariable is slow: prevent a Watchdog reset:
 		independentWatchdog();
+		#endif
 	}
 
 	//Success
@@ -235,24 +242,41 @@ uint16_t getNvUVLO(void)
 
 void testAngleMapEEPROMblocking(void)
 {
-	volatile uint8_t ret1 = 0, ret2 = 0;
+	uint8_t ret1 = 0, ret2 = 0;
 
 	while(1)
 	{
-		initAngleMapRAM();
+		ret2 = readAngleMapEEPROM();
+		HAL_Delay(500);
 
-		//ret1 = writeAngleMapEEPROM();
-		//HAL_Delay(2000);
-		(void)ret1;
+		testFillAngleMapRAM();
+		HAL_Delay(500);
+
+		ret1 = writeAngleMapEEPROM();
+		HAL_Delay(2000);
+		//(void)ret1;
 
 		ret2 = readAngleMapEEPROM();
 
 		HAL_Delay(2000);
 	}
+
+	(void) ret1;
+	(void) ret2;
 }
 
 //****************************************************************************
 // Private Function(s)
 //****************************************************************************
 
-//...
+//Fills the array with incrementing values
+static void testFillAngleMapRAM(void)
+{
+	uint8_t i = 0;
+	static uint16_t val = 0;
+
+	for(i = 0; i < EE_ANGLE_CNT; i++)
+	{
+		angleMap[i] = val++;
+	}
+}

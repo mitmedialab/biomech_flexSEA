@@ -51,6 +51,8 @@ int8_t runtimeCalibration(void)
 		calibrationFlags = 0;
 
 		writeUvloEEPROM(getUVLO());
+
+		retVal = CALIB_DONE;
 	}
 	else
 	{
