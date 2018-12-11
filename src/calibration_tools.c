@@ -4,6 +4,7 @@
 #include "flexsea_cmd_calibration.h"
 #include "calibration_tools.h"
 #include "user-mn.h"
+#include "eeprom_user.h"
 #include "rigid.h"
 
 uint8_t calibrationFlags = 0, calibrationNew = 0;
