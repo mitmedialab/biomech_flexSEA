@@ -30,12 +30,17 @@ inline uint8_t isUVLO()
 	return (calibrationFlags & CALIBRATION_UVLO);
 }
 
+inline uint8_t isI2T()
+{
+	return (calibrationFlags & CALIBRATION_I2T);
+}
+
 inline uint8_t isLegalCalibrationProcedure(uint8_t procedure)
 {
 	//ensure procedure is not out of bounds
 	//ensure procedure has only 1 bit true
 	return ((procedure == 1 || procedure % 2 == 0) && \
-		procedure <= CALIBRATION_UVLO);
+		procedure <= CALIBRATION_I2T);
 }
 
 int8_t runtimeCalibration(void)
@@ -52,6 +57,15 @@ int8_t runtimeCalibration(void)
 		calibrationFlags = 0;
 
 		writeUvloEEPROM(getUVLO());
+
+		retVal = CALIB_DONE;
+	}
+	else if(isI2T())
+	{
+		calibrationNew = 0;
+		calibrationFlags = 0;
+
+		//writeI2tEEPROM();	//ToDo
 
 		retVal = CALIB_DONE;
 	}

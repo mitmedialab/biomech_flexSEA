@@ -42,6 +42,7 @@ uint16_t getButtonClicked(void);
 void saveUVLO(uint16_t v);
 uint16_t getUVLO(void);
 void loadNvUVLO(void);
+void saveI2T(struct i2t_s i);
 
 //****************************************************************************
 // Definition(s):
