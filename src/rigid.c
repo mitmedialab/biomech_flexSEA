@@ -166,9 +166,10 @@ void loadNvUVLO(void)
 	#endif	//USE_EEPROM
 }
 
-void saveI2T(struct i2t_s i)
+void saveI2t(struct i2t_s newI2t)
 {
-
+	//ToDo include safety checks here
+	i2tBatt = newI2t;
 }
 
 //****************************************************************************
