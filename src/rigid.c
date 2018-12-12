@@ -34,8 +34,7 @@
 
 uint16_t buttonClicked = 0;
 uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
-struct i2t_s i2tBatt = {.shift = 7, .leak = 6105, .limit = 76295, \
-						.nonLinThreshold = 125, .useNL = I2T_ENABLE_NON_LIN};
+struct i2t_s i2tBatt;
 uint16_t uvlo = 0;
 
 //****************************************************************************
@@ -170,6 +169,74 @@ void saveI2t(struct i2t_s newI2t)
 {
 	//ToDo include safety checks here
 	i2tBatt = newI2t;
+}
+
+void loadNvI2t(void)
+{
+	#ifdef USE_EEPROM
+
+	uint8_t v = 0;
+	struct i2t_s tmpI2t;
+
+	//Get I2t from EEPROM (if it was ever written)
+	readI2tEEPROM();
+	v = getNvI2t(&tmpI2t);
+
+	//Invalid? Use defaults
+	if(v == 0){setDefaultI2t(&tmpI2t);}
+
+	//Save it
+	saveI2t(tmpI2t);
+
+	#else
+
+	setDefaultI2t(&tmpI2t);
+	saveI2t(tmpI2t);
+
+	#endif	//USE_EEPROM
+}
+
+//We store EEPROM in 16-bit values
+void packI2t(struct i2t_s val, uint16_t *b, uint8_t *index)
+{
+	//Note: we could pack 2x uint8 per uint16, but we decided to KISS for now
+
+	b[(*index)++] = val.shift;									//I2T_SHIFT
+	b[(*index)++] = val.leak;									//I2T_LEAK
+
+	b[(*index)++] = (uint16_t) ((val.limit >> 16) & 0xFFFF);	//I2T_LIMIT
+	b[(*index)++] = (uint16_t) (val.limit & 0xFFFF);
+
+	b[(*index)++] = val.nonLinThreshold;						//I2T_NON_LIN_THRESHOLD
+	b[(*index)++] = val.config;									//I2T_CONFIG
+}
+
+void unpackI2t(struct i2t_s *val, uint16_t *b, uint8_t *index)
+{
+	uint32_t tmpA = 0, tmpB = 0;
+
+	val->shift = b[(*index)++]; 								//I2T_SHIFT
+	val->leak = b[(*index)++];									//I2T_LEAK
+
+	tmpA = b[(*index)++];
+	tmpB = b[(*index)++];
+	val->limit = ((tmpA << 16) & 0xFFFF0000) + tmpB;			//I2T_LIMIT
+
+	val->nonLinThreshold = b[(*index)++];						//I2T_NON_LIN_THRESHOLD
+	val->config = b[(*index)++];								//I2T_CONFIG
+
+	//Compute other data:
+	val->warning = (8 * val->limit) / 10;
+}
+
+void setDefaultI2t(struct i2t_s *s)
+{
+	s->shift = 7;
+	s->leak = 6105;
+	s->limit = 76295;
+	s->nonLinThreshold = 125;
+	s->useNL = I2T_ENABLE_NON_LIN;
+	s->config = 128;
 }
 
 //****************************************************************************

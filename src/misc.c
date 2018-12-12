@@ -148,6 +148,7 @@ void init_peripherals(void)
 
 	//We start I2C3 in Transmit mode to send limits to Re:
 	loadNvUVLO();
+	loadNvI2t();
 	setRegulateLimits(getUVLO(), i2tBatt);
 	i2c3SlaveTransmitToMaster();
 

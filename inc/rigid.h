@@ -43,6 +43,10 @@ void saveUVLO(uint16_t v);
 uint16_t getUVLO(void);
 void loadNvUVLO(void);
 void saveI2t(struct i2t_s newI2t);
+void packI2t(struct i2t_s val, uint16_t *b, uint8_t *index);
+void unpackI2t(struct i2t_s *val, uint16_t *b, uint8_t *index);
+void loadNvI2t(void);
+void setDefaultI2t(struct i2t_s *s);
 
 //****************************************************************************
 // Definition(s):

@@ -23,6 +23,7 @@
 //****************************************************************************
 
 #include "main.h"
+#include "flexsea_global_structs.h"
 
 //****************************************************************************
 // Shared variable(s)
@@ -51,6 +52,11 @@ uint8_t writeUvloEEPROM(uint16_t newValue);
 uint8_t readUvloEEPROM(void);
 uint16_t getNvUVLO(void);
 
+//I2t:
+uint8_t writeI2tEEPROM(struct i2t_s i);
+uint8_t readI2tEEPROM(void);
+uint8_t getNvI2t(struct i2t_s *v);
+
 //****************************************************************************
 // Definition(s):
 //****************************************************************************
@@ -58,6 +64,7 @@ uint16_t getNvUVLO(void);
 #define EE_ANGLE_CNT					128
 #define EE_CYCLE_TESTER_CNT				3
 #define EE_NV_UVLO						2
+#define EE_NV_I2T_CNT					6
 //Total memory size (keep < 256):
 #define EE_CNT							(EE_ANGLE_CNT + EE_CYCLE_TESTER_CNT + EE_NV_UVLO)
 
@@ -65,8 +72,10 @@ uint16_t getNvUVLO(void);
 #define ANGLE_MAP_ADDR					0
 #define CYCLE_COUNT_ADDR				(EE_ANGLE_CNT + 1)
 #define NV_UVLO_ADDR					(CYCLE_COUNT_ADDR + EE_CYCLE_TESTER_CNT + 2)
+#define NV_I2T_ADDR						(NV_UVLO_ADDR + EE_NV_UVLO + 2)
 
 #define NV_UVLO_LOCK					12345
+#define NV_I2T_LOCK						17283
 
 #endif // INC_CYCLE_H
 

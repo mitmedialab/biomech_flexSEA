@@ -65,7 +65,7 @@ int8_t runtimeCalibration(void)
 		calibrationNew = 0;
 		calibrationFlags = 0;
 
-		//writeI2tEEPROM();	//ToDo
+		writeI2tEEPROM(i2tBatt);
 
 		retVal = CALIB_DONE;
 	}
