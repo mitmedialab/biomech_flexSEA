@@ -152,6 +152,11 @@ void init_peripherals(void)
 	setRegulateLimits(getUVLO(), i2tBatt);
 	i2c3SlaveTransmitToMaster();
 
+	 //Set the Battery limitations.
+	struct i2t_s i2tBatt = {.shift = 7, .leak = 19775, .limit = 1062500, \
+							.nonLinThreshold = 156, .useNL = I2T_ENABLE_NON_LIN    };
+	setRegulateLimits(19200, i2tBatt);    // set battery limit to 19.2V
+
 	//All RGB LEDs OFF
 	LEDR(0);
 	LEDG(0);

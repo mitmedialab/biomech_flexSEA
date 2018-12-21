@@ -122,7 +122,7 @@ void setDefaultI2t(struct i2t_s *s);
 //UVLO:
 #define MIN_UVLO					15000
 #define MAX_UVLO					50000
-#define DEFAULT_UVLO				36000
+#define DEFAULT_UVLO                19200    // for use with a 6S, 22.2V nominal system
 
 #endif // INC_RIGID_H
 
