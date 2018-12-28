@@ -587,3 +587,47 @@ float windowSmoothAxial(float val) {
 
 	return average;
 }
+
+void setMotorTorqueOpenLoop(struct act_s *actx, float tau_des)
+{
+	static float N = 1;					// moment arm [m]
+	static float tau_meas = 0;	//joint torque reflected to motor.
+	static int32_t I = 0;								// motor current signal
+
+	N = actx->linkageMomentArm * nScrew;
+
+	actx->tauDes = tau_des;				// save in case need to modify in safetyFailure()
+
+	// todo: better fidelity may be had if we modeled N_ETA as a function of torque, long term goal, if necessary
+	tau_meas =  actx->jointTorque / N;	// measured torque reflected to motor [Nm]
+	tau_des = tau_des / N;				// scale output torque back to the motor [Nm].
+
+	//If we're within limits, scale torque to current.
+	if (!isAngleLimit) {
+		I = 1/MOT_KT * (tau_des) * currentScalar;
+
+	//joint velocity must not be 0 (could be symptom of joint position signal outage)
+	} else if (actx->jointVel != 0 && !startedOverLimit) {
+		I = calcRestoringCurrent(actx, N);
+	//if we started beyond soft limits after finding poles, or joint position is out
+	} else {
+		I = 0;
+	}
+
+	//Saturate I for our current operational limits -- limit can be reduced by safetyShutoff() due to heating
+	if (I > currentOpLimit)
+	{
+		I = currentOpLimit;
+	} else if (I < -currentOpLimit)
+	{
+		I = -currentOpLimit;
+	}
+
+	actx->desiredCurrent = (int32_t) I; 	// demanded mA
+	setMotorCurrent(actx->desiredCurrent);	// send current command to comm buffer to Execute
+
+	//variables used in cmd-rigid offset 5
+	rigid1.mn.userVar[5] = tau_meas*1000;
+	rigid1.mn.userVar[6] = tau_des*1000;
+
+}
