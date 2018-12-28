@@ -142,7 +142,7 @@ void MIT_DLeg_fsm_1(void)
 
 			    	runFlatGroundFSM(&act1);
 
-			    	// Check that torques are within safety range.
+			    	// Check that torques are within specified safety range.
 			    	if (act1.tauDes > act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT ) {
 			    		act1.tauDes = act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT;
 			    	} else if (act1.tauDes < -act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT ) {
