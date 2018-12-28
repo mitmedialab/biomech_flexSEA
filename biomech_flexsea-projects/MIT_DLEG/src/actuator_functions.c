@@ -624,7 +624,7 @@ void setMotorTorqueOpenLoop(struct act_s *actx, float tau_des)
 	}
 
 	actx->desiredCurrent = (int32_t) I; 	// demanded mA
-	setMotorCurrent(actx->desiredCurrent);	// send current command to comm buffer to Execute
+	setMotorCurrent(actx->desiredCurrent, 0);	// send current command to comm buffer to Execute
 
 	//variables used in cmd-rigid offset 5
 	rigid1.mn.userVar[5] = tau_meas*1000;

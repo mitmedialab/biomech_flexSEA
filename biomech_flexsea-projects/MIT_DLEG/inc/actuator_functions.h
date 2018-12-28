@@ -60,6 +60,8 @@ float biomCalcImpedance(float k1, float b, float theta_set); 	// returns a desir
 void  setMotorTorque(struct act_s *actx, float tor_d);
 void  packRigidVars(struct act_s *actx);
 
+void  setMotorTorqueOpenLoop(struct act_s *actx, float tau_des);
+
 //Smoothing
 float windowSmoothJoint(int32_t val);
 float windowSmoothAxial(float val);
