@@ -39,6 +39,13 @@
 #include "misc.h"
 #include "calibration_tools.h"
 
+#if ACTIVE_PROJECT == PROJECT_MIT_DLEG
+#include "user-mn-MIT-DLeg.h"
+#include "walking_state_machine.h"
+#include "actuator_functions.h"
+#endif
+
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -95,6 +102,11 @@ void mainFSM3(void)
 void mainFSM4(void)
 {
 	user_fsm_1();
+
+	if (isEnabledUpdateSensors) {
+    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
+    }
+
 }
 
 //Case 5:
