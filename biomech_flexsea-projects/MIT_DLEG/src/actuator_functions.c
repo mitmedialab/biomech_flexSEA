@@ -149,15 +149,20 @@ void updateSensorValues(struct act_s *actx)
 
 	actx->jointAngleDegrees = actx->jointAngle * DEG_PER_RAD;
 	actx->jointVelDegrees = actx->jointVel * DEG_PER_RAD;
+
 	actx->linkageMomentArm = getLinkageMomentArm(actx->jointAngle);
-	actx->axialForce = 0.8*actx->axialForce + 0.2*getAxialForce();
+
+//	actx->axialForce = 0.8*actx->axialForce + 0.2*getAxialForce();	// Filter signal
+	actx->axialForce = getAxialForce();
+	actx->axialForce = windowAveraging(actx->axialForce);	// Filter signal
 
 	actx->jointTorque = getJointTorque(actx);
 
 	updateJointTorqueRate(actx);
+
 	//actx->jointTorqueRate = windowJointTorqueRate(actx);
 
-	actx->motorVel =  *rigid1.ex.enc_ang_vel / 16.384 * angleUnit;	// rad/s
+	actx->motorVel =  *rigid1.ex.enc_ang_vel / 16.384 * ANG_UNIT;	// rad/s TODO: check on motor encoder CPR, may not actually be 16384
 	actx->motorAcc = rigid1.ex.mot_acc;	// rad/s/s
 
 	actx->regTemp = rigid1.re.temp;
@@ -198,22 +203,28 @@ int16_t getMotorTempSensor(void)
 //float* getJointAngleKinematic( void )
 void getJointAngleKinematic(struct act_s *actx)
 {
-	static int32_t jointAngleCnts = 0;
-	static int32_t jointAngleCntsAbsolute = 0;
 	static float last_jointVel = 0;
-	static float jointAngleAbsolute = 0;
+	static float jointAngleRad = 0;
 
 	//ANGLE
-	//Configuration orientation
-	jointAngleCnts = JOINT_ANGLE_DIR * ( jointZero + JOINT_ENC_DIR * (*(rigid1.ex.joint_ang)) );
+	jointAngleRad = JOINT_ANGLE_DIR * ( jointZero + JOINT_ENC_DIR * ( (float) (*(rigid1.ex.joint_ang)) ) )  * RAD_PER_CNT; // (angleUnit)/JOINT_CPR;
 
+	// filter joint angle? TODO: maybe remove this. or use windowAveraging
+	actx->jointAngle = 0.8*actx->jointAngle + 0.2*jointAngleRad;
+
+	//VELOCITY
+	actx->jointVel = 0.8*actx->jointVel + 0.2*( (actx->jointAngle - actx->lastJointAngle) * SECONDS);
+
+	//ACCEL  -- todo: check to see if this works
+	actx->jointAcc = 0.8 * actx->jointAcc + 0.2*( (actx->jointVel - last_jointVel ) * SECONDS);
+
+	// SAFETY CHECKS
 	//if we start over soft limits after findPoles(), only turn on motor after getting within limits
-	if (startedOverLimit && jointAngleCnts*(angleUnit)/JOINT_CPR < jointMaxSoft && jointAngleCnts*(angleUnit)/JOINT_CPR > jointMinSoft) {
+	if (startedOverLimit && jointAngleRad < jointMaxSoft && jointAngleRad > jointMinSoft) {
 		startedOverLimit = 0;
 	}
 
-	actx->jointAngle = 0.8*actx->jointAngle + 0.2*jointAngleCnts  * (angleUnit)/JOINT_CPR;
-
+	// Check that we're within specified units, else throw a flag.
 	if (actx->jointAngle > JOINT_MAX_SOFT || actx->jointAngle < JOINT_MIN_SOFT) {
 		isSafetyFlag = SAFETY_ANGLE;
 		isAngleLimit = 1;
@@ -221,22 +232,9 @@ void getJointAngleKinematic(struct act_s *actx)
 		isAngleLimit = 0;
 	}
 
-	//Absolute orientation to evaluate against soft-limits
-	jointAngleCntsAbsolute = JOINT_ANGLE_DIR * ( jointZeroAbs + JOINT_ENC_DIR * (*(rigid1.ex.joint_ang)) );
-	jointAngleAbsolute = jointAngleCnts  * (angleUnit)/JOINT_CPR;
-
-	//VELOCITY
-	actx->jointVel = 0.8*actx->jointVel + 0.2*(1000.0*(actx->jointAngle - actx->lastJointAngle));
-
-
-	//ACCEL  -- todo: check to see if this works
-	actx->jointAcc = (( actx->jointVel - last_jointVel )) * (angleUnit)/JOINT_CPR * SECONDS;
-
+	// Save values for next time through.
 	actx->lastJointAngle = actx->jointAngle;
-	//last_jointAngle = joint[0];
-	//last_jointVel = joint[1];
 	last_jointVel = actx->jointVel;
-
 
 }
 
@@ -271,7 +269,9 @@ float getAxialForce(void)
 		case 0:
 
 			axialForce =  FORCE_DIR * (strainReading - tareOffset) * forcePerTick;
-//			axialForce = windowSmoothAxial(axialForce);
+
+			// Filter the signal
+//			axialForce = windowAveraging(axialForce, 5);
 
 			break;
 
@@ -353,9 +353,32 @@ float windowJointTorqueRate(struct act_s *actx) {
 
 }
 
+
+/*
+ *  Filter using moving average.  This one works well for small window sizes
+ *  larger windowsizes gets better accuracy with windowAverageingLarge
+ *  uses WINDOW_SIZE
+ */
+float windowAveraging(float currentVal) {
+
+	static int16_t index = -1;
+	static float window[WINDOW_SIZE];
+	static float average = 0;
+
+	index = (index + 1) % WINDOW_SIZE;
+	average = average - window[index]/WINDOW_SIZE;
+	window[index] = currentVal;
+	average = average + window[index]/WINDOW_SIZE;
+
+	return average;
+}
+
+
+
 void updateJointTorqueRate(struct act_s *actx){
 
-    actx->jointTorqueRate = 0.8 * actx->jointTorqueRate + 0.2 *(1000.0*(actx->jointTorque - actx->lastJointTorque));
+	//TODO: consider switching to windowAveraging
+    actx->jointTorqueRate = 0.8 * actx->jointTorqueRate + 0.2 *( SECONDS * (actx->jointTorque - actx->lastJointTorque) );
     actx->lastJointTorque = actx->jointTorque;
 }
 
@@ -447,22 +470,14 @@ float calcRestoringCurrent(struct act_s *actx, float N) {
 
 		angleDiff = actx->jointAngleDegrees - jointMinSoftDeg;
 		angleDiff = pow(angleDiff,4);
-
-//		if (abs(angleDiff) < 2) {
-//			tauDes = -k*angleDiff - b*actx->jointVelDegrees + 2;
-//		} else {
-			tauRestoring = -k*angleDiff - b*actx->jointVelDegrees;
-//		}
+		tauRestoring = -k*angleDiff - b*actx->jointVelDegrees;
 
 	} else if (actx->jointAngleDegrees - jointMaxSoftDeg > 0) {
 
 		angleDiff = actx->jointAngleDegrees - jointMaxSoftDeg;
 		angleDiff = pow(angleDiff,4);
-//		if (abs(angleDiff) < 2) {
-//			tauDes = -k*angleDiff - b*actx->jointVelDegrees - 2;
-//		} else {
-			tauRestoring = -k*angleDiff - b*actx->jointVelDegrees;
-//		}
+		tauRestoring = -k*angleDiff - b*actx->jointVelDegrees;
+
 	}
 
 	return tauRestoring;
@@ -590,44 +605,52 @@ float windowSmoothAxial(float val) {
 
 void setMotorTorqueOpenLoop(struct act_s *actx, float tau_des)
 {
-	static float N = 1;					// moment arm [m]
+	static float N = 1;					// total gear ratio
 	static float tau_meas = 0;	//joint torque reflected to motor.
 	static int32_t I = 0;								// motor current signal
 
-	N = actx->linkageMomentArm * nScrew;
+	// Step 1: Convert desired joint torque to desired motor Torque
+
+	if (tau_des > ABS_TORQUE_LIMIT_INIT) {
+		tau_des = ABS_TORQUE_LIMIT_INIT;
+	} else if (tau_des < -ABS_TORQUE_LIMIT_INIT) {
+		tau_des = -ABS_TORQUE_LIMIT_INIT;
+	}
 
 	actx->tauDes = tau_des;				// save in case need to modify in safetyFailure()
 
-	// todo: better fidelity may be had if we modeled N_ETA as a function of torque, long term goal, if necessary
+	// Step 1: evaluate overall gear ratio
+	N = actx->linkageMomentArm * N_SCREW;
+
+	tau_des = tau_des / (N * N_ETA);				// scale output torque back to the motor [Nm].
 	tau_meas =  actx->jointTorque / N;	// measured torque reflected to motor [Nm]
-	tau_des = tau_des / N;				// scale output torque back to the motor [Nm].
 
-	//If we're within limits, scale torque to current.
+
+	//If we're within joint limits, scale torque to current.
 	if (!isAngleLimit) {
-		I = 1/MOT_KT * (tau_des) * currentScalar;
-
-	//joint velocity must not be 0 (could be symptom of joint position signal outage)
-	} else if (actx->jointVel != 0 && !startedOverLimit) {
-		I = calcRestoringCurrent(actx, N);
-	//if we started beyond soft limits after finding poles, or joint position is out
+		I = 1/MOT_KT * (tau_des) * CURRENT_SCALAR_INIT;
 	} else {
 		I = 0;
 	}
 
 	//Saturate I for our current operational limits -- limit can be reduced by safetyShutoff() due to heating
-	if (I > currentOpLimit)
+	if (I > CURRENT_LIMIT_INIT)
 	{
-		I = currentOpLimit;
-	} else if (I < -currentOpLimit)
+		I = CURRENT_LIMIT_INIT;
+	} else if (I < -CURRENT_LIMIT_INIT)
 	{
-		I = -currentOpLimit;
+		I = -CURRENT_LIMIT_INIT;
 	}
 
 	actx->desiredCurrent = (int32_t) I; 	// demanded mA
 	setMotorCurrent(actx->desiredCurrent, 0);	// send current command to comm buffer to Execute
 
-	//variables used in cmd-rigid offset 5
-	rigid1.mn.userVar[5] = tau_meas*1000;
-	rigid1.mn.userVar[6] = tau_des*1000;
+}
 
+/*
+ * Compute where we are in frequency sweep
+ * omega [rad/s], t [seconds]
+ */
+float frequencySweep(float omega, uint32_t t){
+	return sinf(omega * ( (float) t / SECONDS ) );
 }

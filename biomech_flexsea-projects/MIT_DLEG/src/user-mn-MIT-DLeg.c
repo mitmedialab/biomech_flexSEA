@@ -49,7 +49,9 @@
 // Variable(s)
 //****************************************************************************
 
-
+float freq_input = 0;
+float freq_rad = 0;
+float torq_input = 0;
 
 
 //****************************************************************************
@@ -63,15 +65,15 @@ void init_MIT_DLeg(void) {
 
 }
 
-//Call this function in one of the main while time slots.
+//Call this function in one of the main while fsm_time slots.
 void MIT_DLeg_fsm_1(void)
 {
 	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 
-    static uint32_t time = 0;
+    static uint32_t fsm_time = 0;
 
-    //Increment time (1 tick = 1ms nominally; need to confirm)
-    time++;
+    //Increment fsm_time (1 tick = 1ms nominally; need to confirm)
+    fsm_time++;
 
     //begin main FSM
 	switch(fsm1State)
@@ -79,9 +81,9 @@ void MIT_DLeg_fsm_1(void)
 		case -2:
 			stateMachine.current_state = STATE_IDLE;
 			//Same power-on delay as FSM2:
-			if(time >= AP_FSM2_POWER_ON_DELAY ) {
+			if(fsm_time >= AP_FSM2_POWER_ON_DELAY ) {
 				fsm1State = -1;
-				time = 0;
+				fsm_time = 0;
 			}
 
 			break;
@@ -92,7 +94,7 @@ void MIT_DLeg_fsm_1(void)
 			if(findPoles()) {
 				mit_init_current_controller();		//initialize Current Controller with gains
 				fsm1State = 0;
-				time = 0;
+				fsm_time = 0;
 			}
 			//for testing
 //			fsm1State = 0;
@@ -115,7 +117,7 @@ void MIT_DLeg_fsm_1(void)
 			act1.safetyTorqueScalar = 1.0;
 
 			fsm1State = 1;
-			time = 0;
+			fsm_time = 0;
 
 			break;
 
@@ -142,6 +144,16 @@ void MIT_DLeg_fsm_1(void)
 
 //			    	runFlatGroundFSM(&act1);
 
+
+
+
+
+//			    	act1.tauDes = biomCalcImpedance(user_data_1.w[0]/100., user_data_1.w[1]/100., user_data_1.w[2]/100.);
+//			    	act1.tauDes = biomCalcImpedance(.5, .1, 0);
+			    	freq_rad = RAD_PER_DEG * freq_input;
+			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  fsm_time  );
+
+
 			    	// Check that torques are within specified safety range.
 			    	if (act1.tauDes > act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT ) {
 			    		act1.tauDes = act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT;
@@ -149,12 +161,9 @@ void MIT_DLeg_fsm_1(void)
 			    		act1.tauDes = - act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT;
 			    	}
 
+//			    	setMotorTorqueOpenLoop(&act1, act1.tauDes);
 
-
-//			    	act1.tauDes = biomCalcImpedance(user_data_1.w[0]/100., user_data_1.w[1]/100., user_data_1.w[2]/100.);
-//			    	act1.tauDes = biomCalcImpedance(.5, .1, 0);
-
-			    	setMotorTorque(&act1, act1.tauDes);
+//			    	setMotorTorque(&act1, act1.tauDes);
 
 			    	/* Output variables live here. Use this as the main reference
 			    	 * NOTE: the communication Offsets are defined in /Rigid/src/cmd-rigid.c
@@ -208,48 +217,55 @@ void MIT_DLeg_fsm_2(void)
 void updateUserWrites(Act_s *actx, WalkParams *wParams){
 
 	actx->safetyTorqueScalar 				= ( (float) user_data_1.w[0] ) /100.0;	// Reduce overall torque limit.
-	wParams->virtualHardstopEngagementAngle = ( (float) user_data_1.w[1] ) /100.0;	// [Deg]
-	wParams->virtualHardstopK 				= ( (float) user_data_1.w[2] ) /100.0;	// [Nm/deg]
-	wParams->lspEngagementTorque 			= ( (float) user_data_1.w[3] ) /100.0; 	// [Nm] Late stance power, torque threshhold
-	wParams->lstPGDelTics 					= ( (float) user_data_1.w[4] ); 		// ramping rate
-	lstPowerGains.k1						= ( (float) user_data_1.w[5] ) / 100.0;	// [Nm/deg]
-	lstPowerGains.thetaDes 					= ( (float) user_data_1.w[6] ) / 100.0;	// [Deg]
-	lstPowerGains.b		 					= ( (float) user_data_1.w[7] ) / 100.0;	// [Nm/s]
-	estGains.k1			 					= ( (float) user_data_1.w[8] ) / 100.0;	// [Nm/deg]
-	estGains.b			 					= ( (float) user_data_1.w[9] ) / 100.0;	// [Nm/s]
+	freq_input				 				= ( (float) user_data_1.w[1] ) /100.0;	// Reduce overall torque limit.
+	torq_input				 				= ( (float) user_data_1.w[2] ) /100.0;	// Reduce overall torque limit.
+//	wParams->virtualHardstopEngagementAngle = ( (float) user_data_1.w[1] ) /100.0;	// [Deg]
+//	wParams->virtualHardstopK 				= ( (float) user_data_1.w[2] ) /100.0;	// [Nm/deg]
+//	wParams->lspEngagementTorque 			= ( (float) user_data_1.w[3] ) /100.0; 	// [Nm] Late stance power, torque threshhold
+//	wParams->lstPGDelTics 					= ( (float) user_data_1.w[4] ); 		// ramping rate
+//	lstPowerGains.k1						= ( (float) user_data_1.w[5] ) / 100.0;	// [Nm/deg]
+//	lstPowerGains.thetaDes 					= ( (float) user_data_1.w[6] ) / 100.0;	// [Deg]
+//	lstPowerGains.b		 					= ( (float) user_data_1.w[7] ) / 100.0;	// [Nm/s]
+//	estGains.k1			 					= ( (float) user_data_1.w[8] ) / 100.0;	// [Nm/deg]
+//	estGains.b			 					= ( (float) user_data_1.w[9] ) / 100.0;	// [Nm/s]
 
 
 }
 
 void initializeUserWrites(Act_s *actx, WalkParams *wParams){
 
-	wParams->earlyStanceK0 = 6.23;
-	wParams->earlyStanceKF = 0.1;
-	wParams->earlyStanceDecayConstant = EARLYSTANCE_DECAY_CONSTANT;
+//	wParams->earlyStanceK0 = 6.23;
+//	wParams->earlyStanceKF = 0.1;
+//	wParams->earlyStanceDecayConstant = EARLYSTANCE_DECAY_CONSTANT;
 
 	actx->safetyTorqueScalar 				= 1.0; 	//user_data_1.w[0] = 100
-	wParams->virtualHardstopEngagementAngle = 0.0;	//user_data_1.w[1] = 0	  [deg]
-	wParams->virtualHardstopK				= 3.5;	//user_data_1.w[2] = 350 [Nm/deg] NOTE: Everett liked this high, Others prefer more like 6.0
-	wParams->lspEngagementTorque 			= 74.0;	//user_data_1.w[3] = 7400 [Nm]
-	wParams->lstPGDelTics 					= 70.0;	//user_data_1.w[4] = 30
-	lstPowerGains.k1						= 4.0;	//user_data_1.w[5] = 400 [Nm/deg]
-	lstPowerGains.thetaDes 					= 18;	//user_data_1.w[6] = 1800 [Deg]
-	lstPowerGains.b		 					= 0.20;	//user_data_1.w[7] = 30   [Nm/s]
-	estGains.k1			 					= 1.50;	//user_data_1.w[8] = 150  [Nm/deg]
-	estGains.b			 					= 0.30;	//user_data_1.w[9] = 32  [Nm/s]
+	freq_input 								= 0.0;
+	torq_input								= 0.0;
+//	wParams->virtualHardstopEngagementAngle = 0.0;	//user_data_1.w[1] = 0	  [deg]
+//	wParams->virtualHardstopK				= 3.5;	//user_data_1.w[2] = 350 [Nm/deg] NOTE: Everett liked this high, Others prefer more like 6.0
+//	wParams->lspEngagementTorque 			= 74.0;	//user_data_1.w[3] = 7400 [Nm]
+//	wParams->lstPGDelTics 					= 70.0;	//user_data_1.w[4] = 30
+//	lstPowerGains.k1						= 4.0;	//user_data_1.w[5] = 400 [Nm/deg]
+//	lstPowerGains.thetaDes 					= 18;	//user_data_1.w[6] = 1800 [Deg]
+//	lstPowerGains.b		 					= 0.20;	//user_data_1.w[7] = 30   [Nm/s]
+//	estGains.k1			 					= 1.50;	//user_data_1.w[8] = 150  [Nm/deg]
+//	estGains.b			 					= 0.30;	//user_data_1.w[9] = 32  [Nm/s]
 
 	//USER WRITE INITIALIZATION GOES HERE//////////////
 
-	user_data_1.w[0] =  (int32_t) ( actx->safetyTorqueScalar*100 ); 	// Hardstop Engagement angle
-	user_data_1.w[1] =  (int32_t) ( wParams->virtualHardstopEngagementAngle*100 ); 	// Hardstop Engagement angle
-	user_data_1.w[2] =  (int32_t) ( wParams->virtualHardstopK*100 ); 				// Hardstop spring constant
-	user_data_1.w[3] =  (int32_t) ( wParams->lspEngagementTorque*100 ); 			// Late stance power, torque threshhold
-	user_data_1.w[4] =  (int32_t) ( wParams->lstPGDelTics ); 		// ramping rate
-	user_data_1.w[5] =  (int32_t) ( lstPowerGains.k1 * 100 );		// 4.5 x 100
-	user_data_1.w[6] =  (int32_t) ( lstPowerGains.thetaDes * 100 ); // 14 x 100
-	user_data_1.w[7] =  (int32_t) ( lstPowerGains.b * 100 ); // 0.1 x 100
-	user_data_1.w[8] =  (int32_t) ( estGains.k1 * 100 ); // 0.1 x 100
-	user_data_1.w[9] =  (int32_t) ( estGains.b * 100 ); // 0.1 x 100
+	user_data_1.w[0] =  (int32_t) ( actx->safetyTorqueScalar*100 ); 	// torque scalar
+	user_data_1.w[1] =  (int32_t) ( freq_input*100 ); 	// frequency set point for freq test
+	user_data_1.w[2] =  (int32_t) ( torq_input*100 ); 	// torque input for freq test
+
+	//	user_data_1.w[1] =  (int32_t) ( wParams->virtualHardstopEngagementAngle*100 ); 	// Hardstop Engagement angle
+//	user_data_1.w[2] =  (int32_t) ( wParams->virtualHardstopK*100 ); 				// Hardstop spring constant
+//	user_data_1.w[3] =  (int32_t) ( wParams->lspEngagementTorque*100 ); 			// Late stance power, torque threshhold
+//	user_data_1.w[4] =  (int32_t) ( wParams->lstPGDelTics ); 		// ramping rate
+//	user_data_1.w[5] =  (int32_t) ( lstPowerGains.k1 * 100 );		// 4.5 x 100
+//	user_data_1.w[6] =  (int32_t) ( lstPowerGains.thetaDes * 100 ); // 14 x 100
+//	user_data_1.w[7] =  (int32_t) ( lstPowerGains.b * 100 ); // 0.1 x 100
+//	user_data_1.w[8] =  (int32_t) ( estGains.k1 * 100 ); // 0.1 x 100
+//	user_data_1.w[9] =  (int32_t) ( estGains.b * 100 ); // 0.1 x 100
 
 	///////////////////////////////////////////////////
 

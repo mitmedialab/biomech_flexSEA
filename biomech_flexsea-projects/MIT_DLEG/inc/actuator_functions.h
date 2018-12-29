@@ -61,7 +61,12 @@ void  setMotorTorque(struct act_s *actx, float tor_d);
 void  packRigidVars(struct act_s *actx);
 
 void  setMotorTorqueOpenLoop(struct act_s *actx, float tau_des);
+float frequencySweep(float omega, uint32_t t);
+
 
 //Smoothing
 float windowSmoothJoint(int32_t val);
 float windowSmoothAxial(float val);
+float windowAveraging(float currentVal);
+
+#define WINDOW_SIZE 5

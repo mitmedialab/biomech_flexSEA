@@ -124,8 +124,6 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 #define JOINT_ZERO_OFFSET 	20		// [deg] Joint Angle offset, CW rotation, based on Setup, ie. TEDtalk flexfoot angle = 20, fittings, etc.
 #define JOINT_ENC_DIR 		-1		// Encoder orientation. CW = 1 (knee orientation), CCW = -1
 #define JOINT_ANGLE_DIR 	1		// Joint angle direction. RHR convention is Ankle: Dorsiflexion (-), Plantarflexion (+) with value == 1
-#define JOINT_CPR 			16384	// Counts per revolution (todo: is it (2^14 - 1)?)
-#define JOINT_CPDEG			45.5111	// Counts per degree (JOINT_CPR/360)
 #define JOINT_HS_MIN		1365	// == ( 30 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in dorsiflexion)
 #define JOINT_HS_MAX		4096	// ==( 90 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in plantarflexion)
 #define JOINT_MIN_ABS		11644	// Absolute encoder at MIN (Max dorsiflexion, 30Deg)
@@ -152,7 +150,7 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 #define TORQ_KD_INIT			2. // good for step response, for zero torque 15 is good
 
 // Motor Parameters
-#define MOT_KT 			0.055	// Phase Kt value = linearKt/(3^0.5)
+#define MOT_KT 			0.0548483	// Phase Kt value = linearKt/(3^0.5)
 #define MOT_L			0.068	// mH
 #define MOT_J			0		//0.000322951	// rotor inertia, [kgm^2]
 #define MOT_B			0.0		// damping term for motor and screw combined, drag from rolling elements
@@ -174,8 +172,6 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 #define JOINT_ZERO_OFFSET 	20		// [deg] Joint Angle offset, CW rotation, based on Setup, ie. TEDtalk flexfoot angle = 20, fittings, etc.
 #define JOINT_ENC_DIR 		-1		// Encoder orientation. CW = 1 (knee orientation), CCW = -1
 #define JOINT_ANGLE_DIR 	1		// Joint angle direction. RHR convention is Ankle: Dorsiflexion (-), Plantarflexion (+) with value == 1
-#define JOINT_CPR 			16384	// Counts per revolution (todo: is it (2^14 - 1)?)
-#define JOINT_CPDEG			45.5111	// Counts per degree (JOINT_CPR/360)
 #define JOINT_HS_MIN		1365	// == ( 30 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in dorsiflexion)
 #define JOINT_HS_MAX		4096	// ==( 90 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in plantarflexion)
 #define JOINT_MIN_ABS		14550 //15020		// Absolute encoder at MIN (Max dorsiflexion, 30Deg)
@@ -203,7 +199,7 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 
 
 // Motor Parameters
-#define MOT_KT 			0.055	// Phase Kt value = linearKt/(3^0.5)
+#define MOT_KT 			0.0548483	// Phase Kt value = linearKt/(3^0.5)
 #define MOT_L			0.068	// mH
 #define MOT_J			0//0.000120 //0.000322951		//0.000322951	// rotor inertia, [kgm^2]
 #define MOT_B			0//0.000200 //0.000131		// damping term for motor and screw combined, drag from rolling elements
@@ -225,8 +221,6 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 #define JOINT_ZERO_OFFSET 	20		// [deg] Joint Angle offset, CW rotation, based on Setup, ie. TEDtalk flexfoot angle = 20, fittings, etc.
 #define JOINT_ENC_DIR 		-1		// Encoder orientation. CW = 1 (knee orientation), CCW = -1
 #define JOINT_ANGLE_DIR 	1		// Joint angle direction. RHR convention is Ankle: Dorsiflexion (-), Plantarflexion (+) with value == 1
-#define JOINT_CPR 			16384	// Counts per revolution (todo: is it (2^14 - 1)?)
-#define JOINT_CPDEG			45.5111	// Counts per degree (JOINT_CPR/360)
 #define JOINT_HS_MIN		1365	// == ( 30 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in dorsiflexion)
 #define JOINT_HS_MAX		4096	// ==( 90 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in plantarflexion)
 #define JOINT_MIN_ABS		16475		// Absolute encoder at MIN (Max dorsiflexion, 30Deg)
@@ -254,7 +248,7 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 
 
 // Motor Parameters
-#define MOT_KT 			0.055	// Phase Kt value = linearKt/(3^0.5)
+#define MOT_KT 			0.0548483	// Phase Kt value = linearKt/(3^0.5)
 #define MOT_L			0.068	// mH
 #define MOT_J			0//0.000120 //0.000322951		//0.000322951	// rotor inertia, [kgm^2]
 #define MOT_B			0//0.000200 //0.000131		// damping term for motor and screw combined, drag from rolling elements
@@ -275,8 +269,6 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 #define JOINT_ZERO_OFFSET 	20		// [deg] Joint Angle offset, CW rotation, based on Setup, ie. TEDtalk flexfoot angle = 20, fittings, etc.
 #define JOINT_ENC_DIR 		-1		// Encoder orientation. CW = 1 (knee orientation), CCW = -1
 #define JOINT_ANGLE_DIR 	1		// Joint angle direction. RHR convention is Ankle: Dorsiflexion (-), Plantarflexion (+) with value == 1
-#define JOINT_CPR 			16384	// Counts per revolution (todo: is it (2^14 - 1)?)
-#define JOINT_CPDEG			45.5111	// Counts per degree (JOINT_CPR/360)
 #define JOINT_HS_MIN		1365	// == ( 30 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in dorsiflexion)
 #define JOINT_HS_MAX		4096	// ==( 90 * JOINT_CPR/360 )		// Joint hard stop angle [deg] in plantarflexion)
 #define JOINT_MIN_ABS		14569		// Absolute encoder at MIN (Max dorsiflexion, 30Deg)
@@ -304,7 +296,7 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 
 
 // Motor Parameters
-#define MOT_KT 			0.055	// Phase Kt value = linearKt/(3^0.5)
+#define MOT_KT 			0.0548483	// Phase Kt value = linearKt/(3^0.5)
 #define MOT_L			0.068	// mH
 #define MOT_J			0//0.000120 //0.000322951		//0.000322951	// rotor inertia, [kgm^2]
 #define MOT_B			0//0.000200 //0.000131		// damping term for motor and screw combined, drag from rolling elements
@@ -353,7 +345,10 @@ enum {
 // System constants
 #define SECONDS					1000		// Scale seconds to ms
 #define CURRENT_SCALAR_INIT		1000		// Scale Amps to mAmps
+#define JOINT_CPR 			16384	// Counts per revolution (todo: is it (2^14 - 1)?)
+#define JOINT_CPDEG			45.5111	// Counts per degree (JOINT_CPR/360)
 #define ANG_UNIT				6.28318531 	// == 2*M_PI 		// Use Radians 2*M_PI
+#define RAD_PER_CNT				3.83495196e-04 // (ANG_UNIT/JOINT_CPR)
 #define RAD_PER_DEG				0.01745329	// == 2PI/360, 0.017453292519943
 #define DEG_PER_RAD 			57.2957795 	// degree to rad conversion
 

@@ -102,11 +102,11 @@ void mainFSM3(void)
 void mainFSM4(void)
 {
 	user_fsm_1();
-
+	DEBUG_H0(1);
 	if (isEnabledUpdateSensors) {
-    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags.
+    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
     }
-
+	DEBUG_H0(0);
 }
 
 //Case 5:
