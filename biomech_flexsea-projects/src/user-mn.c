@@ -232,7 +232,8 @@ void user_fsm_2(void)
 
 		//MIT D-Leg:
 		#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
-		MIT_DLeg_fsm_1();
+//		MIT_DLeg_fsm_1();
+		ActPack_fsm_2();	// used for communication
 		#endif	//PROJECT_MIT_DLEG
 
 		//MIT Pocket 2xDC / PocketClimb:
@@ -241,7 +242,7 @@ void user_fsm_2(void)
 		#endif	//PROJECT_POCKET_2XDC
 
 		//Dephy's Actuator Package (ActPack)
-		#if((ACTIVE_PROJECT == PROJECT_ACTPACK) || defined CO_ENABLE_ACTPACK)
+		#if((ACTIVE_PROJECT == PROJECT_ACTPACK) || defined CO_ENABLE_ACTPACK && (ACTIVE_PROJECT != PROJECT_MIT_DLEG) )
 		ActPack_fsm_2();
 		#endif	//PROJECT_ACTPACK
 

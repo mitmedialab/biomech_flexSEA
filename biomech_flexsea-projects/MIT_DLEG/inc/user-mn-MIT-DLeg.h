@@ -344,6 +344,8 @@ enum {
 
 // System constants
 #define SECONDS					1000		// Scale seconds to ms
+#define REAL_CYCLES				935			// Measured average timing on cycles, [Hz] (measured on oscope)
+#define REAL_PERIOD				0.00106951	// 1/REAL_CYCLES;
 #define CURRENT_SCALAR_INIT		1000		// Scale Amps to mAmps
 #define JOINT_CPR 			16384	// Counts per revolution (todo: is it (2^14 - 1)?)
 #define JOINT_CPDEG			45.5111	// Counts per degree (JOINT_CPR/360)

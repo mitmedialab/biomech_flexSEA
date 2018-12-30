@@ -39,6 +39,8 @@
 #include "flexsea_cmd_calibration.h"
 #include "flexsea_user_structs.h"
 #include <math.h>
+#include "timer.h"
+#include "dio.h"
 
 #include <user-mn-MIT-DLeg.h>
 #include "actuator_functions.h"
@@ -52,6 +54,7 @@
 float freq_input = 0;
 float freq_rad = 0;
 float torq_input = 0;
+
 
 
 //****************************************************************************
@@ -71,6 +74,9 @@ void MIT_DLeg_fsm_1(void)
 	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 
     static uint32_t fsm_time = 0;
+    static uint16_t mainFSMLoopTimer = 0;
+    static uint16_t mainFSMLoopTimerPrev = 0;
+    static uint16_t deltaTimer = 0;
 
     //Increment fsm_time (1 tick = 1ms nominally; need to confirm)
     fsm_time++;
@@ -91,13 +97,13 @@ void MIT_DLeg_fsm_1(void)
 		case -1:
 			stateMachine.current_state = STATE_INIT;
 			//turned off for testing without Motor usage
-			if(findPoles()) {
-				mit_init_current_controller();		//initialize Current Controller with gains
-				fsm1State = 0;
-				fsm_time = 0;
-			}
+//			if(findPoles()) {
+//				mit_init_current_controller();		//initialize Current Controller with gains
+//				fsm1State = 0;
+//				fsm_time = 0;
+//			}
 			//for testing
-//			fsm1State = 0;
+			fsm1State = 0;
 
 			break;
 
@@ -125,7 +131,7 @@ void MIT_DLeg_fsm_1(void)
 			{
 
 				//populate rigid1.mn.genVars to send to Plan
-				packRigidVars(&act1);
+//				packRigidVars(&act1);
 
 				//begin safety check
 			    if (safetyShutoff()) {
@@ -138,8 +144,9 @@ void MIT_DLeg_fsm_1(void)
 			    	stateMachine.current_state = STATE_EARLY_STANCE;
 
 			    } else {
+//			    	mainFSMLoopTimer = readTimer6();
 
-
+			    	deltaTimer = mainFSMLoopTimer - mainFSMLoopTimerPrev;
 			        updateUserWrites(&act1, &walkParams);
 
 //			    	runFlatGroundFSM(&act1);
@@ -151,7 +158,8 @@ void MIT_DLeg_fsm_1(void)
 //			    	act1.tauDes = biomCalcImpedance(user_data_1.w[0]/100., user_data_1.w[1]/100., user_data_1.w[2]/100.);
 //			    	act1.tauDes = biomCalcImpedance(.5, .1, 0);
 			    	freq_rad = RAD_PER_DEG * freq_input;
-			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  fsm_time  );
+//			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  (fsm_time * REAL_PERIOD)  ); // todo consider this
+			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  (fsm_time )  );
 
 
 			    	// Check that torques are within specified safety range.
@@ -175,9 +183,12 @@ void MIT_DLeg_fsm_1(void)
 					rigid1.mn.genVar[4] = (int16_t) (act1.jointTorqueRate*100.0);
 					rigid1.mn.genVar[5] = (int16_t) (act1.jointTorque*100.0); //Nm
 					rigid1.mn.genVar[6] = (int16_t) rigid1.ex.mot_current; // LG
-					rigid1.mn.genVar[7] = (int16_t) rigid1.ex.mot_volt; // TA
-					rigid1.mn.genVar[8] = stateMachine.current_state;
+					rigid1.mn.genVar[7] = (int16_t) fsm_time; //rigid1.ex.mot_volt; // TA
+					rigid1.mn.genVar[8] = (int16_t) (deltaTimer) ; //stateMachine.current_state;
 					rigid1.mn.genVar[9] = act1.tauDes*100;
+
+
+					mainFSMLoopTimerPrev = mainFSMLoopTimer;
 			    }
 
 				break;
@@ -189,6 +200,7 @@ void MIT_DLeg_fsm_1(void)
 	}
 
 	#endif	//ACTIVE_PROJECT == PROJECT_ANKLE_2DOF
+
 }
 
 

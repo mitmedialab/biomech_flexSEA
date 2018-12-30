@@ -35,6 +35,7 @@
 // Variable(s)
 //****************************************************************************
 
+
 //Map fsm case to an index:
 void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 			&mainFSM4, &mainFSM5, &mainFSM6, &mainFSM7,	&mainFSM8, &mainFSM9};

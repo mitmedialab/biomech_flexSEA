@@ -652,5 +652,5 @@ void setMotorTorqueOpenLoop(struct act_s *actx, float tau_des)
  * omega [rad/s], t [seconds]
  */
 float frequencySweep(float omega, uint32_t t){
-	return sinf(omega * ( (float) t / SECONDS ) );
+	return sinf(omega * ( (float) t / REAL_CYCLES ) );
 }

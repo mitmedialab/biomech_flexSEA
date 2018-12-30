@@ -102,11 +102,11 @@ void mainFSM3(void)
 void mainFSM4(void)
 {
 	user_fsm_1();
-	DEBUG_H0(1);
+
 	if (isEnabledUpdateSensors) {
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
     }
-	DEBUG_H0(0);
+
 }
 
 //Case 5:
@@ -149,6 +149,7 @@ void mainFSM7(void)
 //Case 8: User functions
 void mainFSM8(void)
 {
+//	DEBUG_H0(1);
 	//Calibration Tools or User FSM?:
 	int8_t s = runtimeCalibration();
 	if(s == CALIB_NOT)
@@ -159,6 +160,7 @@ void mainFSM8(void)
 	{
 		reset_user_code();
 	}
+//	DEBUG_H0(0);
 }
 
 //Case 9: User Interface
