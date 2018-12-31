@@ -165,7 +165,7 @@ void MIT_DLeg_fsm_1(void)
 //			    	act1.tauDes = biomCalcImpedance(user_data_1.w[0]/100., user_data_1.w[1]/100., user_data_1.w[2]/100.);
 //			    	act1.tauDes = biomCalcImpedance(.5, .1, 0);
 			    	freq_rad = ANG_UNIT * freq_input;
-//			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  (fsm_time * REAL_PERIOD)  ); // todo consider this
+
 			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  ( ( (float) fsm_time ) / SECONDS )  );
 
 
