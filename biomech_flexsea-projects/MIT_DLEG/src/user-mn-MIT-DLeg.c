@@ -41,6 +41,7 @@
 #include <math.h>
 #include "timer.h"
 #include "dio.h"
+#include "calibration_tools.h"
 
 #include <user-mn-MIT-DLeg.h>
 #include "actuator_functions.h"
@@ -55,7 +56,8 @@ float freq_input = 0;
 float freq_rad = 0;
 float torq_input = 0;
 
-
+// EXTERNS
+extern uint8_t calibrationFlags, calibrationNew;
 
 //****************************************************************************
 // Public Function(s)
@@ -90,20 +92,23 @@ void MIT_DLeg_fsm_1(void)
 			if(fsm_time >= AP_FSM2_POWER_ON_DELAY ) {
 				fsm1State = -1;
 				fsm_time = 0;
+
+				// USE these to to TURN OFF FIND POLES set these = 0 for OFF, or =1 for ON
+				calibrationFlags = 1, calibrationNew = 1;
 			}
 
 			break;
 
 		case -1:
 			stateMachine.current_state = STATE_INIT;
-			//turned off for testing without Motor usage
-//			if(findPoles()) {
-//				mit_init_current_controller();		//initialize Current Controller with gains
-//				fsm1State = 0;
-//				fsm_time = 0;
-//			}
-			//for testing
-			fsm1State = 0;
+
+			// Check if FindPoles has completed, if so then go ahead. This is done in calibration_tools.c
+			if ( (calibrationFlags == 0) && (calibrationNew == 0) ){
+				mit_init_current_controller();		//initialize Current Controller with gains
+				fsm1State = 0;
+				fsm_time = 0;
+			}
+
 
 			break;
 
@@ -144,9 +149,11 @@ void MIT_DLeg_fsm_1(void)
 			    	stateMachine.current_state = STATE_EARLY_STANCE;
 
 			    } else {
-//			    	mainFSMLoopTimer = readTimer6();
+			    	mainFSMLoopTimer = readTimer6();
 
 			    	deltaTimer = mainFSMLoopTimer - mainFSMLoopTimerPrev;
+			    	mainFSMLoopTimerPrev = mainFSMLoopTimer;
+
 			        updateUserWrites(&act1, &walkParams);
 
 //			    	runFlatGroundFSM(&act1);
@@ -157,9 +164,9 @@ void MIT_DLeg_fsm_1(void)
 
 //			    	act1.tauDes = biomCalcImpedance(user_data_1.w[0]/100., user_data_1.w[1]/100., user_data_1.w[2]/100.);
 //			    	act1.tauDes = biomCalcImpedance(.5, .1, 0);
-			    	freq_rad = RAD_PER_DEG * freq_input;
+			    	freq_rad = ANG_UNIT * freq_input;
 //			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  (fsm_time * REAL_PERIOD)  ); // todo consider this
-			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  (fsm_time )  );
+			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  ( ( (float) fsm_time ) / SECONDS )  );
 
 
 			    	// Check that torques are within specified safety range.
@@ -169,7 +176,7 @@ void MIT_DLeg_fsm_1(void)
 			    		act1.tauDes = - act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT;
 			    	}
 
-//			    	setMotorTorqueOpenLoop(&act1, act1.tauDes);
+			    	setMotorTorqueOpenLoop(&act1, act1.tauDes);
 
 //			    	setMotorTorque(&act1, act1.tauDes);
 
@@ -183,12 +190,13 @@ void MIT_DLeg_fsm_1(void)
 					rigid1.mn.genVar[4] = (int16_t) (act1.jointTorqueRate*100.0);
 					rigid1.mn.genVar[5] = (int16_t) (act1.jointTorque*100.0); //Nm
 					rigid1.mn.genVar[6] = (int16_t) rigid1.ex.mot_current; // LG
-					rigid1.mn.genVar[7] = (int16_t) fsm_time; //rigid1.ex.mot_volt; // TA
-					rigid1.mn.genVar[8] = (int16_t) (deltaTimer) ; //stateMachine.current_state;
+					rigid1.mn.genVar[7] = (int16_t) rigid1.ex.mot_volt;// ( ( fsm_time ) % SECONDS ) ; //rigid1.ex.mot_volt; // TA
+					rigid1.mn.genVar[8] = (int16_t) (act1.safetyFlag) ; //stateMachine.current_state;
 					rigid1.mn.genVar[9] = act1.tauDes*100;
 
 
-					mainFSMLoopTimerPrev = mainFSMLoopTimer;
+
+
 			    }
 
 				break;

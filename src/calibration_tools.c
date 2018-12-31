@@ -7,7 +7,7 @@
 #include "eeprom_user.h"
 #include "rigid.h"
 
-uint8_t calibrationFlags = 0, calibrationNew = 0;
+uint8_t calibrationFlags = 0, calibrationNew = 0;	// Set both of these to 1 to FindPoles, or set to 0 to notFindPoles
 uint8_t ctInfo[2] = {PORT_RS485_2, PORT_RS485_2};
 
 inline uint8_t isRunningCalibrationProcedure()
