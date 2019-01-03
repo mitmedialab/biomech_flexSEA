@@ -61,6 +61,7 @@ void  setMotorTorque(struct act_s *actx, float tor_d);
 void  packRigidVars(struct act_s *actx);
 
 void  setMotorTorqueOpenLoop(struct act_s *actx, float tau_des);
+void setMotorTorqueOpenLoopVolts(struct act_s *actx, float tau_des);
 float frequencySweep(float omega, float t);
 
 

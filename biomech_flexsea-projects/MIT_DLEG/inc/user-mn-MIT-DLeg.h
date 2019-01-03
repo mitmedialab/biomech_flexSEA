@@ -200,12 +200,13 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 
 // Motor Parameters
 #define MOT_KT 			0.0548483	// Phase Kt value = linearKt/(3^0.5)
-#define MOT_L			0.068	// mH
+#define MOT_R			0.06	// ohm
+#define MOT_L			168.0	// mH
 #define MOT_J			0//0.000120 //0.000322951		//0.000322951	// rotor inertia, [kgm^2]
 #define MOT_B			0//0.000200 //0.000131		// damping term for motor and screw combined, drag from rolling elements
 #define MOT_TRANS		0		// lumped mass inertia todo: consider MotorMass on Spring inertia contribution.
-#define MOT_STIC_POS	1400	// stiction current, 1800
-#define MOT_STIC_NEG	1600	// stiction current, 1800
+#define MOT_STIC_POS	1400	// stiction current, 1400
+#define MOT_STIC_NEG	1600	// stiction current, 1600
 
 // Current Control Parameters  -- Test these on a motor test stand first
 #define ACTRL_I_KP_INIT		15
@@ -315,7 +316,7 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams);
 //Joint software limits [Degrees]
 #ifdef IS_ANKLE
 #define JOINT_MIN_SOFT		-25	* RAD_PER_DEG	// [deg] Actuator physical limit min = -30deg dorsiflexion
-#define JOINT_MAX_SOFT		45	* RAD_PER_DEG	// [deg] Actuator physical limit  max = 90deg plantarflex
+#define JOINT_MAX_SOFT		65	* RAD_PER_DEG	// [deg] Actuator physical limit  max = 90deg plantarflex
 #endif
 
 #ifdef IS_KNEE

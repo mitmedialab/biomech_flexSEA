@@ -104,9 +104,12 @@ void MIT_DLeg_fsm_1(void)
 
 			// Check if FindPoles has completed, if so then go ahead. This is done in calibration_tools.c
 			if ( (calibrationFlags == 0) && (calibrationNew == 0) ){
-				mit_init_current_controller();		//initialize Current Controller with gains
+//				mit_init_current_controller();		//initialize Current Controller with gains
 				fsm1State = 0;
 				fsm_time = 0;
+
+				setControlMode(CTRL_OPEN, 0);
+
 			}
 
 
@@ -176,7 +179,8 @@ void MIT_DLeg_fsm_1(void)
 			    		act1.tauDes = - act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT;
 			    	}
 
-			    	setMotorTorqueOpenLoop(&act1, act1.tauDes);
+//			    	setMotorTorqueOpenLoop(&act1, act1.tauDes);
+			    	setMotorTorqueOpenLoopVolts(&act1, act1.tauDes);
 
 //			    	setMotorTorque(&act1, act1.tauDes);
 
@@ -192,7 +196,7 @@ void MIT_DLeg_fsm_1(void)
 					rigid1.mn.genVar[6] = (int16_t) rigid1.ex.mot_current; // LG
 					rigid1.mn.genVar[7] = (int16_t) rigid1.ex.mot_volt;// ( ( fsm_time ) % SECONDS ) ; //rigid1.ex.mot_volt; // TA
 					rigid1.mn.genVar[8] = (int16_t) (act1.safetyFlag) ; //stateMachine.current_state;
-					rigid1.mn.genVar[9] = act1.tauDes*100;
+					rigid1.mn.genVar[9] = (int16_t) act1.tauDes*100;
 
 
 
