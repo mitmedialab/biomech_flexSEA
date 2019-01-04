@@ -12,7 +12,7 @@
 	branch = dev
 [submodule "flexsea-projects"]
 	path = flexsea-projects
-	url = https://github.com/DephyInc/flexsea-projects.git
+	url = https://github.com/mitmedialab/biomech_flexsea-projects.git
 [submodule "flexsea_projects"]
 	path = flexsea_projects
 	url = https://github.com/mitmedialab/biomech_flexsea-projects.git
