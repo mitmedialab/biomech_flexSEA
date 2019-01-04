@@ -77,10 +77,10 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.408245818" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
@@ -91,12 +91,14 @@
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver.1962891874" name="Cross ARM GNU Archiver" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.archiver"/>
 							<tool command="${cross_prefix}${cross_size}${cross_suffix}" commandLinePattern="${COMMAND} ${FLAGS}" errorParsers="" id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.43799107" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize">
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.1185949409" name="Size format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format" useByScannerDiscovery="false"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.1185949409" name="Size format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format" useByScannerDiscovery="false" value="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.berkeley" valueType="enumerated"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals.317316537" name="Show totals" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals" value="false" valueType="boolean"/>
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.1458382303" name="Cross ARM C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections.1595173765" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths.1373929073" name="Library search path (-L)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;../ldscripts&quot;"/>
+									<listOptionValue builtIn="false" value="../ldscripts"/>
+									<listOptionValue builtIn="false" value="../system/Src/CMSIS"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile.421240198" name="Script files (-T)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile" valueType="stringList">
 									<listOptionValue builtIn="false" value="mem.ld"/>
@@ -105,6 +107,10 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart.1982881081" name="Do not use standard start files (-nostartfiles)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other.1359199276" name="Other linker flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other" value="" valueType="string"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.libs.350665156" name="Libraries (-l)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="arm_cortexM4lf_math"/>
+								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.input.615880993" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -122,12 +128,12 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_DLEG/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -300,7 +306,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createlisting.1385332116" name="Create extended listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createlisting" useByScannerDiscovery="false"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.id.1653709647" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.id" useByScannerDiscovery="false" value="1287942917" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.683916805" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/manage}/Release" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1649554057" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
+							<builder buildPath="${workspace_loc:/manage}/Release" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1649554057" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="unlimited" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
 							<tool command="${cross_prefix}${cross_c}${cross_suffix}" commandLinePattern="${COMMAND} ${cross_toolchain_flags} ${FLAGS} -c ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1374811223" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.1206955117" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.793851030" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" useByScannerDiscovery="false" valueType="includePath">
@@ -314,9 +320,9 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.179867850" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
@@ -337,12 +343,12 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/MIT_DLEG/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/RICNU_Knee_v1/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/Rigid/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -387,6 +393,20 @@
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.105101454" name="Cross ARM C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections.302297405" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections" value="true" valueType="boolean"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile.345922883" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile" valueType="stringList">
+									<listOptionValue builtIn="false" value="mem.ld"/>
+									<listOptionValue builtIn="false" value="libs.ld"/>
+									<listOptionValue builtIn="false" value="sections.ld"/>
+								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart.844444483" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart" value="true" valueType="boolean"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.libs.1606928162" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="arm_cortexM4lf_math"/>
+								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths.1693998374" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="../ldscripts"/>
+									<listOptionValue builtIn="false" value="../system/Src/CMSIS"/>
+								</option>
 							</tool>
 							<tool command="${cross_prefix}${cross_c}${cross_suffix}" commandLinePattern="${COMMAND} ${cross_toolchain_flags} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="" id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.518539460" name="Cross ARM C++ Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.linker.gcsections.955313584" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.linker.gcsections" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -568,7 +588,6 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
@@ -642,6 +661,20 @@
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.97686362" name="Cross ARM C Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections.2004691177" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.gcsections" value="true" valueType="boolean"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile.780447523" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.scriptfile" valueType="stringList">
+									<listOptionValue builtIn="false" value="mem.ld"/>
+									<listOptionValue builtIn="false" value="libs.ld"/>
+									<listOptionValue builtIn="false" value="sections.ld"/>
+								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart.301745509" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart" value="true" valueType="boolean"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.libs.449926939" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="arm_cortexM4lf_math"/>
+								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths.1076119467" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="../ldscripts"/>
+									<listOptionValue builtIn="false" value="../system/Src/CMSIS"/>
+								</option>
 							</tool>
 							<tool command="${cross_prefix}${cross_c}${cross_suffix}" commandLinePattern="${COMMAND} ${cross_toolchain_flags} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="" id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker.321065523" name="Cross ARM C++ Linker" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.linker">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.linker.gcsections.803060820" name="Remove unused sections (-Xlinker --gc-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.cpp.linker.gcsections" useByScannerDiscovery="false" value="true" valueType="boolean"/>
