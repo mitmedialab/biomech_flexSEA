@@ -10,9 +10,9 @@
 	path = flexsea-shared
 	url = https://github.com/JFDuval/flexsea-shared.git
 	branch = dev
-[submodule "flexsea-projects"]
-	path = flexsea-projects
-	url = https://github.com/mitmedialab/biomech_flexsea-projects.git
 [submodule "flexsea_projects"]
 	path = flexsea_projects
+	url = https://github.com/mitmedialab/biomech_flexsea-projects.git
+[submodule "flexsea-projects"]
+	path = flexsea-projects
 	url = https://github.com/mitmedialab/biomech_flexsea-projects.git
