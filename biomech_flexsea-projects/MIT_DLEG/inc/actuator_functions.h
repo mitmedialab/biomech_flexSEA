@@ -63,6 +63,7 @@ void  packRigidVars(struct act_s *actx);
 void  setMotorTorqueOpenLoop(struct act_s *actx, float tau_des);
 void setMotorTorqueOpenLoopVolts(struct act_s *actx, float tau_des);
 float frequencySweep(float omega, float t);
+float torqueSystemIDprbs(int8_t start, int16_t torqueAmplitude, int8_t cyclingNumber);
 
 
 //Smoothing

@@ -56,6 +56,10 @@ float freq_input = 0;
 float freq_rad = 0;
 float torq_input = 0;
 
+int8_t start_input = 0;				// Turn it on.
+int16_t torqueAmplitude_input = 0;		// amplitude of torque signal
+int8_t cyclingNumber_input = 0;		// number of times to run through data set
+
 // EXTERNS
 extern uint8_t calibrationFlags, calibrationNew;
 
@@ -79,6 +83,8 @@ void MIT_DLeg_fsm_1(void)
     static uint16_t mainFSMLoopTimer = 0;
     static uint16_t mainFSMLoopTimerPrev = 0;
     static uint16_t deltaTimer = 0;
+
+    static uint8_t lastControl = 0;
 
     //Increment fsm_time (1 tick = 1ms nominally; need to confirm)
     fsm_time++;
@@ -169,8 +175,9 @@ void MIT_DLeg_fsm_1(void)
 //			    	act1.tauDes = biomCalcImpedance(.5, .1, 0);
 			    	freq_rad = ANG_UNIT * freq_input;
 
-			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  ( ( (float) fsm_time ) / SECONDS )  );
+//			    	act1.tauDes = torq_input * frequencySweep(freq_rad,  ( ( (float) fsm_time ) / SECONDS )  );		// Frequency sweep
 
+			    	act1.tauDes = torqueSystemIDprbs(start_input, torqueAmplitude_input, cyclingNumber_input);							// PRBS
 
 			    	// Check that torques are within specified safety range.
 			    	if (act1.tauDes > act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT ) {
@@ -179,8 +186,23 @@ void MIT_DLeg_fsm_1(void)
 			    		act1.tauDes = - act1.safetyTorqueScalar * ABS_TORQUE_LIMIT_INIT;
 			    	}
 
-//			    	setMotorTorqueOpenLoop(&act1, act1.tauDes);
-			    	setMotorTorqueOpenLoopVolts(&act1, act1.tauDes);
+			    	if (user_data_1.w[3] == 1){
+			    		if (lastControl == 0) {
+			    			setControlMode(CTRL_OPEN, 0);
+			    			lastControl = 1;
+			    		}
+
+			    		setMotorTorqueOpenLoopVolts(&act1, act1.tauDes);			// Current Control at execture
+			    	} else if (user_data_1.w[3] == 0) {
+			    		if (lastControl == 1) {
+			    			mit_init_current_controller();
+			    			lastControl = 0;
+			    		}
+			    		setMotorTorqueOpenLoop(&act1, act1.tauDes);	// Voltage control 1khz
+			    	}
+
+
+//			    	setMotorTorqueOpenLoopVolts(&act1, act1.tauDes);
 
 //			    	setMotorTorque(&act1, act1.tauDes);
 
@@ -189,13 +211,13 @@ void MIT_DLeg_fsm_1(void)
 			    	 */
 			        rigid1.mn.genVar[0] = (int16_t) (act1.linkageMomentArm *1000.0); //startedOverLimit;
 					rigid1.mn.genVar[1] = (int16_t) (act1.jointAngleDegrees*100.0); //deg
-					rigid1.mn.genVar[2] = (int16_t)  walkParams.transition_id;
+					rigid1.mn.genVar[2] = (int16_t) (act1.motorAng);			// counts
  					rigid1.mn.genVar[3] = (int16_t) (act1.jointVel * 100.0); 	// rad/s
 					rigid1.mn.genVar[4] = (int16_t) (act1.jointTorqueRate*100.0);
 					rigid1.mn.genVar[5] = (int16_t) (act1.jointTorque*100.0); //Nm
-					rigid1.mn.genVar[6] = (int16_t) rigid1.ex.mot_current; // LG
+					rigid1.mn.genVar[6] = (int16_t) *rigid1.ex.enc_ang; // LG
 					rigid1.mn.genVar[7] = (int16_t) rigid1.ex.mot_volt;// ( ( fsm_time ) % SECONDS ) ; //rigid1.ex.mot_volt; // TA
-					rigid1.mn.genVar[8] = (int16_t) (act1.safetyFlag) ; //stateMachine.current_state;
+					rigid1.mn.genVar[8] = (int16_t) (rigid1.ex.mot_current) ; //stateMachine.current_state;
 					rigid1.mn.genVar[9] = (int16_t) act1.tauDes*100;
 
 
@@ -240,9 +262,14 @@ void MIT_DLeg_fsm_2(void)
 
 void updateUserWrites(Act_s *actx, WalkParams *wParams){
 
-	actx->safetyTorqueScalar 				= ( (float) user_data_1.w[0] ) /100.0;	// Reduce overall torque limit.
-	freq_input				 				= ( (float) user_data_1.w[1] ) /100.0;	// Reduce overall torque limit.
-	torq_input				 				= ( (float) user_data_1.w[2] ) /100.0;	// Reduce overall torque limit.
+//	actx->safetyTorqueScalar 				= ( (float) user_data_1.w[0] ) /100.0;	// Reduce overall torque limit.
+//	freq_input				 				= ( (float) user_data_1.w[1] ) /100.0;	// Reduce overall torque limit.
+//	torq_input				 				= ( (float) user_data_1.w[2] ) /100.0;	// Reduce overall torque limit.
+
+	start_input = user_data_1.w[0];				// Turn it on.
+	torqueAmplitude_input = user_data_1.w[1];		// amplitude of torque signal
+	cyclingNumber_input = user_data_1.w[2];		// number of times to run through data set
+
 //	wParams->virtualHardstopEngagementAngle = ( (float) user_data_1.w[1] ) /100.0;	// [Deg]
 //	wParams->virtualHardstopK 				= ( (float) user_data_1.w[2] ) /100.0;	// [Nm/deg]
 //	wParams->lspEngagementTorque 			= ( (float) user_data_1.w[3] ) /100.0; 	// [Nm] Late stance power, torque threshhold
@@ -262,9 +289,9 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams){
 //	wParams->earlyStanceKF = 0.1;
 //	wParams->earlyStanceDecayConstant = EARLYSTANCE_DECAY_CONSTANT;
 
-	actx->safetyTorqueScalar 				= 1.0; 	//user_data_1.w[0] = 100
-	freq_input 								= 0.0;
-	torq_input								= 0.0;
+//	actx->safetyTorqueScalar 				= 1.0; 	//user_data_1.w[0] = 100
+//	freq_input 								= 0.0;
+//	torq_input								= 0.0;
 //	wParams->virtualHardstopEngagementAngle = 0.0;	//user_data_1.w[1] = 0	  [deg]
 //	wParams->virtualHardstopK				= 3.5;	//user_data_1.w[2] = 350 [Nm/deg] NOTE: Everett liked this high, Others prefer more like 6.0
 //	wParams->lspEngagementTorque 			= 74.0;	//user_data_1.w[3] = 7400 [Nm]
@@ -277,9 +304,16 @@ void initializeUserWrites(Act_s *actx, WalkParams *wParams){
 
 	//USER WRITE INITIALIZATION GOES HERE//////////////
 
-	user_data_1.w[0] =  (int32_t) ( actx->safetyTorqueScalar*100 ); 	// torque scalar
-	user_data_1.w[1] =  (int32_t) ( freq_input*100 ); 	// frequency set point for freq test
-	user_data_1.w[2] =  (int32_t) ( torq_input*100 ); 	// torque input for freq test
+// Frequency sweep
+//	user_data_1.w[0] =  (int32_t) ( actx->safetyTorqueScalar*100 ); 	// torque scalar
+//	user_data_1.w[1] =  (int32_t) ( freq_input*100 ); 	// frequency set point for freq test
+//	user_data_1.w[2] =  (int32_t) ( torq_input*100 ); 	// torque input for freq test
+
+	// PRBS
+	user_data_1.w[0] =  (int32_t) ( 0 ); 	// torque scalar
+	user_data_1.w[1] =  (int32_t) ( 0 ); 	// frequency set point for freq test
+	user_data_1.w[2] =  (int32_t) ( 0 ); 	// torque input for freq test
+
 
 	//	user_data_1.w[1] =  (int32_t) ( wParams->virtualHardstopEngagementAngle*100 ); 	// Hardstop Engagement angle
 //	user_data_1.w[2] =  (int32_t) ( wParams->virtualHardstopK*100 ); 				// Hardstop spring constant

@@ -61,6 +61,7 @@ typedef struct act_s
     float jointTorqueRate;  // Joint torque rate
     float safetyTorqueScalar;	// Scalar value to reduce overall allowed torque generated.
 
+    int32_t motorAng;		// motor angle [Counts]
     int32_t motorVel;		// motor velocity [rad/s]
     int32_t motorAcc;		// motor acceleration [rad/s/s]
     int16_t regTemp;		// regulate temperature
