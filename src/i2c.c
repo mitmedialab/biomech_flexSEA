@@ -31,6 +31,9 @@
 #include "strain.h"
 #endif	//USE_6CH_AMP
 
+#ifdef USE_MIT_EMG_I2C
+#include "user-mn-MIT-EMG.h"
+#endif
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -128,6 +131,10 @@ void i2c2_fsm(void)
 	i2c2_time_share++;
 	i2c2_time_share %= 4;
 
+	#ifdef USE_MIT_EMG_I2C
+	MIT_EMG_i2c2_fsm();
+	#else
+
 	//Subdivided in 4 slots (250Hz)
 	switch(i2c2_time_share)
 	{
@@ -171,7 +178,7 @@ void i2c2_fsm(void)
 	{
 		//FlexSEA Error code
 	}
-
+	#endif //USE_MIT_EMG_I2C
 	#endif //USE_I2C_2
 }
 
@@ -224,6 +231,12 @@ void init_i2c2(void)
 	//DMA:
 	init_dma1_stream2_ch7(&hi2c2);	//RX
 	init_dma1_stream7_ch7(&hi2c2);	//TX
+
+	//I2C Event & Error interrupts:
+	HAL_NVIC_SetPriority(I2C2_ER_IRQn, ISR_I2C2_ER, ISR_SUB_I2C2_ER);
+	HAL_NVIC_EnableIRQ(I2C2_ER_IRQn);
+	HAL_NVIC_SetPriority(I2C2_EV_IRQn, ISR_I2C2_EV, ISR_SUB_I2C2_EV);
+	HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
 }
 
 // Disable I2C and free the I2C handle.
@@ -264,6 +277,10 @@ void disable_i2c3(void)
 //Detects the end of a Master Receive (when DMA Mem isn't used):
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+	#ifdef USE_MIT_EMG_I2C
+	if(hi2c->Instance == I2C2)
+		MIT_EMG_I2C_RxCpltCallback(hi2c);
+	#endif
 }
 
 //Detects the end of a Master Receive in DMA Mem mode:
