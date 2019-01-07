@@ -47,6 +47,7 @@ int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
 __attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
+__attribute__ ((aligned (4))) uint8_t i2c2_dma_tx_buf[24];
 
 uint8_t firstTransfers = 0;
 
@@ -167,6 +168,7 @@ void i2c2_fsm(void)
 			break;
 	}
 
+	#endif //USE_MIT_EMG_I2C
 	//Error management:
 	if(i2c2FsmState == I2C_FSM_PROBLEM)
 	{
@@ -178,7 +180,6 @@ void i2c2_fsm(void)
 	{
 		//FlexSEA Error code
 	}
-	#endif //USE_MIT_EMG_I2C
 	#endif //USE_I2C_2
 }
 
