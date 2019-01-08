@@ -43,6 +43,7 @@
 #include "user-mn-MIT-DLeg.h"
 #include "walking_state_machine.h"
 #include "actuator_functions.h"
+#include "safety_functions.h"
 #endif
 
 
@@ -96,7 +97,10 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
-
+	if (isEnabledUpdateSensors) {
+    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
+    	checkSafeties(&act1);
+    }
 
 }
 
@@ -104,9 +108,6 @@ void mainFSM3(void)
 void mainFSM4(void)
 {
 
-	if (isEnabledUpdateSensors) {
-    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
-    }
 
 	user_fsm_1();
 

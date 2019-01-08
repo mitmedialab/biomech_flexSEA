@@ -58,5 +58,9 @@ void combineStatusFlags(void);
 #define STATUS_MOT_CURRENT_WARN		32
 #define STATUS_MOT_CURRENT_LIM		64
 
+//battery voltage limits
+#define UVLO_BIOMECH 19200
+#define UVHI_BIOMECH 25800
+
 #endif // INC_MISC_H
 
