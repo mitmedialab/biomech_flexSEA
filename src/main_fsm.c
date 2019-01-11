@@ -54,6 +54,9 @@
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 uint8_t dftWatch = 0;
 
+extern uint8_t l1, l2, l3;
+extern int16_t safetyFlags;
+
 //****************************************************************************
 // Private Function Prototype(s):
 //****************************************************************************
@@ -98,6 +101,9 @@ void mainFSM3(void)
 	combineStatusFlags();
 	readInternalTempSensor();
 	if (isEnabledUpdateSensors) {
+		if (!getSafetyFlags()) {
+			clearLEDStatus();
+		}
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
     	checkSafeties(&act1);
     }
@@ -172,8 +178,8 @@ void mainFSM9(void)
 {
 	//UI RGB LED
 	rgbLedRefreshFade();
-	rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
 	if(newMasterCmdLed) {newMasterCmdLed = 0;}
+	rgb_led_ui(l1, l2, l3, newMasterCmdLed);
 
 	//Constant LED0 flashing while the code runs
 	LED0(rgbLedCenterPulse(12));

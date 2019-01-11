@@ -61,6 +61,7 @@ void combineStatusFlags(void);
 //battery voltage limits
 #define UVLO_BIOMECH 19200
 #define UVHI_BIOMECH 25800
+#define UV_USB_BIOMECH 6000
 
 #endif // INC_MISC_H
 
