@@ -60,6 +60,8 @@ void combineStatusFlags(void);
 
 //battery voltage limits
 #define UVLO_BIOMECH 19200
+#define UVLO_BIOMECH_NOTIFY_OFFSET 500
+#define UVLO_NOTIFY UVLO_BIOMECH + UVLO_BIOMECH_NOTIFY_OFFSET
 #define UVHI_BIOMECH 25800
 #define UV_USB_BIOMECH 6000
 
