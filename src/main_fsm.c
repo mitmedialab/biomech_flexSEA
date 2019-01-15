@@ -34,7 +34,6 @@
 #include "flexsea_system.h"
 #include "flexsea_interface.h"
 #include "flexsea_comm_multi.h"
-
 #include "spi.h"
 #include "misc.h"
 #include "calibration_tools.h"
@@ -50,11 +49,8 @@ uint8_t dftWatch = 0;
 // Private Function Prototype(s):
 //****************************************************************************
 
-void transmitMultiFrame()
-{
-	transmitFxPacket(PORT_USB);
-	transmitFxPacket(PORT_WIRELESS);
-}
+uint16_t computeFsmStatus(volatile int8_t *timingError);
+void transmitMultiFrame();
 
 //****************************************************************************
 // Public Function(s)
@@ -66,6 +62,18 @@ void transmitMultiFrame()
 //Case 0: slaveComm
 void mainFSM0(void)
 {
+	//Calibration Tools or User FSM?:
+	int8_t s = runtimeCalibration();
+	if(s == CALIB_NOT)
+	{
+		user_fsm_2();
+	}
+	else if(s == CALIB_DONE)
+	{
+		reset_user_code();
+	}
+
+	//ToDo move?
 	#if (MULTI_DOF_N == 0)
 	slaveTransmit(PORT_RS485_1);
 	#endif
@@ -74,13 +82,23 @@ void mainFSM0(void)
 //Case 1: I2C1 - IMU
 void mainFSM1(void)
 {
-	i2c1_fsm();
+	//UI RGB LED
+	rgbLedRefreshFade();
+	rgb_led_ui(0, 0, 0, newMasterCmdLed);	//ToDo add error codes
+	if(newMasterCmdLed) {newMasterCmdLed = 0;}
+
+	//Constant LED0 flashing while the code runs
+	LED0(rgbLedCenterPulse(12));
+
+	//Communication with Ex (TX):
+	slaveTransmit(PORT_UART_EX);
 }
 
 //Case 2: I2C2 - Expansion
 void mainFSM2(void)
 {
-	i2c2_fsm();
+	//IMU:
+	i2c1_fsm();
 }
 
 //Case 3:
@@ -89,6 +107,14 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
+
+	// analyze FSMs and set status bytes appropriately
+	uint16_t mnFsmStatus = computeFsmStatus(timingError);
+	uint16_t exFsmStatus = (rigid1.ex.status >> 8) & 0xFF;
+	rigid1.mn.status = (mnFsmStatus << 8) | exFsmStatus;
+
+	//Expansion port I2C
+	i2c2_fsm();
 }
 
 //Case 4: User Functions
@@ -100,28 +126,58 @@ void mainFSM4(void)
 //Case 5:
 void mainFSM5(void)
 {
-	slaveTransmit(PORT_UART_EX);
+	static int dmaTransferCount = 0;
+	if(dmaTransferCount >= 20)
+	{
+		triggerDMATransfer(PORT_WIRELESS);
+		dmaTransferCount = 0;
+	}
+	dmaTransferCount++;
 }
 
 //Case 6:
+static uint8_t autoParsed;
 void mainFSM6(void)
 {
 	//ADC:
 	startAdcConversion();
 	updateADCbuffers();
 
-	uint8_t parsed = 0;
-	parsed += receiveFxPacketByPeriph(comm_multi_periph + PORT_USB);
-	parsed += receiveFxPacketByPeriph(comm_multi_periph + PORT_WIRELESS);
+	//Auto-streaming:
+	autoParsed = 0;
+	if(receiveFxPacketByPeriph(comm_multi_periph + PORT_USB) && comm_multi_periph[PORT_USB].out.unpackedIdx > 0)
+	{
+		autoParsed++;
+	}
 
-	if(!parsed){autoStream();}
+	if(!autoParsed && receiveFxPacketByPeriph(comm_multi_periph + PORT_WIRELESS) && comm_multi_periph[PORT_WIRELESS].out.unpackedIdx > 0)
+	{
+		autoParsed++;
+	}
+
+	//LED turns green when commands are received
+	if(autoParsed)
+	{
+		newMasterCmdLed = 1;
+	}
 }
 
 //Case 7:
 void mainFSM7(void)
 {
-	int i;
+	if(!autoParsed)
+	{
+		autoStream();
+	}
 
+	//Timestamp needed by GUI:
+	rigid1.ctrl.timestamp++;
+}
+
+//Case 8:
+void mainFSM8(void)
+{
+	int i;
 	for(i = 0; i < NUMBER_OF_PORTS; ++i)
 	{
 		if(comm_multi_periph[i].out.unpackedIdx)
@@ -130,35 +186,13 @@ void mainFSM7(void)
 			comm_multi_periph[i].out.unpackedIdx = 0;
 		}
 	}
-
-	rigid1.ctrl.timestamp++;
 }
 
-//Case 8: User functions
-void mainFSM8(void)
-{
-	//Calibration Tools or User FSM?:
-	int8_t s = runtimeCalibration();
-	if(s == CALIB_NOT)
-	{
-		user_fsm_2();
-	}
-	else if(s == CALIB_DONE)
-	{
-		reset_user_code();
-	}
-}
-
-//Case 9: User Interface
+//Case 9:
 void mainFSM9(void)
 {
-	//UI RGB LED
-	rgbLedRefreshFade();
-	rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
-	if(newMasterCmdLed) {newMasterCmdLed = 0;}
-
-	//Constant LED0 flashing while the code runs
-	LED0(rgbLedCenterPulse(12));
+	//Receive data from Ex
+	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);		//Ex
 }
 
 //10kHz time slot:
@@ -178,9 +212,7 @@ void mainFSM10kHz(void)
 	//Communication with our Master & Slave(s):
 	//=========================================
 
-//maybe this should be not a "#ifdef FLEXSEA_MANAGE", but instead "am I connected to plan stack"
-#ifdef BOARD_TYPE_FLEXSEA_MANAGE
-
+	// Multi Packet stuff
 	static uint8_t flip = 0;
 	flip ^= 1;
 	if(flip)
@@ -188,19 +220,17 @@ void mainFSM10kHz(void)
 		transmitMultiFrame();
 	}
 
-#endif //FLEXSEA_MANAGE
-
 	//New approach - WiP:
-	flexsea_receive_from_slave();	//Only for the RS-485 transceivers
+	//flexsea_receive_from_slave();	//Only for the RS-485 transceivers
 	//Master:
-	receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
+	//receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
 
-	receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
-	receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
+	//receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
+	//receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 
 	//Slave:
-	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
-	receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
+	//receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
+	//receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
 
 	//Variable:
 	#if (MULTI_DOF_N == 0)
@@ -230,4 +260,36 @@ void mainFSM10kHz(void)
 void mainFSMasynchronous(void)
 {
 
+}
+
+// Private functions
+// ==============================================
+
+uint16_t computeFsmStatus(volatile int8_t *timingError)
+{
+	int8_t mostOffendingFSM = -1;
+	uint8_t numOffenses = 0;
+	int i;
+	for(i = 0; i < 10; ++i)
+	{
+		if(timingError[i] > numOffenses)
+		{
+			mostOffendingFSM = i;
+			numOffenses = timingError[i];
+		}
+	}
+
+	uint16_t fsmStatus = 0;
+	if(mostOffendingFSM != -1)
+	{
+		fsmStatus = (mostOffendingFSM << 4) | (numOffenses & 0x0F);
+	}
+
+	return fsmStatus;
+}
+
+void transmitMultiFrame()
+{
+	transmitFxPacket(PORT_USB);
+	transmitFxPacket(PORT_WIRELESS);
 }
