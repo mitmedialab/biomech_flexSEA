@@ -37,6 +37,7 @@
 #include "spi.h"
 #include "misc.h"
 #include "calibration_tools.h"
+#include "uarts.h"
 
 //****************************************************************************
 // Variable(s)
