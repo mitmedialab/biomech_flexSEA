@@ -102,10 +102,11 @@ void mainFSM3(void)
 	readInternalTempSensor();
 	if (isEnabledUpdateSensors) {
 		if (!getSafetyFlags()) {
-			clearLEDStatus();
+			clearLEDStatus(); //TODO make sure this works
 		}
     	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
     	checkSafeties(&act1);
+    	handleSafetyConditions(&act1);
     }
 
 }
