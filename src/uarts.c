@@ -32,6 +32,11 @@
 #include "timer.h"
 #include "stm32f4xx_hal_def.h"
 
+#include "user-mn.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_dma.h"
+#include <stdbool.h>
+
 //****************************************************************************
 // Variable(s)
 //****************************************************************************
@@ -160,7 +165,7 @@ void init_usart6(uint32_t baudrate)
 	init_dma2_stream6_ch5();	//TX
 }
 
-//USART3 init function: Expansion port
+//USART3 init function: Bluetooth
 void init_usart3(uint32_t baudrate)
 {
 	husart3.Instance = USART3;
@@ -170,7 +175,10 @@ void init_usart3(uint32_t baudrate)
 
 	//Interrupts:
 	HAL_NVIC_SetPriority(USART3_IRQn, ISR_UART3, ISR_SUB_UART3);
-	//HAL_NVIC_EnableIRQ(USART3_IRQn);
+	HAL_NVIC_EnableIRQ(USART3_IRQn);
+
+	// enable the idle interrupt for the wireless usart to consume smaller packets
+	__HAL_USART_ENABLE_IT(&husart3, USART_IT_IDLE);
 
 	//UART3 module:
 	husart3.Init.BaudRate = baudrate;
@@ -494,9 +502,34 @@ void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 	commPeriph[PORT_RS485_2].rx.bytesReadyFlag++;
 }
 
+//Should not be used for normally send/receive, everything is done via DMA
+//Now it is just being used to detect an idle state
+void USART3_IRQHandler(void)
+{
+	// the only interrupt currently enabled is IDLE detection
+	if(__HAL_USART_GET_FLAG(&husart3, USART_FLAG_IDLE))
+	{
+		volatile uint16_t bytes_available = uart3_dma_xfer_len - __HAL_DMA_GET_COUNTER(&hdma1_str1_ch4);
+		update_rx_buf_wireless(uart3_dma_rx_buf, bytes_available);
+		//Empty DMA buffer once it's copied:
+		memset(uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
+		commPeriph[PORT_WIRELESS].rx.bytesReadyFlag++;
+		HAL_DMA_Abort_IT(&hdma1_str1_ch4);
+		// Start the DMA peripheral
+		HAL_DMA_Start_IT(&hdma1_str1_ch4, (uint32_t) &USART3->DR,
+				(uint32_t) &uart3_dma_rx_buf, uart3_dma_xfer_len);
+		__HAL_USART_CLEAR_IDLEFLAG(&husart3);
+	}
+	else
+	{
+		HAL_USART_IRQHandler(&husart3);
+	}
+}
+
 //Function called after a completed DMA transfer, UART3 RX
 void DMA1_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 {
+#ifdef BEFORE_20190116_DEBUGGING_SESSION
 	if(hdma->Instance == DMA1_Stream1)
 	{
 		//Clear the UART receiver. Might not be needed, but harmless
@@ -513,6 +546,14 @@ void DMA1_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 	//Empty DMA buffer once it's copied:
 	memset(uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
 	commPeriph[PORT_WIRELESS].rx.bytesReadyFlag++;
+#else
+
+	copyIntoMultiPacket(comm_multi_periph + PORT_WIRELESS, (uint8_t*)uart3_dma_rx_buf, uart3_dma_xfer_len);
+
+	//Empty DMA buffer once it's copied:
+	memset((uint8_t *)&uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
+
+#endif
 }
 
 //USART Error callback:
@@ -687,7 +728,7 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		GPIO_InitStruct.Pull = GPIO_PULLUP;		//RN-42 has a PU, we match it
 		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-		BT_RST(1);
+//		BT_RST(1);	//01/16/2019 Test, removed this to see if Red LED bug is linked to this.
 
 		//P4 - Factory reset: we use input w/ PU to avoid messing with it
 		GPIO_InitStruct.Pin = GPIO_PIN_5;
@@ -996,6 +1037,7 @@ static void init_dma1_stream3_ch4(void)
 	__HAL_DMA_ENABLE_IT(husart3.hdmatx, DMA_IT_TC);
 }
 
+/*
 HAL_StatusTypeDef triggerDMATransfer(uint8_t port)
 {
 	DMA_HandleTypeDef *hdma = NULL;
@@ -1008,7 +1050,7 @@ HAL_StatusTypeDef triggerDMATransfer(uint8_t port)
 	__HAL_LOCK(hdma);
 
 	// clear the hisr and lisr registers
-    /* Clear all flags */
+    // Clear all flags
     __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_TC_FLAG_INDEX(hdma));
     __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_HT_FLAG_INDEX(hdma));
     __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_TE_FLAG_INDEX(hdma));
@@ -1022,6 +1064,7 @@ HAL_StatusTypeDef triggerDMATransfer(uint8_t port)
 
 	return HAL_OK;
 }
+*/
 
 uint8_t readyToTransfer(uint8_t port)
 {
@@ -1032,4 +1075,18 @@ uint8_t readyToTransfer(uint8_t port)
 	}
 
 	return (husart != NULL) && (husart->State == HAL_USART_STATE_READY);
+}
+
+void resetUsartState(uint8_t port)
+{
+	USART_HandleTypeDef* husart = NULL;
+	if(port == PORT_WIRELESS)
+	{
+		husart = &husart3;
+	}
+
+	if(husart->State != HAL_USART_STATE_READY)
+	{
+		husart->State = HAL_USART_STATE_READY;
+	}
 }

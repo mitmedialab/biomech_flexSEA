@@ -1,7 +1,7 @@
 /****************************************************************************
 	[Project] FlexSEA: Flexible & Scalable Electronics Architecture
 	[Sub-project] 'flexsea-manage' Mid-level computing, and networking
-	Copyright (C) 2017 Dephy, Inc. <http://dephy.com/>
+	Copyright (C) 2019 Dephy, Inc. <http://dephy.com/>
 *****************************************************************************
 	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy dot com.
 	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab
@@ -60,7 +60,7 @@ void transmitMultiFrame();
 //1kHz time slots:
 //================
 
-//Case 0: slaveComm
+//Case 0:
 void mainFSM0(void)
 {
 	//Calibration Tools or User FSM?:
@@ -74,13 +74,12 @@ void mainFSM0(void)
 		reset_user_code();
 	}
 
-	//ToDo move?
 	#if (MULTI_DOF_N == 0)
 	slaveTransmit(PORT_RS485_1);
 	#endif
 }
 
-//Case 1: I2C1 - IMU
+//Case 1:
 void mainFSM1(void)
 {
 	//UI RGB LED
@@ -95,7 +94,7 @@ void mainFSM1(void)
 	slaveTransmit(PORT_UART_EX);
 }
 
-//Case 2: I2C2 - Expansion
+//Case 2:
 void mainFSM2(void)
 {
 	//IMU:
@@ -118,7 +117,7 @@ void mainFSM3(void)
 	i2c2_fsm();
 }
 
-//Case 4: User Functions
+//Case 4:
 void mainFSM4(void)
 {
 	user_fsm_1();
@@ -127,6 +126,7 @@ void mainFSM4(void)
 //Case 5:
 void mainFSM5(void)
 {
+	/*
 	static int dmaTransferCount = 0;
 	if(dmaTransferCount >= 20)
 	{
@@ -134,6 +134,7 @@ void mainFSM5(void)
 		dmaTransferCount = 0;
 	}
 	dmaTransferCount++;
+	*/
 }
 
 //Case 6:
