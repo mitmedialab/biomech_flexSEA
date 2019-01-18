@@ -414,15 +414,9 @@ void puts_expUart(uint8_t *str, uint16_t length)
 	if(errCnt > 100)
 	{
 		//Something major is going on...
-		//ToDo
 		CLEAR_BIT(husart3.Instance->CR1, (USART_CR1_TXEIE | USART_CR1_TCIE));
-		  /* At end of Tx process, restore husart->State to Ready */
+		//At end of Tx process, restore husart->State to Ready
 		husart3.State = HAL_USART_STATE_READY;
-
-		//init_usart3(230400);	//Expansion port
-		//BT_RST(0);
-
-		//errCnt = 0;
 	}
 
 	if(errCnt > 110)
@@ -510,10 +504,12 @@ void USART3_IRQHandler(void)
 	if(__HAL_USART_GET_FLAG(&husart3, USART_FLAG_IDLE))
 	{
 		volatile uint16_t bytes_available = uart3_dma_xfer_len - __HAL_DMA_GET_COUNTER(&hdma1_str1_ch4);
+
 		update_rx_buf_wireless(uart3_dma_rx_buf, bytes_available);
 		//Empty DMA buffer once it's copied:
 		memset(uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
 		commPeriph[PORT_WIRELESS].rx.bytesReadyFlag++;
+
 		HAL_DMA_Abort_IT(&hdma1_str1_ch4);
 		// Start the DMA peripheral
 		HAL_DMA_Start_IT(&hdma1_str1_ch4, (uint32_t) &USART3->DR,
@@ -1036,35 +1032,6 @@ static void init_dma1_stream3_ch4(void)
 	HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
 	__HAL_DMA_ENABLE_IT(husart3.hdmatx, DMA_IT_TC);
 }
-
-/*
-HAL_StatusTypeDef triggerDMATransfer(uint8_t port)
-{
-	DMA_HandleTypeDef *hdma = NULL;
-	if(port == PORT_WIRELESS)
-		hdma = &hdma1_str1_ch4;	//UART3 RX
-
-	if(hdma == NULL)
-		return HAL_ERROR;
-
-	__HAL_LOCK(hdma);
-
-	// clear the hisr and lisr registers
-    // Clear all flags
-    __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_TC_FLAG_INDEX(hdma));
-    __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_HT_FLAG_INDEX(hdma));
-    __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_TE_FLAG_INDEX(hdma));
-    __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_DME_FLAG_INDEX(hdma));
-    __HAL_DMA_CLEAR_FLAG (hdma, __HAL_DMA_GET_FE_FLAG_INDEX(hdma));
-
-	// set the control register's enable bit to trigger a transfer
-	hdma->Instance->CR |= DMA_SxCR_EN;
-
-	__HAL_UNLOCK(hdma);
-
-	return HAL_OK;
-}
-*/
 
 uint8_t readyToTransfer(uint8_t port)
 {

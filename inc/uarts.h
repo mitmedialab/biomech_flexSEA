@@ -63,7 +63,6 @@ void DMA2_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma);
 //Other USART:
 void init_usart3(uint32_t baudrate);
 void puts_expUart(uint8_t *str, uint16_t length);
-//HAL_StatusTypeDef triggerDMATransfer(uint8_t port);
 uint8_t readyToTransfer(uint8_t port);
 void resetUsartState(uint8_t port);
 void resetBluetooth(void);

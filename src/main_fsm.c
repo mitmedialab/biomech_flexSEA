@@ -108,7 +108,7 @@ void mainFSM3(void)
 	combineStatusFlags();
 	readInternalTempSensor();
 
-	// analyze FSMs and set status bytes appropriately
+	//Analyze FSMs and set status bytes appropriately
 	uint16_t mnFsmStatus = computeFsmStatus(timingError);
 	uint16_t exFsmStatus = (rigid1.ex.status >> 8) & 0xFF;
 	rigid1.mn.status = (mnFsmStatus << 8) | exFsmStatus;
@@ -126,15 +126,7 @@ void mainFSM4(void)
 //Case 5:
 void mainFSM5(void)
 {
-	/*
-	static int dmaTransferCount = 0;
-	if(dmaTransferCount >= 20)
-	{
-		triggerDMATransfer(PORT_WIRELESS);
-		dmaTransferCount = 0;
-	}
-	dmaTransferCount++;
-	*/
+
 }
 
 //Case 6:
@@ -226,9 +218,6 @@ void mainFSM10kHz(void)
 	//flexsea_receive_from_slave();	//Only for the RS-485 transceivers
 	//Master:
 	//receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
-
-	//receiveFlexSEAPacket(PORT_USB, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
-	//receiveFlexSEAPacket(PORT_WIRELESS, &newPacketsFlag, &newMasterCmdLed, &dftWatch);
 
 	//Slave:
 	//receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
