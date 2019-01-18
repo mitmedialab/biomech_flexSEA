@@ -43,9 +43,11 @@ void disable_i2c3(void);
 void initOptionalPullUps(void);
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c);
-void i2c3Receive(void);
+void i2c3SlaveReceiveFromMaster(void);
 void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c);
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c);
+void i2c3SlaveTransmitToMaster(void);
 
 //****************************************************************************
 // Definition(s):
@@ -75,7 +77,8 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c);
 //****************************************************************************
 
 extern I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
-extern uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE];
+extern uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1];
+extern uint8_t i2c_3_t_buf[MN_WBUF_SIZE+1];
 
 extern int8_t i2c1FsmState, i2c2FsmState;
 extern uint8_t i2c1_dma_rx_buf[24], i2c2_dma_rx_buf[24];

@@ -29,7 +29,10 @@
 // Shared variable(s)
 //****************************************************************************
 
-//...
+extern volatile int8_t activeFSM;
+extern volatile int8_t timingError[10];
+#define FSMS_INACTIVE -1
+extern struct i2t_s i2tBatt;
 
 //****************************************************************************
 // Public Function Prototype(s):
@@ -37,6 +40,16 @@
 
 void initRigidIO(void);
 void decodeRegulate(void);
+void setRegulateLimits(uint16_t vMin, struct i2t_s i2t);
+uint16_t getButtonClicked(void);
+void saveUVLO(uint16_t v);
+uint16_t getUVLO(void);
+void loadNvUVLO(void);
+void saveI2t(struct i2t_s newI2t);
+void packI2t(struct i2t_s val, uint16_t *b, uint8_t *index);
+void unpackI2t(struct i2t_s *val, uint16_t *b, uint8_t *index);
+void loadNvI2t(void);
+void setDefaultI2t(struct i2t_s *s);
 
 //****************************************************************************
 // Definition(s):
@@ -104,6 +117,15 @@ void decodeRegulate(void);
 #define MN_R_B1						1
 #define MN_R_B2						2
 #define MN_R_B3						3
+
+#define I2C_READ_KEY				0x55
+#define I2T_ENABLE_NON_LIN			0x80
+#define I2T_DISABLE_NON_LIN			0x00
+
+//UVLO:
+#define MIN_UVLO					15000
+#define MAX_UVLO					50000
+#define DEFAULT_UVLO				36000
 
 #endif // INC_RIGID_H
 

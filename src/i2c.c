@@ -25,6 +25,7 @@
 #include "user-mn.h"
 #include "rigid.h"
 #include "isr.h"
+#include "ui.h"
 
 #ifdef USE_6CH_AMP
 #include "strain.h"
@@ -38,11 +39,13 @@ I2C_HandleTypeDef hi2c1, hi2c2, hi2c3;
 DMA_HandleTypeDef hdma_i2c1_tx, hdma_i2c1_rx;
 DMA_HandleTypeDef hdma_i2c2_tx, hdma_i2c2_rx;
 
-uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE];
+uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1], i2c_3_t_buf[MN_WBUF_SIZE+1];
 int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
 __attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
+
+uint8_t firstTransfers = 0;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -232,8 +235,6 @@ void disable_i2c2(void)
 // Initialize I2C3. Connected to Execute & Regulate. Slave interface.
 void init_i2c3(void)
 {
-	//I2C_HandleTypeDef *hi2c3 contains our handle information
-	//set config for the initial state of the i2c.
 	hi2c3.Instance = I2C3;
 	hi2c3.Init.ClockSpeed = I2C3_CLOCK_RATE;  				//clock frequency
 	hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2; 				//for fast mode (doesn't matter now)
@@ -246,7 +247,11 @@ void init_i2c3(void)
 	hi2c3.State = HAL_I2C_STATE_RESET;
 	HAL_I2C_Init(&hi2c3);
 
-	HAL_NVIC_SetPriority(I2C3_EV_IRQn, ISR_I2C3, ISR_SUB_I2C3);
+	//I2C Event & Error interrupts:
+	HAL_NVIC_SetPriority(I2C3_ER_IRQn, ISR_I2C3_ER, ISR_SUB_I2C3_ER);
+	HAL_NVIC_EnableIRQ(I2C3_ER_IRQn);
+
+	HAL_NVIC_SetPriority(I2C3_EV_IRQn, ISR_I2C3_EV, ISR_SUB_I2C3_EV);
 	HAL_NVIC_EnableIRQ(I2C3_EV_IRQn);
 }
 
@@ -310,7 +315,7 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 	}
 }
 
-void i2c3Receive(void)
+void i2c3SlaveReceiveFromMaster(void)
 {
 	HAL_I2C_Slave_Receive_IT(&hi2c3, i2c_3_r_buf, MN_WBUF_SIZE);
 }
@@ -321,7 +326,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c)
 	if(hi2c->Instance == I2C3)
 	{
 		decodeRegulate();
-		i2c3Receive();
+		i2c3SlaveReceiveFromMaster();
 	}
 }
 
@@ -330,8 +335,31 @@ void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	if(hi2c->Instance == I2C3)
 	{
-		i2c3Receive();
+		firstTransfers++;
+		if(firstTransfers >= 2)
+		{
+			i2c3SlaveReceiveFromMaster();
+		}
+		else
+		{
+			i2c3SlaveTransmitToMaster();
+		}
 	}
+}
+
+//I2C Error Callback:
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
+{
+	if(hi2c->Instance == I2C3)
+	{
+		LEDR(1);
+		i2c3SlaveReceiveFromMaster();
+	}
+}
+
+void i2c3SlaveTransmitToMaster(void)
+{
+	HAL_I2C_Slave_Transmit_IT(&hi2c3, i2c_3_t_buf, MN_WBUF_SIZE);
 }
 
 //****************************************************************************

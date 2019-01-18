@@ -73,8 +73,10 @@
 #define ISR_SUB_DMA1_STREAM7	4
 
 //I2C3:
-#define ISR_I2C3				0
-#define ISR_SUB_I2C3			0
+#define ISR_I2C3_EV				0
+#define ISR_SUB_I2C3_EV			0
+#define ISR_I2C3_ER				0
+#define ISR_SUB_I2C3_ER			1
 
 //SPI4 - Plan:
 #define ISR_SPI4				1
@@ -91,9 +93,9 @@
 #define ISR_SUB_SPI6			0
 
 //Timers:
-#define ISR_SYSTICK				3
-#define ISR_SUB_SYSTICK			1
-#define ISR_TIMER7				1	//10kHz Timebase
+#define ISR_SYSTICK				0
+#define ISR_SUB_SYSTICK			0
+#define ISR_TIMER7				3	//10kHz Timebase
 #define ISR_SUB_TIMER7			0
 
 //USB:

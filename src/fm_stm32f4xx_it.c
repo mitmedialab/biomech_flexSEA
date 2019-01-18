@@ -87,11 +87,13 @@ void USART1_IRQHandler(void)
 	HAL_USART_IRQHandler(&husart1);
 }
 
-//Should not be used, everything is done via DMA
+/*
+// usart handler is now in uarts.c to handle partial packets from Bluetooth modules
 void USART3_IRQHandler(void)
 {
 	HAL_USART_IRQHandler(&husart3);
 }
+*/
 
 //Should not be used, everything is done via DMA
 void USART6_IRQHandler(void)
@@ -201,9 +203,16 @@ void I2C1_ER_IRQHandler(void)
   HAL_I2C_ER_IRQHandler(&hi2c1);
 }
 
+//I2C3 Event Handler
 void I2C3_EV_IRQHandler(void)
 {
 	HAL_I2C_EV_IRQHandler(&hi2c3);
+}
+
+//I2C3 Error Handler
+void I2C3_ER_IRQHandler(void)
+{
+  HAL_I2C_ER_IRQHandler(&hi2c3);
 }
 
 //****************************************************************************

@@ -146,8 +146,11 @@ void init_peripherals(void)
 	//Software:
 	initMasterSlaveComm();
 
-	//Enable reception on I2C3 (Regulate):
-	i2c3Receive();
+	//We start I2C3 in Transmit mode to send limits to Re:
+	loadNvUVLO();
+	loadNvI2t();
+	setRegulateLimits(getUVLO(), i2tBatt);
+	i2c3SlaveTransmitToMaster();
 
 	//All RGB LEDs OFF
 	LEDR(0);
@@ -177,7 +180,8 @@ void independentWatchdog(void)
 	if(firstTime)
 	{
 		init_iwdg();
-		HAL_IWDG_Refresh(&hiwdg);
+		//HAL_IWDG_Refresh(&hiwdg);
+		firstTime = 0;
 	}
 	else
 	{

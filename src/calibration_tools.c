@@ -4,6 +4,8 @@
 #include "flexsea_cmd_calibration.h"
 #include "calibration_tools.h"
 #include "user-mn.h"
+#include "eeprom_user.h"
+#include "rigid.h"
 
 uint8_t calibrationFlags = 0, calibrationNew = 0;
 uint8_t ctInfo[2] = {PORT_RS485_2, PORT_RS485_2};
@@ -23,12 +25,22 @@ inline uint8_t isFindingCurrentZeroes()
 	return (calibrationFlags & CALIBRATION_FIND_CURRENT_ZEROES);
 }
 
+inline uint8_t isUVLO()
+{
+	return (calibrationFlags & CALIBRATION_UVLO);
+}
+
+inline uint8_t isI2T()
+{
+	return (calibrationFlags & CALIBRATION_I2T);
+}
+
 inline uint8_t isLegalCalibrationProcedure(uint8_t procedure)
 {
 	//ensure procedure is not out of bounds
 	//ensure procedure has only 1 bit true
 	return ((procedure == 1 || procedure % 2 == 0) && \
-		procedure <= CALIBRATION_BELT);
+		procedure <= CALIBRATION_I2T);
 }
 
 int8_t runtimeCalibration(void)
@@ -38,6 +50,24 @@ int8_t runtimeCalibration(void)
 	if(isFindingPoles())
 	{
 		retVal = mnFindPolesFSM();
+	}
+	else if(isUVLO())
+	{
+		calibrationNew = 0;
+		calibrationFlags = 0;
+
+		writeUvloEEPROM(getUVLO());
+
+		retVal = CALIB_DONE;
+	}
+	else if(isI2T())
+	{
+		calibrationNew = 0;
+		calibrationFlags = 0;
+
+		writeI2tEEPROM(i2tBatt);
+
+		retVal = CALIB_DONE;
 	}
 	else
 	{

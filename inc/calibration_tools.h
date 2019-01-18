@@ -43,6 +43,8 @@ extern uint8_t calibrationFlags, calibrationNew;
 // UTILITY FUNCTIONS
 uint8_t isFindingPoles();
 uint8_t isFindingCurrentZeroes();
+uint8_t isUVLO();
+uint8_t isI2T();
 uint8_t isRunningCalibrationProcedure();
 uint8_t isLegalCalibrationProcedure(uint8_t procedure);
 int8_t runtimeCalibration(void);

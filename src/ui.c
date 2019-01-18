@@ -3,7 +3,7 @@
 	[Sub-project] 'flexsea-manage' Mid-level computing, and networking
 	Copyright (C) 2017 Dephy, Inc. <http://dephy.com/>
 *****************************************************************************
-	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy dot com.
+	[Lead developer] Jean-Francois (JF) Duval, jfduval at dephy dot com.
 	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab
 	Biomechatronics research group <http://biomech.media.mit.edu/>
 	[Contributors]
@@ -38,6 +38,7 @@ static void initRgbLed(void);
 //****************************************************************************
 // Public Function(s)
 //****************************************************************************
+
 void init_leds(void)
 {
 	initGreenLeds();
@@ -86,7 +87,9 @@ void rgb_led_ui(uint8_t err_l0, uint8_t err_l1, uint8_t err_l2,
 	}
 
 	if(cnt_comm > 0)
+	{
 		cnt_comm--;
+	}
 
 	if(!cnt_comm)
 	{
@@ -106,7 +109,7 @@ void rgb_led_ui(uint8_t err_l0, uint8_t err_l1, uint8_t err_l2,
 	{
 		//Major error => flashing red
 
-		latch_err_l2 = 1;    //Latching it, will require a reset to be normal again
+		latch_err_l2 = 1;	//Latching it, will require a reset to be normal again
 		r = flash_red;
 		g = 0;
 		b = 0;
