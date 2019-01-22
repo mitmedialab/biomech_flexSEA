@@ -3,7 +3,7 @@
 	[Sub-project] 'flexsea-manage' Mid-level computing, and networking
 	Copyright (C) 2019 Dephy, Inc. <http://dephy.com/>
 *****************************************************************************
-	[Lead developper] Jean-Francois (JF) Duval, jfduval at dephy dot com.
+	[Lead developer] Jean-Francois (JF) Duval, jfduval at dephy dot com.
 	[Origin] Based on Jean-Francois Duval's work at the MIT Media Lab
 	Biomechatronics research group <http://biomech.media.mit.edu/>
 	[Contributors]

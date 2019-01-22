@@ -16,7 +16,7 @@
 ****************************************************************************/
 
 #include "user-mn.h"
-#ifdef USE_6CH_AMP
+//#ifdef USE_6CH_AMP
 
 #ifndef INC_STRAINGAUGE_H
 #define INC_STRAINGAUGE_H
@@ -62,4 +62,4 @@ void decode6chAmp(void);
 //****************************************************************************
 
 #endif	//INC_STRAINGAUGE_H
-#endif 	//USE_6CH_AMP
+//#endif 	//USE_6CH_AMP
