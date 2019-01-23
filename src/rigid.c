@@ -34,7 +34,7 @@
 
 
 volatile int8_t activeFSM = FSMS_INACTIVE;
-volatile int8_t timingError[10] = {0};
+volatile int8_t timingError[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint16_t buttonClicked = 0;
 uint8_t i2c3_tmp_buf[EX_EZI2C_BUF_SIZE];
 struct i2t_s i2tBatt;

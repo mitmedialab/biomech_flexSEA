@@ -31,7 +31,8 @@
 
 extern volatile int8_t activeFSM;
 extern volatile int8_t timingError[10];
-#define FSMS_INACTIVE -1
+#define FSMS_INACTIVE 		-1
+#define MAX_TIMING_ERR		15
 extern struct i2t_s i2tBatt;
 
 //****************************************************************************

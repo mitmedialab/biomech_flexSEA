@@ -112,6 +112,8 @@ void mainFSM3(void)
 	uint16_t mnFsmStatus = computeFsmStatus(timingError);
 	uint16_t exFsmStatus = (rigid1.ex.status >> 8) & 0xFF;
 	rigid1.mn.status = (mnFsmStatus << 8) | exFsmStatus;
+	//For now we display mn.status in genVar[9]
+	rigid1.mn.genVar[9] = mnFsmStatus;
 
 	//Expansion port I2C
 	i2c2_fsm();
@@ -261,7 +263,7 @@ uint16_t computeFsmStatus(volatile int8_t *timingError)
 	int8_t mostOffendingFSM = -1;
 	uint8_t numOffenses = 0;
 	int i;
-	for(i = 0; i < 10; ++i)
+	for(i = 0; i < 10; i++)
 	{
 		if(timingError[i] > numOffenses)
 		{

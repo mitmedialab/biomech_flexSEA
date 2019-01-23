@@ -180,7 +180,6 @@ void independentWatchdog(void)
 	if(firstTime)
 	{
 		init_iwdg();
-		//HAL_IWDG_Refresh(&hiwdg);
 		firstTime = 0;
 	}
 	else
