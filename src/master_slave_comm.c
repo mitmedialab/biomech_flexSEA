@@ -52,10 +52,11 @@ void initMasterSlaveComm(void)
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
 
 	uint8_t i;
-	for(i=0;i<NUMBER_OF_PORTS;i++)
+	for(i = 0; i < NUMBER_OF_PORTS; i++)
+	{
+		//ToDo: is that a problem for multi-DoF?
 		initMultiPeriph(comm_multi_periph+i, i, i < 2 ? SLAVE : MASTER);
-
-
+	}
 
 	//RS-485 #1:
 	#if(MULTI_DOF_N == 0)

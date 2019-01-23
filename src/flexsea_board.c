@@ -91,7 +91,7 @@ void flexsea_send_serial_slave(PacketWrapper* p)
 	//If it's a valid slave port, send message...
 	if(port == PORT_RS485_1)
 	{
-		//puts_rs485_1(str, length);	//ToDo
+		puts_rs485_1(str, length);	//ToDo
 	}
 	else if(port == PORT_RS485_2)
 	{
