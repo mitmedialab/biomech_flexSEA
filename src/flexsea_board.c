@@ -144,7 +144,7 @@ void flexsea_send_serial_master(PacketWrapper* p)
 	{
 		//This is only use for a reply - we want a small delay
 		//puts_rs485_1(str, length);
-		//rs485Transmit(p);				//ToDo
+		rs485Transmit(p);
 		commPeriph[PORT_RS485_1].transState = TS_TRANSMIT_THEN_RECEIVE;
 	}
 }

@@ -131,7 +131,7 @@ void sendMasterDelayedResponse(void)
 	{
 		/*puts_rs485_1(packet[port][OUTBOUND].packed, \
 					packet[port][OUTBOUND].numb);*/
-//		puts_rs485_1(commPeriph[port].out->packed, commPeriph[port].out->numb);	//ToDo Re-enable
+		puts_rs485_1(commPeriph[port].out->packed, commPeriph[port].out->numb);
 		//Drop flag
 		commPeriph[port].tx.packetReady = 0;
 	}
