@@ -45,6 +45,7 @@
 
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 uint8_t dftWatch = 0;
+volatile uint32_t calibTimeCounter = 0, latchCalibTimeCounter = 0;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -67,11 +68,18 @@ void mainFSM0(void)
 	int8_t s = runtimeCalibration();
 	if(s == CALIB_NOT)
 	{
+		calibTimeCounter = 0;
 		user_fsm_2();
 	}
 	else if(s == CALIB_DONE)
 	{
 		reset_user_code();
+		latchCalibTimeCounter = calibTimeCounter;
+	}
+	else
+	{
+		//Ongoing calibration
+		calibTimeCounter++;
 	}
 
 	#if (MULTI_DOF_N == 0)

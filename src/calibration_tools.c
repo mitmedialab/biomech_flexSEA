@@ -120,6 +120,7 @@ int8_t mnFindPolesFSM(void)
 					break;
 				case 601:
 					//Done, exiting
+					calibTimer = 0;
 					calibFSMstate = 2;
 					break;
 				default:
