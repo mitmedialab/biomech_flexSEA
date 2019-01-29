@@ -26,6 +26,7 @@
 #include <master_slave_comm.h>
 #include <ui.h>
 #include "main.h"
+#include "global-config.h"
 #include "main_fsm.h"
 #include "flexsea_global_structs.h"
 #include "flexsea_board.h"
