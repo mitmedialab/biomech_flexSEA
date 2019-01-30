@@ -142,7 +142,7 @@
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.409903104" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.180102228" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -356,7 +356,7 @@
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.1639727129" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.189024042" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -610,7 +610,7 @@
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.957019651" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.284389670" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
