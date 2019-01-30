@@ -82,23 +82,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		//SPI NSS pin:
 		SPI_NSS_Callback();
 	}
-	#ifndef BOARD_SUBTYPE_POCKET
-	else if(GPIO_Pin == GPIO_PIN_15)
-	#else
-	else if(GPIO_Pin == GPIO_PIN_8)
-	#endif	//BOARD_SUBTYPE_POCKET
-	{
-		//SYNC:
-		timebases();
-
-		//FSM monitoring. Previous FSM should have finished by this time, if not flag it.
-		if(activeFSM != FSMS_INACTIVE)
+	#ifdef BOARD_SUBTYPE_RIGID
+		#ifndef BOARD_SUBTYPE_POCKET
+		else if(GPIO_Pin == GPIO_PIN_15)
+		#else
+		else if(GPIO_Pin == GPIO_PIN_8)
+		#endif	//BOARD_SUBTYPE_POCKET
 		{
-			//Report an error!
-			if(timingError[activeFSM] < MAX_TIMING_ERR)
+			//SYNC:
+			timebases();
+
+			//FSM monitoring. Previous FSM should have finished by this time, if not flag it.
+			if(activeFSM != FSMS_INACTIVE)
 			{
-				timingError[activeFSM]++;
+				//Report an error!
+				if(timingError[activeFSM] < MAX_TIMING_ERR)
+				{
+					timingError[activeFSM]++;
+				}
 			}
 		}
-	}
+	#endif	//BOARD_SUBTYPE_RIGID
 }

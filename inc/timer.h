@@ -39,6 +39,9 @@ typedef uint32_t timer_ticks_t;
 extern void init_systick_timer(void);
 void init_timer_6(void);
 uint16_t readTimer6(void);
+#ifndef BOARD_SUBTYPE_RIGID
+void init_timer_7(void);
+#endif
 void timebases(void);
 void delayUsBlocking(uint16_t us);
 void test_delayUsBlocking_blocking(void);

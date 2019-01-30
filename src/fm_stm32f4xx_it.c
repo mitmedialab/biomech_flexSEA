@@ -68,18 +68,40 @@ void EXTI4_IRQHandler(void)
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
 }
 
-//SYNC line:
-#ifndef BOARD_SUBTYPE_POCKET
-void EXTI15_10_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
-}
-#else
-void EXTI9_5_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
-}
-#endif	//BOARD_SUBTYPE_POCKET
+//SYNC line or timer:
+#ifdef BOARD_SUBTYPE_RIGID
+	//SYNC line
+	#ifndef BOARD_SUBTYPE_POCKET
+	void EXTI15_10_IRQHandler(void)
+	{
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
+	}
+	#else
+	void EXTI9_5_IRQHandler(void)
+	{
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+	}
+	#endif	//BOARD_SUBTYPE_POCKET
+#else	//BOARD_SUBTYPE_RIGID
+	//Internal timer
+	void TIM7_IRQHandler(void)
+	{
+		HAL_TIM_IRQHandler(&htim7);
+
+		//FlexSEA timebase:
+		timebases();
+
+		//FSM monitoring. Previous FSM should have finished by this time, if not flag it.
+		if(activeFSM != FSMS_INACTIVE)
+		{
+			//Report an error!
+			if(timingError[activeFSM] < MAX_TIMING_ERR)
+			{
+				timingError[activeFSM]++;
+			}
+		}
+	}
+#endif
 
 //Should not be used, everything is done via DMA
 void USART1_IRQHandler(void)
@@ -186,10 +208,12 @@ void OTG_FS_IRQHandler(void)
 	HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
 }
 
+#ifdef BOARD_SUBTYPE_RIGID	//ToDo might not be used
 void TIM7_IRQHandler(void)
 {
 	HAL_TIM_IRQHandler(&htim7);
 }
+#endif
 
 //I2C1 Event Handler
 void I2C1_EV_IRQHandler(void)

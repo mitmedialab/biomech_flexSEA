@@ -89,6 +89,26 @@ uint16_t readTimer6(void)
 	return (uint16_t)htim6.Instance->CNT;
 }
 
+#ifndef BOARD_SUBTYPE_RIGID
+//Timer 7: 10kHz timebase
+void init_timer_7(void)
+{
+	TIM_MasterConfigTypeDef sMasterConfig;
+
+	htim7.Instance = TIM7;
+	htim7.Init.Prescaler = 0;
+	htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim7.Init.Period = 8400;
+	HAL_TIM_Base_Init(&htim7);
+
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig);
+
+	HAL_TIM_Base_Start_IT(&htim7);
+}
+#endif
+
 //Blocking function based on Timer 6. Max delay = 500us (0.5ms).
 //Please be aware that the delay passed as a parameter is the minimum: it can
 //get longer due to interrupts.

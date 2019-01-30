@@ -70,6 +70,9 @@ void init_peripherals(void)
 	//Hardware modules:
 	init_systick_timer();		//SysTick timer (1kHz)
 	init_timer_6();				//For us delay function
+	#ifndef BOARD_SUBTYPE_RIGID
+	init_timer_7();				//10kHz timebase
+	#endif
 	init_usart1(2000000);		//USART1 (RS-485 #1)
 	init_usart6(2000000);		//USART6 (RS-485 #2)
 	init_rs485_outputs();
