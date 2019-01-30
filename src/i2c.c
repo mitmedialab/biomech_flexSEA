@@ -133,7 +133,7 @@ void i2c2_fsm(void)
 	i2c2_time_share %= 4;
 
 	#ifdef USE_MIT_EMG_I2C
-	MIT_EMG_i2c2_fsm();
+	mitEmgI2c2Fsm();
 	#else
 
 	//Subdivided in 4 slots (250Hz)
@@ -280,7 +280,7 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
 	#ifdef USE_MIT_EMG_I2C
 	if(hi2c->Instance == I2C2)
-		MIT_EMG_I2C_RxCpltCallback(hi2c);
+		mitEmgI2CRxCpltCallback(hi2c);
 	#endif
 }
 
