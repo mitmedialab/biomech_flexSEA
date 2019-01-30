@@ -166,7 +166,7 @@ void rgb_led_ui(uint8_t err_l0, uint8_t err_l1, uint8_t err_l2,
 	else
 	{
 		//Legacy code, used for all the errors
-		rgbLedSet(255*r, 255*b, 255*g);
+		rgbLedSet(255*r, 255*g, 255*b);
 	}
 }
 
