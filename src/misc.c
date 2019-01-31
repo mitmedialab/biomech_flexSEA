@@ -75,7 +75,7 @@ void init_peripherals(void)
 	init_switches();
 	#endif
 	init_usart1(2000000);		//USART1 (RS-485 #1)
-	init_usart6(2000000);		//USART6 (RS-485 #2)
+	init_usart6(2000000);		//USART6 (RS-485 #2, Ex)
 	init_rs485_outputs();
 	init_leds();
 	initHooks();

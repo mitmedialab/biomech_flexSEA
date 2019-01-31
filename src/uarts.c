@@ -214,7 +214,7 @@ void init_rs485_outputs(void)
 
 	#ifndef BOARD_SUBTYPE_POCKET
 
-	// Enable GPIO Peripheral clock on port F
+	// Enable GPIO Peripheral clock on port F (valid for Rigid and Manage)
 	__GPIOF_CLK_ENABLE();
 
 	// Configure pin in output push/pull mode
@@ -238,8 +238,20 @@ void init_rs485_outputs(void)
 
 	#endif	//BOARD_SUBTYPE_POCKET
 
-	//Note: currently only configuring for asynch RS-485 #1 & #2
-	//(so 2 of the 6 transceivers)
+	//Manage only - 2nd transceiver:
+	#ifndef BOARD_SUBTYPE_RIGID
+
+	// Enable GPIO Peripheral clock on port E
+	__GPIOE_CLK_ENABLE();
+
+	// Configure pin in output push/pull mode
+	GPIO_InitStructure.Pin = GPIO_PIN_10 | GPIO_PIN_11;
+	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStructure.Speed = GPIO_SPEED_LOW;
+	GPIO_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
+
+	#endif
 }
 
 //Receive or Transmit
@@ -255,28 +267,62 @@ void rs485_set_mode(uint32_t port, uint8_t rx_tx)
 		if(rx_tx == RS485_TX)
 		{
 			//Half-duplex TX (Receive disabled):
-			RS485_RE(1);
-			RS485_DE(1);
+			RS485_RE1(1);
+			RS485_DE1(1);
 		}
 		else if(rx_tx == RS485_RX)
 		{
 			//Half-duplex RX (Transmit disabled):
-			RS485_RE(0);
-			RS485_DE(0);
+			RS485_RE1(0);
+			RS485_DE1(0);
 		}
 		else if(rx_tx == RS485_RX_TX)
 		{
 			//Read & Write:
-			RS485_RE(0);
-			RS485_DE(1);
+			RS485_RE1(0);
+			RS485_DE1(1);
 		}
 		else
 		{
 			//Standby: no transmission, no reception
-			RS485_RE(1);
-			RS485_DE(0);
+			RS485_RE1(1);
+			RS485_DE1(0);
 		}
 	}
+	#ifndef BOARD_SUBTYPE_RIGID
+	else if(port == PORT_RS485_2)	//RS-485 #2 / USART6
+	{
+		//USART6 (RS-485 #2):
+		//===================
+		//RE4:	 	PF11
+		//DE4: 		PF10
+
+		if(rx_tx == RS485_TX)
+		{
+			//Half-duplex TX (Receive disabled):
+			RS485_RE4(1);
+			RS485_DE4(1);
+		}
+		else if(rx_tx == RS485_RX)
+		{
+			//Half-duplex RX (Transmit disabled):
+			RS485_RE4(0);
+			RS485_DE4(0);
+		}
+		else if(rx_tx == RS485_RX_TX)
+		{
+			//Read & Write:
+			RS485_RE4(0);
+			RS485_DE4(1);
+		}
+		else
+		{
+			//Standby: no transmission, no reception
+			RS485_RE4(1);
+			RS485_DE4(0);
+		}
+	}
+	#endif
 }
 
 //Sends a string via RS-485 #1 (USART1)
@@ -331,12 +377,18 @@ uint8_t reception_rs485_1_blocking(void)
 }
 
 //Sends a string via UART (USART6)
+//On Manage this is RS-485 #2
 void puts_uart_ex(uint8_t *str, uint16_t length)
 {
 	unsigned int i = 0;
 	uint8_t *uart6_dma_buf_ptr;
 	static uint32_t errCnt = 0;
 	uart6_dma_buf_ptr = (uint8_t*) &uart6_dma_tx_buf;
+
+	#ifndef BOARD_SUBTUPE_RIGID
+	//Transmit enable
+	rs485_set_mode(PORT_RS485_2, RS485_TX);
+	#endif
 
 	//Copy str to tx buffer:
 	memcpy(uart6_dma_tx_buf, str, length);
@@ -370,6 +422,7 @@ void puts_uart_ex(uint8_t *str, uint16_t length)
 
 //Prepares the board for a Reply (reception). Blocking.
 //ToDo: add timeout
+//On Manage this is RS-485 #2
 uint8_t reception_uart_ex_blocking(void)
 {
 	int delay = 0;
@@ -384,6 +437,9 @@ uint8_t reception_uart_ex_blocking(void)
 	for(delay = 0; delay < 600; delay++);		//Short delay
 
 	//Receive enable
+	#ifndef BOARD_SUBTUPE_RIGID
+	rs485_set_mode(PORT_RS485_2, RS485_RX);
+	#endif
 	tmp = USART6->DR;	//Read buffer to clear
 
 	//Start the DMA peripheral
@@ -599,17 +655,23 @@ void HAL_USART_ErrorCallback(USART_HandleTypeDef *husart)
 //We have a packet ready, but we want to wait a little while before sending it
 void rs485Transmit(PacketWrapper* p)
 {
-	if(p->destinationPort == PORT_RS485_1)
+	Port dp = p->destinationPort;
+
+	#ifdef BOARD_SUBTYPE_RIGID
+	if(dp == PORT_RS485_1)
+	#else
+	if((dp == PORT_RS485_1) || (dp == PORT_RS485_2))
+	#endif
 	{
 		//packet[PORT_RS485_1][OUTBOUND] should already be filled
 
-		commPeriph[PORT_RS485_1].tx.packetReady = 1;
+		commPeriph[dp].tx.packetReady = 1;
 		//We reply 2 slots later:
-		commPeriph[PORT_RS485_1].tx.timeStamp = (tb_100us_timeshare + 2) % 10;
+		commPeriph[dp].tx.timeStamp = (tb_100us_timeshare + 2) % 10;
 
 		//ToDo: make sure this isn't done somewhere else, or that this data isn't already in commPeriph
-		memcpy(commPeriph[PORT_RS485_1].out->packed, p->packed, COMM_STR_BUF_LEN);
-		commPeriph[PORT_RS485_1].out->numb = COMM_STR_BUF_LEN;
+		memcpy(commPeriph[dp].out->packed, p->packed, COMM_STR_BUF_LEN);
+		commPeriph[dp].out->numb = COMM_STR_BUF_LEN;
 	}
 }
 
@@ -642,22 +704,7 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		//Peripheral clock enable:
 		__USART6_CLK_ENABLE();
 
-		#ifndef BOARD_SUBTYPE_POCKET
-
-		__GPIOG_CLK_ENABLE();
-
-		//GPIOs:
-		//PG14  ------> USART6_TX
-		//PG9   ------> USART6_RX
-
-		GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_14;
-		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull = GPIO_PULLUP;	//Transceiver's R is Hi-Z when !RE=1
-		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-		GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
-		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-
-		#else
+		#if((defined BOARD_SUBTYPE_POCKET) || (!defined BOARD_SUBTYPE_RIGID))
 
 		__GPIOC_CLK_ENABLE();
 
@@ -672,7 +719,22 @@ void HAL_USART_MspInit(USART_HandleTypeDef* husart)
 		GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
 		HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-		#endif	//BOARD_SUBTYPE_POCKET
+		#else
+
+		__GPIOG_CLK_ENABLE();
+
+		//GPIOs:
+		//PG14  ------> USART6_TX
+		//PG9   ------> USART6_RX
+
+		GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_14;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_PULLUP;	//Transceiver's R is Hi-Z when !RE=1
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+		GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+		#endif	//((defined BOARD_SUBTYPE_POCKET) || (!defined BOARD_SUBTYPE_RIGID))
 	}
 	else if(husart->Instance == USART3)	//Bluetooth
 	{

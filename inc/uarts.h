@@ -106,12 +106,18 @@ void rs485Transmit(PacketWrapper* p);
 #define RS485_RX_TX					0x03
 
 #ifndef BOARD_SUBTYPE_POCKET
-#define RS485_RE(x) HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, x);
-#define RS485_DE(x) HAL_GPIO_WritePin(GPIOF, GPIO_PIN_11, x);
+#define RS485_RE1(x) HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, x);
+#define RS485_DE1(x) HAL_GPIO_WritePin(GPIOF, GPIO_PIN_11, x);
 #else
-#define RS485_RE(x) HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, x);
-#define RS485_DE(x) HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, x);
+#define RS485_RE1(x) HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, x);
+#define RS485_DE1(x) HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, x);
 #endif	//BOARD_SUBTYPE_POCKET
+
+//Manage has more transceivers:
+#ifndef BOARD_SUBTYPE_RIGID
+#define RS485_RE4(x) HAL_GPIO_WritePin(GPIOE, GPIO_PIN_11, x);
+#define RS485_DE4(x) HAL_GPIO_WritePin(GPIOE, GPIO_PIN_10, x);
+#endif
 
 #endif // INC_UARTS_H
 
