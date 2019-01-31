@@ -100,6 +100,7 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
+	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 	if (isEnabledUpdateSensors) {
 		if (!getSafetyFlags()) {
 			clearLEDStatus(); //TODO make sure this works
@@ -108,6 +109,7 @@ void mainFSM3(void)
     	checkSafeties(&act1);
     	handleSafetyConditions(&act1);
     }
+	#endif
 
 }
 
