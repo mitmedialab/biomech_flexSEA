@@ -130,13 +130,13 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=1"/>
+									<listOptionValue builtIn="false" value="HW_VER=2"/>
 									<listOptionValue builtIn="false" value="NOT_HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
-									<listOptionValue builtIn="false" value="NOT_BOARD_SUBTYPE_RIGID"/>
+									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
@@ -344,13 +344,13 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=1"/>
+									<listOptionValue builtIn="false" value="HW_VER=2"/>
 									<listOptionValue builtIn="false" value="NOT_HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
-									<listOptionValue builtIn="false" value="NOT_BOARD_SUBTYPE_RIGID"/>
+									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
@@ -598,13 +598,13 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1836724366" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
-									<listOptionValue builtIn="false" value="HW_VER=1"/>
+									<listOptionValue builtIn="false" value="HW_VER=2"/>
 									<listOptionValue builtIn="false" value="NOT_HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
-									<listOptionValue builtIn="false" value="NOT_BOARD_SUBTYPE_RIGID"/>
+									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
