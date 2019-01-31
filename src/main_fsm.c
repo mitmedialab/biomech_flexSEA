@@ -26,6 +26,7 @@
 #include <master_slave_comm.h>
 #include <ui.h>
 #include "main.h"
+#include "global-config.h"
 #include "main_fsm.h"
 #include "flexsea_global_structs.h"
 #include "flexsea_board.h"
@@ -54,7 +55,6 @@
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 uint8_t dftWatch = 0;
 
-extern uint8_t l1, l2, l3;
 extern int16_t safetyFlags;
 
 //****************************************************************************
@@ -180,7 +180,7 @@ void mainFSM9(void)
 	//UI RGB LED
 	rgbLedRefreshFade();
 	if(newMasterCmdLed) {newMasterCmdLed = 0;}
-	rgb_led_ui(l1, l2, l3, newMasterCmdLed);
+	rgb_led_ui(l0, l1, l2, newMasterCmdLed);
 
 	//Constant LED0 flashing while the code runs
 	LED0(rgbLedCenterPulse(12));
