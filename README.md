@@ -1,3 +1,7 @@
+### This branch is developed for dyno testing
+This branch contains clean Act-Pack with `genVar[0] = analog[0]` for torque sensor input.
+Contact Albert Wu (<wualbert@mit.edu>) or Rebecca McCabe (<rmccabe@mit.edu>) for questions.
+
 //****************************************************************************  
 //	**[Project]** FlexSEA: Flexible & Scalable Electronics Architecture  
 //	**[Sub-project]** 'flexsea-manage' Mid-level computing, and networking  
