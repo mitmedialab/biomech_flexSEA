@@ -206,7 +206,11 @@ uint8_t getDeviceId()
 
 uint8_t getDeviceType()
 {
-	return FX_RIGID;
+	#ifdef BOARD_SUBTYPE_RIGID
+		return FX_RIGID;
+	#else
+		return FX_MANAGE;
+	#endif
 }
 
 uint8_t getBoardUpID(void)
