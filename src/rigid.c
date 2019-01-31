@@ -176,10 +176,11 @@ void saveI2t(struct i2t_s newI2t)
 
 void loadNvI2t(void)
 {
+	struct i2t_s tmpI2t;
+
 	#ifdef USE_EEPROM
 
 	uint8_t v = 0;
-	struct i2t_s tmpI2t;
 
 	//Get I2t from EEPROM (if it was ever written)
 	readI2tEEPROM();

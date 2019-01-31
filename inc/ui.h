@@ -40,18 +40,23 @@ void rgb_led_test_code_blocking(void);
 // Definition(s):
 //****************************************************************************
 
-#ifndef BOARD_SUBTYPE_POCKET
-	#ifndef HW_BIOMECH
-		#define LED0(x) HAL_GPIO_WritePin(GPIOD, 1<<12, x);
-		#define LED1(x) HAL_GPIO_WritePin(GPIOD, 1<<11, x);
+#ifdef BOARD_SUBTYPE_RIGID
+	#ifndef BOARD_SUBTYPE_POCKET
+		#ifndef HW_BIOMECH
+			#define LED0(x) HAL_GPIO_WritePin(GPIOD, 1<<12, x);
+			#define LED1(x) HAL_GPIO_WritePin(GPIOD, 1<<11, x);
+		#else
+			#define LED0(x) HAL_GPIO_WritePin(GPIOE, 1<<1, x);
+			#define LED1(x) HAL_GPIO_WritePin(GPIOE, 1<<0, x);
+		#endif
 	#else
-		#define LED0(x) HAL_GPIO_WritePin(GPIOE, 1<<1, x);
-		#define LED1(x) HAL_GPIO_WritePin(GPIOE, 1<<0, x);
-	#endif
+		#define LED0(x) HAL_GPIO_WritePin(GPIOE, 1<<12, x);
+		#define LED1(x) HAL_GPIO_WritePin(GPIOE, 1<<11, x);
+	#endif	//BOARD_SUBTYPE_POCKET
 #else
-	#define LED0(x) HAL_GPIO_WritePin(GPIOE, 1<<12, x);
-	#define LED1(x) HAL_GPIO_WritePin(GPIOE, 1<<11, x);
-#endif	//BOARD_SUBTYPE_POCKET
+	#define LED0(x) HAL_GPIO_WritePin(GPIOC, 1<<1, x);
+	#define LED1(x) HAL_GPIO_WritePin(GPIOC, 1<<0, x);
+#endif	//BOARD_SUBTYPE_RIGID
 
 #ifndef BOARD_SUBTYPE_POCKET
 	#define LEDR(x) HAL_GPIO_WritePin(GPIOF, 1<<4, x);
@@ -62,6 +67,12 @@ void rgb_led_test_code_blocking(void);
 	#define LEDG(x) HAL_GPIO_WritePin(GPIOE, 1<<13, x);
 	#define LEDB(x) HAL_GPIO_WritePin(GPIOE, 1<<15, x);
 #endif	//BOARD_SUBTYPE_POCKET
+
+#ifndef BOARD_SUBTYPE_RIGID
+void init_sw1();
+uint8_t read_sw1(void);
+void init_switches(void);
+#endif	//BOARD_SUBTYPE_RIGID
 
 /*
  RGB LED:

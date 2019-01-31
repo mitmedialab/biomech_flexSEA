@@ -72,6 +72,7 @@ void init_peripherals(void)
 	init_timer_6();				//For us delay function
 	#ifndef BOARD_SUBTYPE_RIGID
 	init_timer_7();				//10kHz timebase
+	init_switches();
 	#endif
 	init_usart1(2000000);		//USART1 (RS-485 #1)
 	init_usart6(2000000);		//USART6 (RS-485 #2)
@@ -86,7 +87,9 @@ void init_peripherals(void)
 
 	#endif //USE_SPI_PLAN
 
-	initRigidIO();				//Interface with Rigid's other uC
+	#ifdef BOARD_SUBTYPE_RIGID
+		initRigidIO();			//Interface with Rigid's other uC
+	#endif
 
 	#ifdef USE_UART3
 
@@ -160,7 +163,9 @@ void init_peripherals(void)
 	LEDG(0);
 	LEDB(0);
 
-	resetBluetooth();
+	#ifdef BOARD_SUBTYPE_RIGID
+		resetBluetooth();
+	#endif
 }
 
 void init_iwdg(void)

@@ -359,7 +359,9 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 
 void i2c3SlaveTransmitToMaster(void)
 {
+	#ifdef USE_I2C_3
 	HAL_I2C_Slave_Transmit_IT(&hi2c3, i2c_3_t_buf, MN_WBUF_SIZE);
+	#endif
 }
 
 //****************************************************************************

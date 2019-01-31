@@ -170,6 +170,42 @@ void rgb_led_ui(uint8_t err_l0, uint8_t err_l1, uint8_t err_l2,
 	}
 }
 
+#ifndef BOARD_SUBTYPE_RIGID
+
+//SW1 pin
+void init_sw1()
+{
+	//SW1 on PE3
+
+	// Enable GPIO Peripheral clock
+	__GPIOE_CLK_ENABLE();
+
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	// Configure pin in output push/pull mode
+	GPIO_InitStructure.Pin = GPIO_PIN_3;
+	GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
+	GPIO_InitStructure.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
+}
+
+uint8_t read_sw1(void)
+{
+	uint8_t state = 0;
+	GPIO_PinState bitstatus;
+	bitstatus = HAL_GPIO_ReadPin(GPIOE, 1 << 3);
+	state = bitstatus;
+	return state;
+}
+
+void init_switches(void)
+{
+	init_sw1();
+}
+
+#endif	//BOARD_SUBTYPE_RIGID
+
 //****************************************************************************
 // Test Code
 //****************************************************************************
@@ -203,6 +239,7 @@ void rgb_led_test_code_blocking(void)
 
 static void initGreenLeds(void)
 {
+	#ifdef BOARD_SUBTYPE_RIGID
 	#ifndef BOARD_SUBTYPE_POCKET
 
 	#ifndef HW_BIOMECH
@@ -253,6 +290,22 @@ static void initGreenLeds(void)
 	HAL_GPIO_Init(GPIOE, &LED_InitStructure);
 
 	#endif	//BOARD_SUBTYPE_POCKET
+	#else
+
+	//LED0 - C1, LED1 - C0
+	GPIO_InitTypeDef LED_InitStructure;
+
+	// Enable GPIO Peripheral clock
+	__GPIOC_CLK_ENABLE();
+
+	// Configure pin in output push/pull mode
+	LED_InitStructure.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+	LED_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	LED_InitStructure.Speed = GPIO_SPEED_LOW;
+	LED_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOC, &LED_InitStructure);
+
+	#endif	//BOARD_SUBTYPE_RIGID
 }
 
 static void initRgbLed(void)
