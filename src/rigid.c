@@ -192,7 +192,7 @@ void loadNvI2t(void)
 
 	setDefaultI2t(&tmpI2t);
 	saveI2t(tmpI2t);
-
+t
 	#endif	//USE_EEPROM
 }
 

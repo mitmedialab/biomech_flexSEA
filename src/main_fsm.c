@@ -40,7 +40,7 @@
 #include "misc.h"
 #include "calibration_tools.h"
 
-#if ACTIVE_PROJECT == PROJECT_MIT_DLEG
+#if (ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 #include "user-mn-MIT-DLeg.h"
 #include "walking_state_machine.h"
 #include "actuator_functions.h"
@@ -100,6 +100,7 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
+	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 	if (isEnabledUpdateSensors) {
 		if (!getSafetyFlags()) {
 			clearLEDStatus(); //TODO make sure this works
@@ -108,6 +109,7 @@ void mainFSM3(void)
     	checkSafeties(&act1);
     	handleSafetyConditions(&act1);
     }
+	#endif //#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 
 }
 
@@ -177,11 +179,14 @@ void mainFSM8(void)
 //Case 9: User Interface
 void mainFSM9(void)
 {
+
 	//UI RGB LED
 	rgbLedRefreshFade();
+	//FIXME: What does this block of code do? Is it relevant to projects that are not MIT_DLEG?
+	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 	if(newMasterCmdLed) {newMasterCmdLed = 0;}
 	rgb_led_ui(l0, l1, l2, newMasterCmdLed);
-
+	#endif
 	//Constant LED0 flashing while the code runs
 	LED0(rgbLedCenterPulse(12));
 }

@@ -82,6 +82,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RunningExo/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.408245818" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
@@ -136,6 +137,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/RunningExo/inc"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
@@ -151,7 +153,7 @@
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
-									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_MIT_DLEG"/>
+									<listOptionValue builtIn="false" value="INCLUDE_UPROJ_RUNNINGEXO"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.409903104" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="-Wno-unused-but-set-variable" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.180102228" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
