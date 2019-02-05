@@ -55,7 +55,6 @@
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 uint8_t dftWatch = 0;
 
-extern int16_t safetyFlags;
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -100,14 +99,16 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
-	if (isEnabledUpdateSensors) {
-		if (!getSafetyFlags()) {
-			clearLEDStatus(); //TODO make sure this works
+	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
+		if (isEnabledUpdateSensors) {
+			if (!getSafetyFlags()) {
+				clearLEDStatus(); //TODO make sure this works
+			}
+			updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
+			checkSafeties(&act1);
+			handleSafetyConditions(&act1);
 		}
-    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
-    	checkSafeties(&act1);
-    	handleSafetyConditions(&act1);
-    }
+	#endif
 
 }
 
