@@ -138,9 +138,7 @@
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 								</option>
@@ -352,9 +350,7 @@
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 								</option>
@@ -606,9 +602,7 @@
 									<listOptionValue builtIn="false" value="BOARD_TYPE_FLEXSEA_MANAGE"/>
 									<listOptionValue builtIn="false" value="BOARD_SUBTYPE_RIGID"/>
 									<listOptionValue builtIn="false" value="ARM_MATH_CM4"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_SVM"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_ACTPACK"/>
-									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_MIT_DLEG"/>
 								</option>
