@@ -80,4 +80,7 @@ void rgb_led_test_code_blocking(void);
 #define UI_RED_FLASH_ON			100
 #define UI_RED_FLASH_PERIOD		200
 
+//global vars used for flipping LED safety lights in mainfsm.c
+extern uint8_t l0, l1, l2;
+
 #endif // UI_H_
