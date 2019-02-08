@@ -212,6 +212,13 @@ uint8_t getDeviceId()
 
 }
 
+int16_t* getDeviceId16()
+{
+	// casting to uint32_t lets us not worry about LSB vs MSB (this system should be LSB though)
+	int16_t *uidAddress = (int16_t*)(UID_BASE);
+	return uidAddress;
+}
+
 uint8_t getDeviceType()
 {
 	return FX_RIGID;

@@ -26,6 +26,7 @@
 #include <master_slave_comm.h>
 #include <ui.h>
 #include "main.h"
+#include "global-config.h"
 #include "main_fsm.h"
 #include "flexsea_global_structs.h"
 #include "flexsea_board.h"
@@ -43,6 +44,7 @@
 #include "user-mn-MIT-DLeg.h"
 #include "walking_state_machine.h"
 #include "actuator_functions.h"
+#include "safety_functions.h"
 #endif
 
 
@@ -52,6 +54,7 @@
 
 uint8_t newMasterCmdLed = 0, newSlaveCmdLed = 0, newPacketsFlag = 0;
 uint8_t dftWatch = 0;
+
 
 //****************************************************************************
 // Private Function Prototype(s):
@@ -96,7 +99,16 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
-
+	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
+		if (isEnabledUpdateSensors) {
+			if (!getSafetyFlags()) {
+				clearLEDStatus(); //TODO make sure this works
+			}
+			updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
+			checkSafeties(&act1);
+			handleSafetyConditions(&act1);
+		}
+	#endif
 
 }
 
@@ -104,9 +116,6 @@ void mainFSM3(void)
 void mainFSM4(void)
 {
 
-	if (isEnabledUpdateSensors) {
-    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
-    }
 
 	user_fsm_1();
 
@@ -171,8 +180,8 @@ void mainFSM9(void)
 {
 	//UI RGB LED
 	rgbLedRefreshFade();
-	rgb_led_ui(0, 0, 0, newMasterCmdLed);    //ToDo add error codes
 	if(newMasterCmdLed) {newMasterCmdLed = 0;}
+	rgb_led_ui(l0, l1, l2, newMasterCmdLed);
 
 	//Constant LED0 flashing while the code runs
 	LED0(rgbLedCenterPulse(12));

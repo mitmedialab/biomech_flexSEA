@@ -58,5 +58,12 @@ void combineStatusFlags(void);
 #define STATUS_MOT_CURRENT_WARN		32
 #define STATUS_MOT_CURRENT_LIM		64
 
+//battery voltage limits
+#define UVLO_BIOMECH 19200
+#define UVLO_BIOMECH_NOTIFY_OFFSET 500
+#define UVLO_NOTIFY UVLO_BIOMECH + UVLO_BIOMECH_NOTIFY_OFFSET
+#define UVHI_BIOMECH 52800 //Modified for a 48V system, nominally 25800 for a 24V system
+#define UV_USB_BIOMECH 6000
+
 #endif // INC_MISC_H
 
