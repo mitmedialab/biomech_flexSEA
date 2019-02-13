@@ -67,9 +67,6 @@ uint8_t getDeviceType();
 #define update_rx_buf_485_1(x, y)		circ_buff_write(commPeriph[PORT_RS485_1].rx.circularBuff, (x), (y))
 #define update_rx_buf_uart(x, y)		circ_buff_write(commPeriph[PORT_SUB2].rx.circularBuff, (x), (y))
 
-#define comm_str_spi					comm_str_3
-#define rx_command_spi					rx_command_3
-
 #define update_rx_buf_spi(x, y)			circ_buff_write(commPeriph[PORT_SPI].rx.circularBuff, (x), (y))
 #define update_rx_buf_usb(x, y)			circ_buff_write(commPeriph[PORT_USB].rx.circularBuff, (x), (y))
 #define update_rx_buf_wireless(x, y)	circ_buff_write(commPeriph[PORT_WIRELESS].rx.circularBuff, (x), (y))
@@ -87,6 +84,8 @@ uint8_t getDeviceType();
 //****************************************************************************
 // Shared variable(s)
 //****************************************************************************
+
+extern PortType masterSlave[NUMBER_OF_PORTS];
 
 #endif	//INC_FLEXSEA_BOARD_H
 

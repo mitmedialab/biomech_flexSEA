@@ -46,46 +46,25 @@
 //Prepares the structures:
 void initMasterSlaveComm(void)
 {
-	//USB:
-	initCommPeriph(&commPeriph[PORT_USB], PORT_USB, MASTER, rx_buf_4, \
-			comm_str_4, rx_command_4, &rx_buf_circ_4, \
-			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
+	//RS-485 #1 can change direction:
+	#if(defined BILATERAL_MASTER || !defined BILATERAL)
+	masterSlave[PORT_RS485_1] = SLAVE;
+	#endif	//BILATERAL_MASTER
+	#ifdef BILATERAL_SLAVE
+	masterSlave[PORT_RS485_1] = MASTER;
+	#endif	//BILATERAL_SLAVE
 
 	uint8_t i;
 	for(i = 0; i < NUMBER_OF_PORTS; i++)
 	{
-		//ToDo: is that a problem for multi-DoF?
-		initMultiPeriph(comm_multi_periph+i, i, i < 2 ? SLAVE : MASTER);
+		//Multi-packet:
+		initMultiPeriph(comm_multi_periph+i, i, masterSlave[i]);
+
+		//Single packets:
+		initCommPeriph(&commPeriph[i], i, masterSlave[i], \
+				comm_str[i], rx_command[i], &rx_buf_circ[i], \
+				&packet[i][INBOUND], &packet[i][OUTBOUND]);
 	}
-
-	//RS-485 #1:
-	#if(MULTI_DOF_N == 0)
-	PortType ms = SLAVE;
-	#endif	//(MULTI_DOF_N == 0)
-
-	#if (MULTI_DOF_N == 1)
-	PortType ms = MASTER;
-	#endif	//(MULTI_DOF_N == 1)
-
-	initCommPeriph(&commPeriph[PORT_RS485_1], PORT_RS485_1, ms, rx_buf_1, \
-			comm_str_1, rx_command_1, &rx_buf_circ_1, \
-			&packet[PORT_RS485_1][INBOUND], &packet[PORT_RS485_1][OUTBOUND]);
-
-
-	//UART:
-	initCommPeriph(&commPeriph[PORT_RS485_2], PORT_RS485_2, SLAVE, rx_buf_2, \
-			comm_str_2, rx_command_2, &rx_buf_circ_2, \
-			&packet[PORT_RS485_2][INBOUND], &packet[PORT_RS485_2][OUTBOUND]);
-
-	//SPI:
-	initCommPeriph(&commPeriph[PORT_SPI], PORT_SPI, MASTER, rx_buf_3, \
-				comm_str_3, rx_command_3, &rx_buf_circ_3, \
-				&packet[PORT_SPI][INBOUND], &packet[PORT_SPI][OUTBOUND]);
-
-	//Bluetooth:
-	initCommPeriph(&commPeriph[PORT_WIRELESS], PORT_WIRELESS, MASTER, rx_buf_5, \
-				comm_str_5, rx_command_5, &rx_buf_circ_5, \
-				&packet[PORT_WIRELESS][INBOUND], &packet[PORT_WIRELESS][OUTBOUND]);
 }
 
 //Slave Communication function. Call at 1kHz.
@@ -146,7 +125,6 @@ static int sinceLastStreamSend[MAX_STREAMS] = {0};
 
 void autoStream(void)
 {
-
 	if(isStreaming)
 	{
 		int i;
@@ -161,7 +139,6 @@ void autoStream(void)
 			{
 				if(isMultiAutoStream(streamCmds[i]))
 				{
-
 					MultiCommPeriph *cp = comm_multi_periph + streamPortInfos[i];
 					pInfo.xid = streamReceivers[i];
 					pInfo.rid = getDeviceId();
@@ -174,12 +151,12 @@ void autoStream(void)
 					cp->in.unpacked[0] = 0;
 					uint8_t error = receiveAndFillResponse(streamCmds[i], RX_PTYPE_READ, &pInfo, cp);
 					if(error)
+					{
 						cp->out.unpackedIdx = 0;
-
+					}
 				}
 				else
 				{
-
 					//Determine what offset to use:
 					streamCurrentOffset[i]++;
 					if(streamCurrentOffset[i] > streamIndex[i][1])

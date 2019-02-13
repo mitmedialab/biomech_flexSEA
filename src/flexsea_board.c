@@ -41,6 +41,9 @@
 //==============
 //Board architecture. Has to be changed in all the flexsea_board files!
 
+PortType masterSlave[NUMBER_OF_PORTS] = {SLAVE, SLAVE, MASTER, MASTER, MASTER, \
+											MASTER, MASTER};
+
 #if (MULTI_DOF_N == 0)
 uint8_t board_id = FLEXSEA_MANAGE_1;
 uint8_t board_up_id = FLEXSEA_PLAN_1;
@@ -126,7 +129,7 @@ void flexsea_send_serial_master(PacketWrapper* p)
 	{
 		commPeriph[PORT_SPI].tx.packetReady = 1;
 		//This will be sent during the next SPI transaction
-		memcpy(comm_str_spi, str, length);
+		memcpy(comm_str[PORT_SPI], str, length);
 	}
 	else if(port == PORT_USB)
 	{

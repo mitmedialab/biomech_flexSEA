@@ -178,7 +178,7 @@ void completeSpiTransmit(void)
 		//comm_str was already generated, now we place it in the buffer:
 		if(commPeriph[PORT_SPI].tx.packetReady == 1)
 		{
-			memcpy(aTxBuffer4, comm_str_spi, COMM_STR_BUF_LEN);
+			memcpy(aTxBuffer4, comm_str[PORT_SPI], COMM_STR_BUF_LEN);
 			commPeriph[PORT_SPI].tx.packetReady = 0;
 		}
 		else
