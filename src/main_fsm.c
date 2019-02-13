@@ -224,15 +224,6 @@ void mainFSM10kHz(void)
 		transmitMultiFrame();
 	}
 
-	//New approach - WiP:
-	//flexsea_receive_from_slave();	//Only for the RS-485 transceivers
-	//Master:
-	//receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
-
-	//Slave:
-	//receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
-	//receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
-
 	//Variable:
 	#if (MULTI_DOF_N == 0)
 
