@@ -322,7 +322,7 @@ void rs485_set_mode(uint32_t port, uint8_t rx_tx)
 			RS485_DE4(0);
 		}
 	}
-	#endif
+	#endif	//BOARD_SUBTYPE_RIGID
 }
 
 //Sends a string via RS-485 #1 (USART1)
@@ -581,31 +581,10 @@ void USART3_IRQHandler(void)
 //Function called after a completed DMA transfer, UART3 RX
 void DMA1_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 {
-#ifdef BEFORE_20190116_DEBUGGING_SESSION
-	if(hdma->Instance == DMA1_Stream1)
-	{
-		//Clear the UART receiver. Might not be needed, but harmless
-		//empty_dr = USART1->DR;
-	}
-
-	//Deal with FlexSEA buffers here:
-	update_rx_buf_wireless(uart3_dma_rx_buf, uart3_dma_xfer_len);			//Circular Buffer
-
-	//for David's multi-packet stuff, we are doubling up
-	circ_buff_write(& (comm_multi_periph[PORT_WIRELESS].circularBuff), uart3_dma_rx_buf, uart3_dma_xfer_len);
-	comm_multi_periph[PORT_WIRELESS].bytesReadyFlag++;
-
-	//Empty DMA buffer once it's copied:
-	memset(uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
-	commPeriph[PORT_WIRELESS].rx.bytesReadyFlag++;
-#else
-
 	copyIntoMultiPacket(comm_multi_periph + PORT_WIRELESS, (uint8_t*)uart3_dma_rx_buf, uart3_dma_xfer_len);
 
 	//Empty DMA buffer once it's copied:
 	memset((uint8_t *)&uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
-
-#endif
 }
 
 //USART Error callback:
