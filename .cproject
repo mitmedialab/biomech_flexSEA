@@ -348,11 +348,11 @@
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
+									<listOptionValue builtIn="false" value="../biomech_biomech-config/"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_biomech-config/"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1418081600" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
