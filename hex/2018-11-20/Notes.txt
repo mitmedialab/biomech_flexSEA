@@ -1,3 +1,0 @@
-HW v0.1
-ActPack
-Compiled with Release_v01
