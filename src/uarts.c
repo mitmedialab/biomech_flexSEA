@@ -385,7 +385,7 @@ void puts_uart_ex(uint8_t *str, uint16_t length)
 	static uint32_t errCnt = 0;
 	uart6_dma_buf_ptr = (uint8_t*) &uart6_dma_tx_buf;
 
-	#ifndef BOARD_SUBTUPE_RIGID
+	#ifndef BOARD_SUBTYPE_RIGID
 	//Transmit enable
 	rs485_set_mode(PORT_RS485_2, RS485_TX);
 	#endif
@@ -396,10 +396,9 @@ void puts_uart_ex(uint8_t *str, uint16_t length)
 	//ToDo replace by valid delay function!
 	for(i = 0; i < 1000; i++);
 
-	//Send data
-	//HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length);
-
 	//Send data via DMA:
+	__HAL_DMA_CLEAR_FLAG(husart6.hdmatx, DMA_FLAG_TCIF3_7 | DMA_FLAG_DMEIF3_7 | \
+					DMA_FLAG_TEIF3_7 | DMA_FLAG_HTIF3_7 | DMA_FLAG_TCIF3_7);
 	if(HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length) != HAL_OK)
 	{
 		errCnt++;
@@ -433,11 +432,11 @@ uint8_t reception_uart_ex_blocking(void)
 	uint32_t tmp = 0;
 
 	//Do not enable if still transmitting:
-	while(husart1.State == HAL_USART_STATE_BUSY_TX);	//ToDo why is that relating to UART1???
+	while(husart6.State == HAL_USART_STATE_BUSY_TX);
 	for(delay = 0; delay < 600; delay++);		//Short delay
 
 	//Receive enable
-	#ifndef BOARD_SUBTUPE_RIGID
+	#ifndef BOARD_SUBTYPE_RIGID
 	rs485_set_mode(PORT_RS485_2, RS485_RX);
 	#endif
 	tmp = USART6->DR;	//Read buffer to clear

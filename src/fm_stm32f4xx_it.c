@@ -137,7 +137,6 @@ void DMA2_Stream7_IRQHandler(void)
 	HAL_NVIC_ClearPendingIRQ(DMA2_Stream7_IRQn);
 
 	HAL_DMA_IRQHandler(husart1.hdmatx);
-	//HAL_DMA_IRQHandler(&hdma2_str7_ch4);
 }
 
 //DMA1 Stream1 - USART3 RX
@@ -218,13 +217,13 @@ void TIM7_IRQHandler(void)
 //I2C1 Event Handler
 void I2C1_EV_IRQHandler(void)
 {
-  HAL_I2C_EV_IRQHandler(&hi2c1);
+	HAL_I2C_EV_IRQHandler(&hi2c1);
 }
 
 //I2C1 Error Handler
 void I2C1_ER_IRQHandler(void)
 {
-  HAL_I2C_ER_IRQHandler(&hi2c1);
+	HAL_I2C_ER_IRQHandler(&hi2c1);
 }
 
 //I2C3 Event Handler
@@ -236,7 +235,7 @@ void I2C3_EV_IRQHandler(void)
 //I2C3 Error Handler
 void I2C3_ER_IRQHandler(void)
 {
-  HAL_I2C_ER_IRQHandler(&hi2c3);
+	HAL_I2C_ER_IRQHandler(&hi2c3);
 }
 
 //****************************************************************************

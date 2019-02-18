@@ -196,7 +196,7 @@ void mainFSM8(void)
 void mainFSM9(void)
 {
 	//Receive data from Ex
-	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);		//Ex
+	//receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);		//Ex
 }
 
 //10kHz time slot:
@@ -224,6 +224,8 @@ void mainFSM10kHz(void)
 		transmitMultiFrame();
 	}
 
+	//Test - used to be in FSM9:
+	receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
 	//Variable:
 	#if (MULTI_DOF_N == 0)
 
