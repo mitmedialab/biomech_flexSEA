@@ -39,7 +39,6 @@ uint8_t getBoardID(void);
 int16_t* getDeviceId16(void);
 uint8_t getDeviceId();
 uint8_t getDeviceType();
-uint8_t getJointDof(void);
 
 uint8_t getBoardUpID(void);
 uint8_t getBoardSubID(uint8_t sub, uint8_t idx);

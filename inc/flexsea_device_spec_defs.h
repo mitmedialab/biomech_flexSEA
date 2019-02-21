@@ -12,10 +12,13 @@
 extern "C" {
 #endif
 
-#if (defined DLEG_MULTIPACKET)
-#define _rigid_mn_numFields 43
+
+
+
+#ifdef DLEG_MULTIPACKET
+	#define _rigid_mn_numFields 43
 #else
-#define _rigid_mn_numFields 30
+	#define _rigid_mn_numFields 30
 #endif
 
 #define	_dev_numFields _rigid_mn_numFields

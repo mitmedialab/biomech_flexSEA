@@ -38,7 +38,7 @@
 // DEFINITIONS
 
 // EXTERNS
-extern uint8_t calibrationFlags, calibrationNew;
+extern uint8_t calibrationFlags, calibrationNew, calibrationProgress;
 
 // UTILITY FUNCTIONS
 uint8_t isFindingPoles();
