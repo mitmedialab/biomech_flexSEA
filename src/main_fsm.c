@@ -78,12 +78,13 @@ void mainFSM0(void)
 	if(s == CALIB_NOT)
 	{
 		calibTimeCounter = 0;
-		user_fsm_2();
+//		user_fsm_2();
 	}
 	else if(s == CALIB_DONE)
 	{
 		reset_user_code();
 		latchCalibTimeCounter = calibTimeCounter;
+		user_fsm_2();
 	}
 	else
 	{
