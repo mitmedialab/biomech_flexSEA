@@ -74,7 +74,7 @@ uint8_t board_sub3_id[SLAVE_BUS_3_CNT] = {FLEXSEA_MANAGE_1};
 // Private Function Prototype(s):
 //****************************************************************************
 
-static void transitionToReception(CommPeriph *cp, uint8_t (*f)(void));
+//static void transitionToReception(CommPeriph *cp, uint8_t (*f)(void));
 
 //****************************************************************************
 // Function(s)
@@ -184,18 +184,10 @@ void flexsea_receive_from_slave(void)
 {
 	//Transceiver state:
 	//==================
-	transitionToReception(&commPeriph[PORT_RS485_1], \
-			reception_rs485_1_blocking);
-	transitionToReception(&commPeriph[PORT_RS485_2], \
-				reception_uart_ex_blocking);
-
-	/*
-	//Did we get new bytes?
-	//=====================
-	commPeriph[PORT_RS485_1].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_1], &packet[PORT_RS485_1][INBOUND]);
-	commPeriph[PORT_RS485_2].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_RS485_2], &packet[PORT_RS485_2][INBOUND]);
-	commPeriph[PORT_EXP].rx.unpackedPacketsAvailable = tryParseRx(&commPeriph[PORT_EXP], &packet[PORT_EXP][INBOUND]);
-	*/
+	/*transitionToReception(&commPeriph[PORT_RS485_1], \
+			reception_rs485_1_blocking);*/
+	/*transitionToReception(&commPeriph[PORT_RS485_2], \
+			reception_uart_ex_blocking);*/
 }
 
 uint8_t getBoardID(void)
@@ -251,6 +243,7 @@ uint8_t getSlaveCnt(uint8_t sub)
 // Private Function(s)
 //****************************************************************************
 
+/*
 //Special function for the RS-485 reception and transceiver state management
 static void transitionToReception(CommPeriph *cp, uint8_t (*f)(void))
 {
@@ -263,3 +256,4 @@ static void transitionToReception(CommPeriph *cp, uint8_t (*f)(void))
 		//From this point on data will be received via the interrupt.
 	}
 }
+*/

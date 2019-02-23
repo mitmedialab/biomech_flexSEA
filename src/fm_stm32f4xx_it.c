@@ -87,11 +87,13 @@ void USART1_IRQHandler(void)
 	HAL_USART_IRQHandler(&husart1);
 }
 
-//Should not be used, everything is done via DMA
+/*
+// usart handler is now in uarts.c to handle partial packets from Bluetooth modules
 void USART3_IRQHandler(void)
 {
 	HAL_USART_IRQHandler(&husart3);
 }
+*/
 
 //Should not be used, everything is done via DMA
 void USART6_IRQHandler(void)

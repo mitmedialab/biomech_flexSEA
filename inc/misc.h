@@ -58,6 +58,9 @@ void combineStatusFlags(void);
 #define STATUS_MOT_CURRENT_WARN		32
 #define STATUS_MOT_CURRENT_LIM		64
 
+// MACRO for incrementing and limiting counter values (making them restart at 0 after hitting a value)
+#define TICK_COUNTER(x, lim) do { if((++x) >= lim) x = 0; } while(0)
+
 //battery voltage limits
 #define UVLO_BIOMECH 19200
 #define UVLO_BIOMECH_NOTIFY_OFFSET 500
