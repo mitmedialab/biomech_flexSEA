@@ -78,13 +78,13 @@ void mainFSM0(void)
 	if(s == CALIB_NOT)
 	{
 		calibTimeCounter = 0;
-//		user_fsm_2();
+		user_fsm_2();
 	}
 	else if(s == CALIB_DONE)
 	{
 		reset_user_code();
 		latchCalibTimeCounter = calibTimeCounter;
-		user_fsm_2();
+//		user_fsm_2();
 	}
 	else
 	{
@@ -140,8 +140,9 @@ void mainFSM3(void)
 	uint16_t mnFsmStatus = computeFsmStatus(timingError);
 	uint16_t exFsmStatus = (rigid1.ex.status >> 8) & 0xFF;
 	rigid1.mn.status = (mnFsmStatus << 8) | exFsmStatus;
+
 	//For now we display mn.status in genVar[9]
-	rigid1.mn.genVar[9] = mnFsmStatus;
+//	rigid1.mn.genVar[9] = mnFsmStatus;
 
 	//Expansion port I2C
 	i2c2_fsm();
