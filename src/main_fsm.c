@@ -42,7 +42,8 @@
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg.h"
-#include "walking_state_machine.h"
+//#include "walking_state_machine.h"
+#include "walking_knee_ankle_state_machine.h"
 #include "actuator_functions.h"
 #include "safety_functions.h"
 #endif

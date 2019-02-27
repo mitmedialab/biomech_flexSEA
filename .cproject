@@ -332,6 +332,8 @@
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1917126458" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
