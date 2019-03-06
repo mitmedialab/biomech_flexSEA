@@ -36,6 +36,7 @@
 #include "usb_device.h"
 #include "user-mn.h"
 #include "eeprom.h"
+#include "adv_analog.h"
 #include <math.h>
 #include "flexsea_user_structs.h"
 #ifdef INCLUDE_UPROJ_SVM
@@ -99,22 +100,23 @@ void init_peripherals(void)
 	#endif
 
 	#ifdef USE_I2C_1
-
 		init_i2c1();
 
-		#ifdef USE_IMU
+		 #ifdef USE_IMU
+		 	init_imu();
 
-			init_imu();
+		 #endif	//USE_IMU
 
-		#endif	//USE_IMU
+		 //ToDo: ADD ifdf guard
+		 init_adva_fc_pins();
 
 	#endif	//USE_I2C_1
-
 	#ifdef USE_I2C_2
 
 		init_i2c2();
 
 	#endif	//USE_I2C_2
+
 
 	#ifdef USE_I2C_3
 
@@ -149,19 +151,24 @@ void init_peripherals(void)
 	#endif	//USE_EEPROM
 
 
-	//Software:
-	initMasterSlaveComm();
+	 //Software:
+	 initMasterSlaveComm();
+	 //
+	 //We start I2C3 in Transmit mode to send limits to Re:
+	 loadNvUVLO();
+	 loadNvI2t();
+	 setRegulateLimits(getUVLO(), i2tBatt);
+	 i2c3SlaveTransmitToMaster();
 
-	//We start I2C3 in Transmit mode to send limits to Re:
-	loadNvUVLO();
-	loadNvI2t();
-	setRegulateLimits(getUVLO(), i2tBatt);
-	i2c3SlaveTransmitToMaster();
-
-	//All RGB LEDs OFF
+	 //All RGB LEDs OFF
 	LEDR(0);
 	LEDG(0);
 	LEDB(0);
+
+	 //ToDo: ADD ifdf guard
+	set_default_analog();
+
+
 
 	#ifdef BOARD_SUBTYPE_RIGID
 		resetBluetooth();
