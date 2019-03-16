@@ -52,10 +52,11 @@ void initMasterSlaveComm(void)
 			&packet[PORT_USB][INBOUND], &packet[PORT_USB][OUTBOUND]);
 
 	uint8_t i;
-	for(i=0;i<NUMBER_OF_PORTS;i++)
+	for(i = 0; i < NUMBER_OF_PORTS; i++)
+	{
+		//ToDo: is that a problem for multi-DoF?
 		initMultiPeriph(comm_multi_periph+i, i, i < 2 ? SLAVE : MASTER);
-
-
+	}
 
 	//RS-485 #1:
 	#if(MULTI_DOF_N == 0)
@@ -140,21 +141,11 @@ inline uint8_t isMultiAutoStream(uint8_t cmdCode) {
 	return cmdCode == CMD_SYSDATA;
 }
 
+static MultiPacketInfo pInfo;
+static int sinceLastStreamSend[MAX_STREAMS] = {0};
+
 void autoStream(void)
 {
-	static int sinceLastStreamSend[MAX_STREAMS];
-
-	static MultiCommPeriph autoPeriph;
-	static MultiPacketInfo pInfo;
-	static uint8_t notInitialized = 1;
-
-	if(notInitialized)
-	{
-		notInitialized = 0;
-		pInfo.rid = getDeviceId();
-		initMultiPeriph(&autoPeriph, PORT_NONE, MASTER);
-		memset(sinceLastStreamSend, 0, MAX_STREAMS * sizeof(int));
-	}
 
 	if(isStreaming)
 	{
@@ -168,31 +159,34 @@ void autoStream(void)
 		{
 			if(sinceLastStreamSend[i] >= streamPeriods[i])
 			{
-				//Determine what offset to use:
-				streamCurrentOffset[i]++;
-				if(streamCurrentOffset[i] > streamIndex[i][1])
-				{
-					streamCurrentOffset[i] = streamIndex[i][0];
-				}
-
 				if(isMultiAutoStream(streamCmds[i]))
 				{
-					autoPeriph.in.currentMultiPacket++;
-					pInfo.xid = streamReceivers[i];
-					pInfo.portIn = streamPortInfos[i];
-					uint8_t error = receiveAndFillResponse(streamCmds[i], RX_PTYPE_READ, &pInfo, &autoPeriph);
 
-					if(!error && autoPeriph.out.unpackedIdx)
-					{
-						MultiCommPeriph *cp = comm_multi_periph + streamPortInfos[i];
-						cp->out.currentMultiPacket = autoPeriph.out.currentMultiPacket;
-						cp->out.unpackedIdx = autoPeriph.out.unpackedIdx;
-						memcpy( (cp->out.unpacked), (autoPeriph.out.unpacked), autoPeriph.out.unpackedIdx);
-					}
+					MultiCommPeriph *cp = comm_multi_periph + streamPortInfos[i];
+					pInfo.xid = streamReceivers[i];
+					pInfo.rid = getDeviceId();
+					pInfo.portIn = streamPortInfos[i];
+
+					// following line is a bad-practice-band-aid!
+					// we should enforce that auto-streamable commands do not read from the unpacked buffer
+					// this line forces sysdata to respond with data and not metadata regardless of the status of the comm periph
+					// TODO: resolvable by changing sysdata metadata to be a response to a write command instead of a read command
+					cp->in.unpacked[0] = 0;
+					uint8_t error = receiveAndFillResponse(streamCmds[i], RX_PTYPE_READ, &pInfo, cp);
+					if(error)
+						cp->out.unpackedIdx = 0;
 
 				}
 				else
 				{
+
+					//Determine what offset to use:
+					streamCurrentOffset[i]++;
+					if(streamCurrentOffset[i] > streamIndex[i][1])
+					{
+						streamCurrentOffset[i] = streamIndex[i][0];
+					}
+
 					uint8_t cp_str[256] = {0};
 					cp_str[P_XID] = streamReceivers[i];
 					cp_str[P_DATA1] = streamCurrentOffset[i];

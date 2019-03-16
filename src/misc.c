@@ -186,7 +186,6 @@ void independentWatchdog(void)
 	if(firstTime)
 	{
 		init_iwdg();
-		//HAL_IWDG_Refresh(&hiwdg);		// removed to fix 950Hz comm rate with ACTPACK_fsm2 delays
 		firstTime = 0;
 	}
 	else

@@ -26,6 +26,7 @@
 #include "flexsea.h"
 #include "flexsea_sys_def.h"
 #include "stm32_hal_legacy.h"
+#include "rigid.h"
 
 //****************************************************************************
 // Variable(s)
@@ -89,5 +90,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	{
 		//SYNC:
 		timebases();
+
+		//FSM monitoring. Previous FSM should have finished by this time, if not flag it.
+		if(activeFSM != FSMS_INACTIVE)
+		{
+			//Report an error!
+			if(timingError[activeFSM] < MAX_TIMING_ERR)
+			{
+				timingError[activeFSM]++;
+			}
+		}
 	}
 }

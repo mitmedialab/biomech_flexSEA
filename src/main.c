@@ -30,6 +30,8 @@
 #include "flexsea_board.h"
 #include "flexsea_system.h"
 #include "flexsea_global_structs.h"
+#include "rigid.h"
+#include "dio.h"
 
 //****************************************************************************
 // Variable(s)
@@ -43,6 +45,17 @@ void (*fsmCases[10])(void) = {&mainFSM0, &mainFSM1, &mainFSM2, &mainFSM3, \
 //****************************************************************************
 // Function(s)
 //****************************************************************************
+
+// attribute guarantees inlining unless inlining "causes a problem"
+// for example: inlining a recursive function into itself is only done once
+__attribute__((always_inline)) __STATIC_INLINE void runFSM(uint8_t index)
+{
+	activeFSM = index;
+	//DEBUG_H0(1);
+	fsmCases[index]();
+	//DEBUG_H0(0);
+	activeFSM = FSMS_INACTIVE;
+}
 
 int main(void)
 {
@@ -73,12 +86,10 @@ int main(void)
 		{
 			tb_100us_flag = 0;
 
-			//Timing FSM:
-			fsmCases[tb_100us_timeshare]();
+			runFSM(tb_100us_timeshare);
 
 			//Increment value, limits to 0-9
-			tb_100us_timeshare++;
-			tb_100us_timeshare %= 10;
+			TICK_COUNTER(tb_100us_timeshare, 10);
 
 			//The code below is executed every 100us, after the previous slot.
 			//Keep it short!
