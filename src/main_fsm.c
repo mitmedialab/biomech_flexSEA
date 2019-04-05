@@ -153,7 +153,9 @@ void mainFSM3(void)
 //Case 4: User Functions
 void mainFSM4(void)
 {
+//	DEBUG_H0(1);
 	user_fsm_1();
+//	DEBUG_H0(0);
 }
 
 //Case 5:
