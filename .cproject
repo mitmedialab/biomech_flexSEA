@@ -68,7 +68,6 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.34310641" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.525086787" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../inc"/>
-									<listOptionValue builtIn="false" value="../biomech_biomech-config/"/>
 									<listOptionValue builtIn="false" value="../system/Inc"/>
 									<listOptionValue builtIn="false" value="../system/Inc/CMSIS"/>
 									<listOptionValue builtIn="false" value="../system/Inc/stm32f4-hal"/>
@@ -78,7 +77,7 @@
 									<listOptionValue builtIn="false" value="../flexsea-shared/unity"/>
 									<listOptionValue builtIn="false" value="../flexsea-comm/inc/"/>
 									<listOptionValue builtIn="false" value="../flexsea-system/inc/"/>
-									<listOptionValue builtIn="false" value="../flexsea-projects/inc"/>
+									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_DLEG/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/MIT_2DoF_Ankle_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
@@ -88,6 +87,8 @@
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_DPEB31"/>
+									<listOptionValue builtIn="false" value="DO_NOT_INCLUDE_UPROJ_CYCLE_TESTER"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.876566538" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -137,12 +138,11 @@
 									<listOptionValue builtIn="false" value="../flexsea-projects/RICNU_Knee_v1/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/Rigid/inc"/>
 									<listOptionValue builtIn="false" value="../flexsea-projects/ActPack/inc"/>
-									<listOptionValue builtIn="false" value="../biomech_biomech-config/"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.957020218" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="NULL=0"/>
 									<listOptionValue builtIn="false" value="HW_VER=2"/>
-									<listOptionValue builtIn="false" value="NOT_HW_BIOMECH"/>
+									<listOptionValue builtIn="false" value="HW_BIOMECH"/>
 									<listOptionValue builtIn="false" value="HSE_VALUE=12000000"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32F427xx"/>
