@@ -208,7 +208,7 @@ uint8_t getDeviceId()
 	uint8_t *uidAddress = (uint8_t*)(UID_BASE);
 
 	// apparently this byte is gonna be different for us ..?
-	return uidAddress[2];
+	return uidAddress[0];
 
 }
 
