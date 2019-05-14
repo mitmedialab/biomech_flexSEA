@@ -24,6 +24,13 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>flexsea-projects/MIT_DLEG/inc/genetic_alg.h</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/flexsea-projects/MIT_DLEG/inc/genetic_alg.h</locationURI>
+		</link>
+	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1524577987427</id>
