@@ -100,16 +100,16 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
-#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
-	if (isEnabledUpdateSensors) {
-		if (!getSafetyFlags()) {
-			clearLEDStatus();
-		}
-    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
-    	checkSafeties(&act1);
-    	handleSafetyConditions(&act1);
-    }
-#endif
+//#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
+//	if (isEnabledUpdateSensors) {
+//		if (!getSafetyFlags()) {
+//			clearLEDStatus();
+//		}
+//    	updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
+//    	checkSafeties(&act1);
+//    	handleSafetyConditions(&act1);
+//    }
+//#endif
 
 }
 
