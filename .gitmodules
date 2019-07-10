@@ -11,8 +11,9 @@
 	url = https://github.com/JFDuval/flexsea-shared.git
 	branch = dev
 [submodule "flexsea_projects"]
-	path = flexsea_projects
+	path = flexsea-projects
 	url = https://github.com/mitmedialab/biomech_flexsea-projects.git
+	branch = ts_multipacketUpdate-projects
 [submodule "biomech_biomech-config"]
 	path = biomech_biomech-config
 	url = https://github.com/mitmedialab/biomech_biomech-config.git
