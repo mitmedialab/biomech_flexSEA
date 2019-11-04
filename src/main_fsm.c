@@ -42,8 +42,8 @@
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
 #include "user-mn-MIT-DLeg.h"
-//#include "walking_state_machine.h"
-#include "walking_knee_ankle_state_machine.h"
+#include "walking_state_machine.h"
+//#include "walking_knee_ankle_state_machine.h"
 #include "actuator_functions.h"
 #include "safety_functions.h"
 #endif
@@ -133,7 +133,7 @@ void mainFSM3(void)
 			}
 			updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
 			checkSafeties(&act1);
-			handleSafetyConditions(&act1);
+
 		}
 	#endif
 	
@@ -153,7 +153,9 @@ void mainFSM3(void)
 //Case 4: User Functions
 void mainFSM4(void)
 {
+//	DEBUG_H0(1);
 	user_fsm_1();
+//	DEBUG_H0(0);
 }
 
 //Case 5:
