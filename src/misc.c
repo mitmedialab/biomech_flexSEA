@@ -151,8 +151,11 @@ void init_peripherals(void)
 	loadNvI2t();
 
 	 //Set the Battery limitations.
-	struct i2t_s i2tBatt = {.shift = 7, .leak = 19775, .limit = 1062500, \
+/*	struct i2t_s i2tBatt = {.shift = 7, .leak = 19775, .limit = 1062500, \
 							.nonLinThreshold = 156, .useNL = I2T_ENABLE_NON_LIN    };
+*/
+	struct i2t_s i2tBatt = {.shift = 7, .leak = 24414, .limit = 457764, \
+							.nonLinThreshold = 219, .useNL = I2T_ENABLE_NON_LIN    }; //modified 2019-10-26, MC
 	setRegulateLimits(UVLO_BIOMECH, i2tBatt);    // set battery limit to 19.2V
 //	setRegulateLimits(getUVLO(), i2tBatt);
 	i2c3SlaveTransmitToMaster();
