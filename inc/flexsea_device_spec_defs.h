@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#define _rigid_mn_numFields 30
+#define _rigid_mn_numFields 32
 #define	_dev_numFields _rigid_mn_numFields
 
 #ifdef __cplusplus
