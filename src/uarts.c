@@ -344,10 +344,10 @@ void puts_uart_ex(uint8_t *str, uint16_t length)
 	//ToDo replace by valid delay function!
 	for(i = 0; i < 1000; i++);
 
-	//Send data
-	//HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length);
-
 	//Send data via DMA:
+	__HAL_DMA_CLEAR_FLAG(husart6.hdmatx, DMA_FLAG_TCIF3_7 | DMA_FLAG_DMEIF3_7 | \
+					DMA_FLAG_TEIF3_7 | DMA_FLAG_HTIF3_7 | DMA_FLAG_TCIF3_7);	//ToDo added by JF 11/11/2019, confirm
+
 	if(HAL_USART_Transmit_DMA(&husart6, uart6_dma_buf_ptr, length) != HAL_OK)
 	{
 		errCnt++;
@@ -380,7 +380,7 @@ uint8_t reception_uart_ex_blocking(void)
 	uint32_t tmp = 0;
 
 	//Do not enable if still transmitting:
-	while(husart1.State == HAL_USART_STATE_BUSY_TX);	//ToDo why is that relating to UART1???
+	while(husart6.State == HAL_USART_STATE_BUSY_TX);
 	for(delay = 0; delay < 600; delay++);		//Short delay
 
 	//Receive enable
@@ -525,31 +525,10 @@ void USART3_IRQHandler(void)
 //Function called after a completed DMA transfer, UART3 RX
 void DMA1_Str1_CompleteTransfer_Callback(DMA_HandleTypeDef *hdma)
 {
-#ifdef BEFORE_20190116_DEBUGGING_SESSION
-	if(hdma->Instance == DMA1_Stream1)
-	{
-		//Clear the UART receiver. Might not be needed, but harmless
-		//empty_dr = USART1->DR;
-	}
-
-	//Deal with FlexSEA buffers here:
-	update_rx_buf_wireless(uart3_dma_rx_buf, uart3_dma_xfer_len);			//Circular Buffer
-
-	//for David's multi-packet stuff, we are doubling up
-	circ_buff_write(& (comm_multi_periph[PORT_WIRELESS].circularBuff), uart3_dma_rx_buf, uart3_dma_xfer_len);
-	comm_multi_periph[PORT_WIRELESS].bytesReadyFlag++;
-
-	//Empty DMA buffer once it's copied:
-	memset(uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
-	commPeriph[PORT_WIRELESS].rx.bytesReadyFlag++;
-#else
-
 	copyIntoMultiPacket(comm_multi_periph + PORT_WIRELESS, (uint8_t*)uart3_dma_rx_buf, uart3_dma_xfer_len);
 
 	//Empty DMA buffer once it's copied:
 	memset((uint8_t *)&uart3_dma_rx_buf, 0, uart3_dma_xfer_len);
-
-#endif
 }
 
 //USART Error callback:

@@ -133,7 +133,7 @@ void i2c2_fsm(void)
 	i2c2_time_share %= 4;
 
 	#ifdef USE_MIT_EMG_I2C
-	mitEmgI2c2Fsm();
+//	mitEmgI2c2Fsm();
 	#else
 
 	//Subdivided in 4 slots (250Hz)

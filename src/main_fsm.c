@@ -41,12 +41,14 @@
 #include "uarts.h"
 
 #if ACTIVE_PROJECT == PROJECT_MIT_DLEG
-#include "user-mn-MIT-DLeg.h"
-#include "walking_state_machine.h"
-//#include "walking_knee_ankle_state_machine.h"
-#include "actuator_functions.h"
-#include "safety_functions.h"
-#endif
+
+	#include "user-mn-MIT-DLeg.h"
+//	#include "walking_state_machine.h"
+	//#include "walking_knee_ankle_state_machine.h"
+	#include "actuator_functions.h"
+	#include "safety_functions.h"
+
+#endif	//ACTIVE_PROJECT == PROJECT_MIT_DLEG
 
 
 //****************************************************************************
@@ -71,7 +73,7 @@ void transmitMultiFrame();
 //1kHz time slots:
 //================
 
-//Case 0: Slave Comms
+//Case 0:
 void mainFSM0(void)
 {
 	//Calibration Tools or User FSM?:
@@ -85,7 +87,6 @@ void mainFSM0(void)
 	{
 		reset_user_code();
 		latchCalibTimeCounter = calibTimeCounter;
-//		user_fsm_2();
 	}
 	else
 	{
@@ -98,7 +99,7 @@ void mainFSM0(void)
 	#endif
 }
 
-//Case 1: I2C1 - IMU
+//Case 1:
 void mainFSM1(void)
 {
 	//UI RGB LED
@@ -126,16 +127,21 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
+
 	#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
-		if (isEnabledUpdateSensors) {
-			if (!getSafetyFlags()) {
+
+		if(isEnabledUpdateSensors)
+		{
+			if(!getSafetyFlags())
+			{
 				clearLEDStatus(); //TODO make sure this works
 			}
+
 			updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
 			checkSafeties(&act1);
-
 		}
-	#endif
+
+	#endif	//(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 	
 	//Analyze FSMs and set status bytes appropriately
 	uint16_t mnFsmStatus = computeFsmStatus(timingError);
@@ -143,8 +149,7 @@ void mainFSM3(void)
 	rigid1.mn.status = (mnFsmStatus << 8) | exFsmStatus;
 
 	//Expansion port I2C
-	i2c2_fsm();
-
+//	i2c2_fsm();
 }
 
 //Case 4: User Functions
@@ -246,15 +251,6 @@ void mainFSM10kHz(void)
 		transmitMultiFrame();
 	}
 
-	//New approach - WiP:
-	//flexsea_receive_from_slave();	//Only for the RS-485 transceivers
-	//Master:
-	//receiveFlexSEAPacket(PORT_SPI, &newPacketsFlag, &newMasterCmdLed, &spi4Watch);
-
-	//Slave:
-	//receiveFlexSEAPacket(PORT_RS485_2, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);	//Ex
-	//receiveFlexSEAPacket(PORT_EXP, &newPacketsFlag, &newSlaveCmdLed, &dftWatch);
-
 	//Variable:
 	#if (MULTI_DOF_N == 0)
 
@@ -272,9 +268,9 @@ void mainFSM10kHz(void)
 	#endif	//(MULTI_DOF_N == 1)
 
 	//Error recovery:
-	spiMonitoring(4);
+	//spiMonitoring(4);
 
-	completeSpiTransmit();
+	//completeSpiTransmit();
 }
 
 //Asynchronous time slots:
