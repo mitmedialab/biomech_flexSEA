@@ -100,6 +100,12 @@ void mainFSM3(void)
 	independentWatchdog();
 	combineStatusFlags();
 	readInternalTempSensor();
+
+
+	updateSensorValues(&act1);
+
+
+
 //#if(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
 //	if (isEnabledUpdateSensors) {
 //		if (!getSafetyFlags()) {
