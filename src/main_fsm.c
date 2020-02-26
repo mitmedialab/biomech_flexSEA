@@ -139,6 +139,7 @@ void mainFSM3(void)
 
 			updateSensorValues(&act1);	// updates all actuator sensors, will throw safety flags. takes about 33us run
 			checkSafeties(&act1);
+			handleSafetyConditions(&act1);
 		}
 
 	#endif	//(ACTIVE_PROJECT == PROJECT_MIT_DLEG)
