@@ -16,7 +16,7 @@ extern "C" {
 
 
 #ifdef DLEG_MULTIPACKET
-	#define _rigid_mn_numFields 45
+	#define _rigid_mn_numFields 53
 #else
 	#define _rigid_mn_numFields 30
 #endif
