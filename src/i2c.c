@@ -46,8 +46,8 @@ uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1], i2c_3_t_buf[MN_WBUF_SIZE+1
 int8_t i2c1FsmState = I2C_FSM_DEFAULT;
 int8_t i2c2FsmState = I2C_FSM_DEFAULT;
 __attribute__ ((aligned (4))) uint8_t i2c1_dma_rx_buf[24];
-__attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[24];
-__attribute__ ((aligned (4))) uint8_t i2c2_dma_tx_buf[24];
+__attribute__ ((aligned (4))) uint8_t i2c2_dma_rx_buf[I2C_EMG_BUFSIZE];
+__attribute__ ((aligned (4))) uint8_t i2c2_dma_tx_buf[I2C_EMG_BUFSIZE];
 
 uint8_t firstTransfers = 0;
 
