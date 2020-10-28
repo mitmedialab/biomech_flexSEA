@@ -58,7 +58,7 @@ void i2c3SlaveTransmitToMaster(void);
 //set to 1 if we want to use interrupt driven I2C.
 #define I2C1_USE_INT 			0
 #define I2C1_CLOCK_RATE 		400000 	//in Hz, corresponds to "Full Speed" I2C
-#define I2C2_CLOCK_RATE 		400000 	//in Hz, corresponds to "Full Speed" I2C
+#define I2C2_CLOCK_RATE 		100000 	//in Hz, corresponds to "Full Speed" I2C
 #define I2C3_CLOCK_RATE 		400000 	//in Hz, corresponds to "Full Speed" I2C
 
 
@@ -83,7 +83,7 @@ extern uint8_t i2c_2_r_buf[24], i2c_3_r_buf[MN_WBUF_SIZE+1];
 extern uint8_t i2c_3_t_buf[MN_WBUF_SIZE+1];
 
 extern int8_t i2c1FsmState, i2c2FsmState;
-extern uint8_t i2c1_dma_rx_buf[24], i2c2_dma_rx_buf[40], i2c2_dma_tx_buf[40];
+extern uint8_t i2c1_dma_rx_buf[24], i2c2_dma_rx_buf[42], i2c2_dma_tx_buf[42];
 
 
 #endif //INC_FM_I2C_H
